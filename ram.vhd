@@ -48,7 +48,7 @@ begin
     -- Inputs:  clk, re, addr, memory, we
     -- Outputs: data_out, memory
     -- Purpose: Memory read and write mechanism description.
-    memory_read_write : process(clk)
+    memory_read_write : process (clk)
     begin
         if (rising_edge(clk)) then
             
