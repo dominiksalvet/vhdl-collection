@@ -18,12 +18,10 @@ use ieee.numeric_std.all;
 
 
 entity clk_divider is
-    
     generic (
         ONE_CLK_MODE  : boolean; -- when true, clk_out has '1' value only for one clock signal
         COUNTER_WIDTH : positive -- bit widht of an internal clock counter
-    );
-    
+    ); 
     port (
         clk : in std_logic; -- input clock signal
         rst : in std_logic; -- reset signal
@@ -32,7 +30,6 @@ entity clk_divider is
         clk_div : in  std_logic_vector(COUNTER_WIDTH - 1 downto 0);
         clk_out : out std_logic -- final output clock
     );
-    
 end entity clk_divider;
 
 
