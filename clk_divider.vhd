@@ -4,7 +4,7 @@
 -- Dependecies: none
 -------------------------------------------------------------------------------
 -- Description:
---     Generic implementation of a clock divider.
+--     This source file represents a generic implementation of a clock divider.
 -------------------------------------------------------------------------------
 -- Comments:
 --     1. Each clk_out period, clk_div is stored internally and changes on this
@@ -46,9 +46,9 @@ begin
     
     clk_out <= clk_reg;
     
-    -- description: clk signal counter implementation (decreasing method)
-    -- inputs:      clk, rst, clk_div, counter, clk_reg
-    -- outputs:     counter, clk_reg
+    -- Inputs:  clk, rst, clk_div, counter, clk_reg
+    -- Outputs: counter, clk_reg
+    -- Purpose: Implementation of the clk signal counter. The counter uses decrementing.
     count_clk : process (clk)
     begin
         if (rising_edge(clk)) then
