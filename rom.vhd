@@ -36,7 +36,7 @@ end entity rom;
 
 architecture rtl of rom is
     
-    -- definition of memory type
+    -- memory_t: definition of memory type
     type memory_t is array((2 ** ADDR_WIDTH) - 1 downto 0) of
         std_logic_vector(DATA_WIDTH - 1 downto 0);
     -- accessible memory signal, rom initialization

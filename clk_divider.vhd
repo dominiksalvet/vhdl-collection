@@ -26,7 +26,7 @@ entity clk_divider is
         clk : in std_logic; -- input clock signal
         rst : in std_logic; -- reset signal
         
-        -- clock is divided by value of this signal
+        -- clk_div: clock is divided by value of this signal
         clk_div : in  std_logic_vector(COUNTER_WIDTH - 1 downto 0);
         clk_out : out std_logic -- final output clock
     );
