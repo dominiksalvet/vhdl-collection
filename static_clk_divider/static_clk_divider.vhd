@@ -24,9 +24,8 @@ entity static_clk_divider is
         FREQ_DIV : positive range 2 to positive'high -- frequency divisor, clk_out=clk/FREQ_DIV
     );
     port (
-        clk : in std_logic; -- input clock signal
-        rst : in std_logic; -- reset signal
-        
+        clk     : in  std_logic; -- input clock signal
+        rst     : in  std_logic; -- reset signal
         clk_out : out std_logic -- final output clock
     );
 end entity static_clk_divider;
