@@ -37,8 +37,8 @@ begin
     
     -- Inputs:  clk, rst
     -- Outputs: clk_out
-    -- Purpose: Implementation of the clk signal counter. The counter uses an incrementing method.
-    count_clk : process (clk)
+    -- Purpose: Perform clk requency division by counting and create the final clk_out signal.
+    divide_clk_freq : process (clk)
         variable clk_counter : positive range 1 to FREQ_DIV; -- internal clk counter
     begin
         if (rising_edge(clk)) then
@@ -56,7 +56,7 @@ begin
                 
             end if;
         end if;
-    end process count_clk;
+    end process divide_clk_freq;
     
 end architecture rtl;
 
