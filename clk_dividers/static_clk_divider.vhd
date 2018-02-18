@@ -5,7 +5,7 @@
 -------------------------------------------------------------------------------
 -- Description:
 --     This source file represents a generic implementation of a clock divider
---     with fixed frequency divisor.
+--     with a fixed frequency divisor.
 -------------------------------------------------------------------------------
 -- Comments:
 --     1. Period of output clk_out starts with '1' value, followed by '0'.
@@ -42,17 +42,17 @@ begin
         variable clk_counter : positive range 1 to FREQ_DIV; -- internal clk counter
     begin
         if (rising_edge(clk)) then
-            -- need to reset the clk_counter and begin new clk_out period
+            -- need to reset the clk_counter and begin the new clk_out period
             if (rst = '1' or clk_counter = FREQ_DIV) then
                 clk_out     <= '1';
                 clk_counter := 1;
             else
                 
-                if (clk_counter = (FREQ_DIV / 2)) then -- half of a clk_out period
+                if (clk_counter = (FREQ_DIV / 2)) then -- half of the clk_out period
                     clk_out <= '0';
                 end if;
                 
-                clk_counter := clk_counter + 1; -- counting
+                clk_counter := clk_counter + 1; -- counting clk rising edges
                 
             end if;
         end if;
@@ -64,7 +64,7 @@ end architecture rtl;
 -------------------------------------------------------------------------------
 -- MIT License
 --
--- Copyright (c) 2016-2018 Dominik Salvet
+-- Copyright (c) 2018 Dominik Salvet
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
 -- of this software and associated documentation files (the "Software"), to
