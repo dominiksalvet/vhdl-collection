@@ -63,4 +63,4 @@ begin
 
     end process stim_proc;
     
-end;
+end architecture behavior;
