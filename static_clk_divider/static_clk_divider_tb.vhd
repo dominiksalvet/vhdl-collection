@@ -18,7 +18,8 @@ use ieee.std_logic_1164.all;
 
 
 entity static_clk_divider_tb is
-end static_clk_divider_tb;
+end entity static_clk_divider_tb;
+
 
 architecture behavior of static_clk_divider_tb is
     
