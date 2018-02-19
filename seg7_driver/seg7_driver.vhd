@@ -13,6 +13,8 @@
 --        divided by number of unique digits.
 --     2. The least significant bit of seg7_sel output accordinates the least
 --        significant four bits of data_in input.
+--     3. The input data_in is not stored anywhere internally to quickly react
+--        to the changes on this input.
 -------------------------------------------------------------------------------
 
 
