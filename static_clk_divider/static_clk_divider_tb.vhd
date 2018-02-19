@@ -25,7 +25,10 @@ architecture behavior of static_clk_divider_tb is
     
     constant CLK_PERIOD : time := 10 ns; -- clock period definition
     
-    -- static_clk_divider signals
+    -- static_clk_divider generics
+    constant FREQ_DIV : positive range 2 to positive'high := 5; 
+    
+    -- static_clk_divider ports
     signal clk     : std_logic := '0';
     signal rst     : std_logic := '0';
     signal clk_out : std_logic;
@@ -35,7 +38,7 @@ begin
     -- instantiate the unit under test (uut)
     uut : entity work.static_clk_divider(rtl)
         generic map (
-            FREQ_DIV => 5
+            FREQ_DIV => FREQ_DIV
         )
         port map (
             clk     => clk,
@@ -55,13 +58,13 @@ begin
     -- Purpose: Stimulus process.
     stim_proc : process
     begin 
-
+        
         rst <= '1'; -- initialize the module
         wait for CLK_PERIOD;
-
+        
         rst <= '0';
         wait;
-
+        
     end process stim_proc;
     
 end architecture behavior;

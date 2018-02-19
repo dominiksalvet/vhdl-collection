@@ -22,7 +22,10 @@ architecture behavior of clk_divider_tb is
     
     constant CLK_PERIOD : time := 10 ns; -- clock period definition
     
-    -- clk_divider signals
+    -- clk_divider generics
+    constant FREQ_DIV_MAX_VALUE : positive := 7; 
+    
+    -- clk_divider ports
     signal clk : std_logic := '0';
     signal rst : std_logic := '0';
     
@@ -34,12 +37,12 @@ begin
     -- instantiate the unit under test (uut)
     uut : entity work.clk_divider(rtl)
         generic map (
-            FREQ_DIV_MAX_VALUE => 7
+            FREQ_DIV_MAX_VALUE => FREQ_DIV_MAX_VALUE
         )
         port map (
             clk => clk,
             rst => rst,
-
+            
             freq_div => freq_div,
             clk_out  => clk_out
         );
@@ -62,22 +65,22 @@ begin
         
         rst <= '0';
         wait for 10 * CLK_PERIOD;
-
+        
         freq_div <= 2;
         wait for 10 * CLK_PERIOD;
-
+        
         freq_div <= 3;
         wait for 10 * CLK_PERIOD;
-
+        
         freq_div <= 4;
         wait for 10 * CLK_PERIOD;
-
+        
         freq_div <= 7;
         wait for 10 * CLK_PERIOD;
-
+        
         freq_div <= 1;
         wait for 10 * CLK_PERIOD;
-
+        
         freq_div <= 4;
         wait;
         
