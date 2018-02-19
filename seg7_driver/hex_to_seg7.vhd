@@ -6,7 +6,7 @@
 -- Description:
 --     Converter from hexadecimal data to seven segment data.
 -------------------------------------------------------------------------------
--- Comments:
+-- Notes:
 --     1. If the output seg7_data signal is propaged to LEDs, it is required to
 --        respects the LEDs on/off value and inverse the signal eventually.
 --     2. This implementation assumes LED on state as '0' value and LED off

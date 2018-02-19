@@ -6,7 +6,7 @@
 -- Description:
 --     Generic implementation of single port sychronous RW type RAM memory.
 -------------------------------------------------------------------------------
--- Comments:
+-- Notes:
 --     1. Since there is a read enable signal, data_out output will be
 --        implemented as register.
 --     2. The module can be implemented as block memory, if the target platfrom

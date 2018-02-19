@@ -7,7 +7,7 @@
 --     This source file represents a generic implementation of a clock divider
 --     with a fixed frequency divisor.
 -------------------------------------------------------------------------------
--- Comments:
+-- Notes:
 --     1. Period of output clk_out starts with '1' value, followed by '0'.
 --     2. When the FREQ_DIV is set as an odd number, the clk_out will have '1'
 --        value one clk period shorter than '0' value per clk_out period.

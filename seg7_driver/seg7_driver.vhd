@@ -6,7 +6,7 @@
 -- Description:
 --     Generic implementation of multiple seven segment displays driver.
 -------------------------------------------------------------------------------
--- Comments:
+-- Notes:
 --     1. This implementation uses seg7_sel signal to select active digit/s and
 --        so it is meant to perform fast switching between the digits. Then the
 --        final refresh frequency of all the display is equal to clk frequency

@@ -7,7 +7,7 @@
 --     This source file represents a generic implementation of a clock divider.
 --     It supports to dynamically change frequency divisor, including 1 value.
 -------------------------------------------------------------------------------
--- Comments:
+-- Notes:
 --     1. Period of output clk_out starts with '1' value, followed by '0'.
 --     2. When it is not possible to perform clock frequency division without
 --        a remainder, the clk_out will have '1' value one clk period shorter
