@@ -1,4 +1,10 @@
-**Still under development!**
+**Still need to complete:**
+
+* [`clk_divider.vhd`](clk_divider.vhd)
+* [`clk_divider_tb.vhd`](clk_divider_tb.vhd)
+* [`mem_copier.vhd`](mem_copier.vhd)
+* `mem_copier_tb.vhd`
+* `README.md` - this file
 
 # VHDL Utilites
 
