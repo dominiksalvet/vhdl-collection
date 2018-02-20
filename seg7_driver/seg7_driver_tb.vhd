@@ -12,6 +12,7 @@
 --        index and so it is selected by "0001" value on seg7_sel output signal
 --        (eventually "1110"). After 8 * CLK_PERIOD, the message will be
 --        changed to "face".
+--     2. Do not change DIGIT_COUNT unless you know the impact.
 -------------------------------------------------------------------------------
 
 
@@ -111,7 +112,7 @@ begin
         assert (seg7_data = (C_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
             report "Invalid data sent to a seven segment display!" severity error;
         wait for 5 * CLK_PERIOD; -- need to wait 9 * CLK_PERIOD until "face" message starts
-
+        
         -- "face" message
         assert (seg7_data = (E_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
             report "Invalid data sent to a seven segment display!" severity error;
