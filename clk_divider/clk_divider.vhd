@@ -8,8 +8,10 @@
 --     It supports to dynamically change frequency divisor, including 1 value.
 -------------------------------------------------------------------------------
 -- Notes:
---     1. Period of output clk_out starts with '1' value, followed by '0'.
---     2. When it is not possible to perform clock frequency division without
+--     1. For static clock divide, use static_clk_divider as it has lower
+--        requirements of hardware resources.
+--     2. Period of output clk_out starts with '1' value, followed by '0'.
+--     3. When it is not possible to perform clock frequency division without
 --        a remainder, the clk_out will have '1' value one clk period shorter
 --        than '0' value per clk_out period.
 -------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ entity clk_divider is
         clk : in std_logic; -- input clock signal
         rst : in std_logic; -- reset signal
         
-        -- freq_div: clk frequency is divided by value of this number, clk_out=clk/freq_div
+        -- clk frequency is divided by value of this number, clk_out=clk/freq_div
         freq_div : in  positive range 1 to FREQ_DIV_MAX_VALUE;
         clk_out  : out std_logic -- final output clock
     );
@@ -37,42 +39,36 @@ end entity clk_divider;
 
 architecture rtl of clk_divider is
     
-    signal use_direct_clk : std_logic;
-    
-    signal divided_clk : std_logic;
+    signal use_direct_clk : std_logic; -- force to use direct clk input as output clock
+    signal divided_clk    : std_logic; -- value of clk based on counter method
     
 begin
     
+    -- switch between direct clk and divided_clk
     clk_out <= clk when use_direct_clk = '1' else divided_clk;
     
-    -- Inputs:  clk, freq_div
-    -- Outputs: use_direct_clk
-    -- Purpose: Check for the input when the frequency division by 1 is required.
-    direct_clk_checking : process (clk)
-    begin
-        if (rising_edge(clk)) then
-            if (freq_div = 1) then
-                use_direct_clk <= '1';
-            else
-                use_direct_clk <= '0';
-            end if;
-        end if;
-    end process direct_clk_checking;
-    
     -- Inputs:  clk, rst, freq_div
-    -- Outputs: clk_out
-    -- Purpose: Perform clk frequency division by counting and create the final clk_out signal.
+    -- Outputs: use_direct_clk, divided_clk
+    -- Purpose: Perform clk frequency division, outputs need to be composed to get a final clock.
     divide_clk_freq : process (clk)
-        -- freq_div_reg: register to store internally freq_div value in a time
+        -- register to store internally freq_div value in a time
         variable freq_div_reg : positive range 1 to FREQ_DIV_MAX_VALUE;
         variable clk_counter  : positive range 1 to FREQ_DIV_MAX_VALUE; -- internal clk counter
     begin
         if (rising_edge(clk)) then
             -- need to reset the clk_counter and begin the new clk_out period
             if (rst = '1' or clk_counter = freq_div_reg) then
-                divided_clk  <= '1';
-                freq_div_reg := freq_div;
-                clk_counter  := 1;
+                
+                if (freq_div = 1) then -- when freq_div is 1, then it needs to be used direct clk
+                    use_direct_clk <= not rst;
+                else
+                    use_direct_clk <= '0';
+                end if;
+                
+                divided_clk <= '1'; -- when rst is '1', then final clock should be '0'
+                freq_div_reg := freq_div; -- internal register to store a reference value
+                clk_counter  := 1; -- reset the clk signal counter
+                
             else
                 
                 if (clk_counter = (freq_div_reg / 2)) then -- half of the clk_out period
