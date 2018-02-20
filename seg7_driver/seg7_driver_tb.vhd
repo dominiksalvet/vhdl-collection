@@ -98,36 +98,36 @@ begin
         
         -- "cafe" message
         assert (seg7_data = (E_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait for CLK_PERIOD;
         
         assert (seg7_data = (F_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait for CLK_PERIOD;
         
         assert (seg7_data = (A_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait for CLK_PERIOD;
         
         assert (seg7_data = (C_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
-        wait for 5 * CLK_PERIOD; -- need to wait 9 * CLK_PERIOD until "face" message starts
+            report "Invalid data sent to the seg7_data output!" severity error;
+        wait for 5 * CLK_PERIOD; -- need to wait 9 * CLK_PERIOD until the "face" message starts
         
         -- "face" message
         assert (seg7_data = (E_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait for CLK_PERIOD;
         
         assert (seg7_data = (C_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait for CLK_PERIOD;
         
         assert (seg7_data = (A_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait for CLK_PERIOD;
         
         assert (seg7_data = (F_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
-            report "Invalid data sent to a seven segment display!" severity error;
+            report "Invalid data sent to the seg7_data output!" severity error;
         wait;
         
     end process contr_proc;
