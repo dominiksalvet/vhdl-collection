@@ -61,7 +61,7 @@ begin
     
     -- Inputs:  clk, rst, freq_div
     -- Outputs: clk_out
-    -- Purpose: Perform clk requency division by counting and create the final clk_out signal.
+    -- Purpose: Perform clk frequency division by counting and create the final clk_out signal.
     divide_clk_freq : process (clk)
         -- freq_div_reg: register to store internally freq_div value in a time
         variable freq_div_reg : positive range 1 to FREQ_DIV_MAX_VALUE;
