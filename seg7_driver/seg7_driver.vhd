@@ -32,7 +32,7 @@ entity seg7_driver is
         clk : in std_logic; -- clock signal
         rst : in std_logic; -- reset signal
         
-        -- data_in: input data vector, will be treated as hexadecimal numbers (separated by 4 bits)
+        -- input data vector, will be treated as hexadecimal numbers (separated by 4 bits)
         data_in   : in  std_logic_vector((DIGIT_COUNT * 4) - 1 downto 0);
         seg7_sel  : out std_logic_vector(DIGIT_COUNT - 1 downto 0); -- seven segment selector bits
         seg7_data : out std_logic_vector(6 downto 0) -- actual seven segment digit data
@@ -59,7 +59,7 @@ begin
             seg7_data => hts_seg7_data
         );
     
-    -- hts_hex_data: window with the converted hexadecimal number
+    -- window with the converted hexadecimal number
     hts_hex_data <= data_in((seg7_sel_index * 4) + 3 downto (seg7_sel_index * 4));
     
     -- Inputs:  clk, seg7_sel_index, rst
