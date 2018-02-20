@@ -1,6 +1,5 @@
 **Still need to complete:**
 
-* [`clk_divider.vhd`](clk_divider.vhd)
 * [`clk_divider_tb.vhd`](clk_divider_tb.vhd)
 * [`mem_copier.vhd`](mem_copier.vhd)
 * `mem_copier_tb.vhd`
