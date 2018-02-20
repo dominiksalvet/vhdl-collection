@@ -27,7 +27,7 @@ architecture behavior of clk_divider_tb is
     constant CLK_PERIOD : time := 10 ns; -- clock period definition
     
     -- clk_divider generics
-    constant FREQ_DIV_MAX_VALUE : positive := 7; 
+    constant FREQ_DIV_MAX_VALUE : positive := 7;
     
     -- clk_divider ports
     signal clk : std_logic := '0';
@@ -62,7 +62,7 @@ begin
     
     -- Purpose: Stimulus process.
     stim_proc : process
-    begin 
+    begin
         
         rst <= '1'; -- initialize the module
         wait for 3 * CLK_PERIOD;
@@ -93,7 +93,7 @@ begin
     
     -- Purpose: Control process.
     contr_proc : process
-    begin 
+    begin
         
         -- asserting only at critical simulation times
         wait for 4.25 * CLK_PERIOD;

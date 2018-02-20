@@ -69,7 +69,7 @@ begin
 
     -- Purpose: Control process.
     contr_proc : process
-    begin 
+    begin
         
         wait for CLK_PERIOD;
         

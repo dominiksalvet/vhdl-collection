@@ -44,7 +44,7 @@ architecture behavior of seg7_driver_tb is
     signal rst : std_logic := '0';
     
     signal data_in   : std_logic_vector((DIGIT_COUNT * 4) - 1 downto 0) := (others => '0');
-    signal seg7_sel  : std_logic_vector(DIGIT_COUNT - 1 downto 0); 
+    signal seg7_sel  : std_logic_vector(DIGIT_COUNT - 1 downto 0);
     signal seg7_data : std_logic_vector(6 downto 0);
     
 begin
@@ -76,7 +76,7 @@ begin
     
     -- Purpose: Stimulus process.
     stim_proc : process
-    begin 
+    begin
         
         rst     <= '1'; -- initialize the module
         data_in <= x"cafe";
@@ -92,7 +92,7 @@ begin
     
     -- Purpose: Control process.
     contr_proc : process
-    begin 
+    begin
         
         wait for CLK_PERIOD;
         
