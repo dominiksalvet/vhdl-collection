@@ -66,6 +66,22 @@ begin
         wait;
         
     end process stim_proc;
+
+    -- Purpose: Control process.
+    contr_proc : process
+    begin 
+        
+        wait for CLK_PERIOD;
+        
+        assert (clk_out = '1') -- the first part of the output clock period
+            report "Expected inverse output clock value!" severity error;
+        wait for (FREQ_DIV / 2) * CLK_PERIOD;
+		
+		assert (clk_out = '0') -- the second part of the output clock period
+            report "Expected inverse output clock value!" severity error;
+        wait for ((FREQ_DIV - 1) / 2) * CLK_PERIOD;
+        
+    end process contr_proc;
     
 end architecture behavior;
 
