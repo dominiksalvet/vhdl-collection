@@ -1,13 +1,18 @@
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Standard:    VHDL-1993
 -- Platform:    independent
--- Dependecies: mem_copier.vhd
--------------------------------------------------------------------------------
+-- Dependecies: mem_copier.vhd, rom.vhd, ram.vhd
+--------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the mem_copier entity with the rtl architecture.
--------------------------------------------------------------------------------
+--
+--     The test bench simulates to copy first 4 bytes from the source memory to
+--     the last 4 bytes of the target memory. After verify that the data were
+--     correctly written, the whole source memory image is transfered to the
+--     target memory.
+--------------------------------------------------------------------------------
 -- Notes:
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 
 library ieee;
@@ -23,9 +28,9 @@ architecture behavior of mem_copier_tb is
     constant CLK_PERIOD : time := 10 ns; -- clock period definition
     
     -- mem_copier generics
-    constant SRC_ADDR_WIDTH : positive := 8;
-    constant TAR_ADDR_WIDTH : positive := 8;
-    constant DATA_WIDTH     : positive := 8;
+    constant SRC_ADDR_WIDTH : positive := 4;
+    constant TAR_ADDR_WIDTH : positive := 4;
+    constant DATA_WIDTH     : positive := 8; -- addressing by bytes
     
     -- mem_copier ports
     signal clk        : std_logic := '0';
@@ -41,7 +46,7 @@ architecture behavior of mem_copier_tb is
     
     signal tar_we       : std_logic;
     signal tar_addr     : std_logic_vector(TAR_ADDR_WIDTH - 1 downto 0);
-    signal tar_data_out : std_logic_vector(DATA_WIDTH - 1 downto 0); 
+    signal tar_data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
     
 begin
     
@@ -67,7 +72,37 @@ begin
             tar_we       => tar_we,
             tar_addr     => tar_addr,
             tar_data_out => tar_data_out
-        ); 
+        );
+    
+    -- source memory that is used for simulation as read-only
+    src_mem : entity work.rom(rtl)
+        generic map (
+            ADDR_WIDTH => SRC_ADDR_WIDTH,
+            DATA_WIDTH => DATA_WIDTH
+        )
+        port map (
+            clk => clk,
+            
+            re       => re,
+            addr     => addr,
+            data_out => data_out
+        );
+    
+    -- target memory to copy data to
+    tar_mem : entity work.ram(rtl)
+        generic map (
+            ADDR_WIDTH => SRC_ADDR_WIDTH,
+            DATA_WIDTH => DATA_WIDTH
+        )
+        port map (
+            clk => clk,
+            
+            we       => we,
+            re       => re,
+            addr     => addr,
+            data_in  => data_in,
+            data_out => data_out
+        );
     
     -- Purpose: Clock process definition.
     clk_proc : process
@@ -97,16 +132,16 @@ begin
 end architecture behavior;
 
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- MIT License
 --
 -- Copyright (c) 2018 Dominik Salvet
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to
--- deal in the Software without restriction, including without limitation the
--- rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
--- sell copies of the Software, and to permit persons to whom the Software is
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
 -- furnished to do so, subject to the following conditions:
 --
 -- The above copyright notice and this permission notice shall be included in
@@ -116,7 +151,7 @@ end architecture behavior;
 -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
--- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
--- IN THE SOFTWARE.
--------------------------------------------------------------------------------
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
+--------------------------------------------------------------------------------
