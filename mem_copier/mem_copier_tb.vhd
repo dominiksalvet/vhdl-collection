@@ -83,9 +83,9 @@ begin
         port map (
             clk => clk,
             
-            re       => re,
-            addr     => addr,
-            data_out => data_out
+            re       => '1',
+            addr     => src_addr,
+            data_out => src_data_in
         );
     
     -- target memory to copy data to
@@ -97,11 +97,11 @@ begin
         port map (
             clk => clk,
             
-            we       => we,
-            re       => re,
-            addr     => addr,
-            data_in  => data_in,
-            data_out => data_out
+            we       => tar_we,
+            re       => '1',
+            addr     => tar_addr,
+            data_in  => tar_data_out,
+            data_out => open
         );
     
     -- Purpose: Clock process definition.
