@@ -5,11 +5,12 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the static_clk_divider entity with the rtl architecture.
+--
+--     Uses FREQ_DIV with value 5 to see that clk_out period is 5 times longer
+--     than the original one of clk. Also value '1' is assigned for 2 clk period
+--     while value '0' is assigned for 3 clk period.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. Uses FREQ_DIV with value 5 to see that clk_out period is 5 times
---        longer than the original one of clk. Also value '1' is assigned for
---        2 clk period while value '0' is assigned for 3 clk period.
 --------------------------------------------------------------------------------
 
 

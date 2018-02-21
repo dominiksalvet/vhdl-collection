@@ -5,14 +5,15 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the seg7_driver entity with the rtl architecture.
+--
+--     Simulation represents an example where the message "cafe" will be
+--     displayed. The seven segment display, which shows "E", has the lowest
+--     index and so it is selected by "0001" value on seg7_sel output signal
+--     (eventually "1110"). After 8 * CLK_PERIOD, the message will be changed
+--     to the "face".
 --------------------------------------------------------------------------------
 -- Notes:
---     1. Simulation represents an example where the message "cafe" will be
---        displayed. The seven segment display, which shows "E", has the lowest
---        index and so it is selected by "0001" value on seg7_sel output signal
---        (eventually "1110"). After 8 * CLK_PERIOD, the message will be changed
---        to the "face".
---     2. Do not change DIGIT_COUNT unless you know the impact.
+--     1. Do not change DIGIT_COUNT unless you know the impact.
 --------------------------------------------------------------------------------
 
 
