@@ -1,14 +1,14 @@
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Standard:    VHDL-1993
 -- Platform:    independent
 -- Dependecies: none
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Description:
 --     This source file represents a generic implementation of a clock divider.
 --     It supports to dynamically change frequency divisor, including 1 value.
 --     In no combination of all the inputs there should be shorter output clock
 --     period than the defined one by freq_div.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Notes:
 --     1. For static clock divide, use static_clk_divider as it has lower
 --        requirements of hardware resources.
@@ -16,7 +16,7 @@
 --     3. When it is not possible to perform clock frequency division without
 --        a remainder, the clk_out will have '1' value one clk period shorter
 --        than '0' value per clk_out period.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 
 library ieee;
@@ -86,16 +86,16 @@ begin
 end architecture rtl;
 
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- MIT License
 --
 -- Copyright (c) 2016-2018 Dominik Salvet
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to
--- deal in the Software without restriction, including without limitation the
--- rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
--- sell copies of the Software, and to permit persons to whom the Software is
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
 -- furnished to do so, subject to the following conditions:
 --
 -- The above copyright notice and this permission notice shall be included in
@@ -105,7 +105,7 @@ end architecture rtl;
 -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
--- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
--- IN THE SOFTWARE.
--------------------------------------------------------------------------------
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
+--------------------------------------------------------------------------------

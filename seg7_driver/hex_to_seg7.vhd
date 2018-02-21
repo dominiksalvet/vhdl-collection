@@ -1,17 +1,17 @@
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Standard:    VHDL-1993
 -- Platform:    independent
 -- Dependecies: none
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Description:
 --     Converter from hexadecimal data to seven segment data.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Notes:
 --     1. If the output seg7_data signal is propaged to LEDs, it is required to
 --        respects the LEDs on/off value and inverse the signal eventually.
 --     2. This implementation assumes LED on state as '0' value and LED off
 --        state as '1' value.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 
 library ieee;
@@ -71,16 +71,16 @@ begin
 end architecture rtl;
 
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- MIT License
 --
 -- Copyright (c) 2018 Dominik Salvet
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to
--- deal in the Software without restriction, including without limitation the
--- rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
--- sell copies of the Software, and to permit persons to whom the Software is
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
 -- furnished to do so, subject to the following conditions:
 --
 -- The above copyright notice and this permission notice shall be included in
@@ -90,7 +90,7 @@ end architecture rtl;
 -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
--- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
--- IN THE SOFTWARE.
--------------------------------------------------------------------------------
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
+--------------------------------------------------------------------------------

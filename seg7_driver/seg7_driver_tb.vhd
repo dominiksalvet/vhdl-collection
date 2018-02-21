@@ -1,19 +1,19 @@
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Standard:    VHDL-1993
 -- Platform:    independent
 -- Dependecies: seg7_driver.vhd
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the seg7_driver entity with the rtl architecture.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Notes:
 --     1. Simulation represents an example where the message "cafe" will be
 --        displayed. The seven segment display, which shows "E", has the lowest
 --        index and so it is selected by "0001" value on seg7_sel output signal
---        (eventually "1110"). After 8 * CLK_PERIOD, the message will be
---        changed to "face".
+--        (eventually "1110"). After 8 * CLK_PERIOD, the message will be changed
+--        to the "face".
 --     2. Do not change DIGIT_COUNT unless you know the impact.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 
 library ieee;
@@ -135,16 +135,16 @@ begin
 end architecture behavior;
 
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- MIT License
 --
 -- Copyright (c) 2018 Dominik Salvet
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to
--- deal in the Software without restriction, including without limitation the
--- rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
--- sell copies of the Software, and to permit persons to whom the Software is
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
 -- furnished to do so, subject to the following conditions:
 --
 -- The above copyright notice and this permission notice shall be included in
@@ -154,7 +154,7 @@ end architecture behavior;
 -- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 -- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 -- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
--- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
--- IN THE SOFTWARE.
--------------------------------------------------------------------------------
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
+--------------------------------------------------------------------------------
