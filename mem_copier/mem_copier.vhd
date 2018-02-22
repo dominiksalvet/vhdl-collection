@@ -8,7 +8,9 @@
 --     operate in wide ways of use. It behaves like a very simple DMA module.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. The memories must have the same bit width of their data buses.
+--     1. The copy_en input must have '1' value for all the time of copying the
+--        data.
+--     2. The memories must have the same bit width of their data buses.
 --------------------------------------------------------------------------------
 
 
