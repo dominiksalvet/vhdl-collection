@@ -6,8 +6,8 @@
 -- Description:
 --     This source file represents a generic implementation of a clock divider.
 --     It supports to dynamically change frequency divisor, including 1 value.
---     In no combination of all the inputs there should be shorter output clock
---     period than the defined one by freq_div.
+--     While changing freq_div value, there does not exist an interval, where
+--     output clock period is not defined one of the assigned freq_div values.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. For static clock divide, use static_clk_divider as it has lower
