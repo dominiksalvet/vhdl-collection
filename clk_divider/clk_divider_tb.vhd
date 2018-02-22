@@ -27,8 +27,6 @@ end entity clk_divider_tb;
 
 architecture behavior of clk_divider_tb is
     
-    constant CLK_PERIOD : time := 10 ns; -- clock period definition
-    
     -- clk_divider generics
     constant FREQ_DIV_MAX_VALUE : positive := 7;
     
@@ -38,6 +36,9 @@ architecture behavior of clk_divider_tb is
     
     signal freq_div : positive := 1;
     signal clk_out  : std_logic;
+    
+    -- clock period definition
+    constant CLK_PERIOD : time := 10 ns;
     
 begin
     
@@ -85,7 +86,7 @@ begin
         freq_div <= 7;
         wait for 10 * CLK_PERIOD;
         
-         -- make fast transition to very high frequency (react should be slow)
+        -- make fast transition to very high frequency (react should be slow)
         freq_div <= 1;
         wait for 10 * CLK_PERIOD;
         
@@ -100,42 +101,42 @@ begin
         
         -- asserting only at critical simulation times
         wait for 4.25 * CLK_PERIOD;
-		
+        
         assert (clk_out = clk)
             report "Expected inverse clk_out value!" severity error;
         wait for 0.5 * CLK_PERIOD;
-		
-		assert (clk_out = clk)
+        
+        assert (clk_out = clk)
             report "Expected inverse clk_out value!" severity error;
         wait for 8.5 * CLK_PERIOD;
-		
-		assert (clk_out = '0')
+        
+        assert (clk_out = '0')
             report "Expected inverse clk_out value!" severity error;
         wait for CLK_PERIOD;
-		
-		assert (clk_out = '1')
+        
+        assert (clk_out = '1')
             report "Expected inverse clk_out value!" severity error;
         wait for CLK_PERIOD;
-		
-		assert (clk_out = '0')
+        
+        assert (clk_out = '0')
             report "Expected inverse clk_out value!" severity error;
         wait for 11 * CLK_PERIOD;
-		
-		assert (clk_out = '0')
+        
+        assert (clk_out = '0')
             report "Expected inverse clk_out value!" severity error;
         wait for CLK_PERIOD;
-		
-		assert (clk_out = '1')
+        
+        assert (clk_out = '1')
             report "Expected inverse clk_out value!" severity error;
         wait for 26 * CLK_PERIOD;
-		
-		assert (clk_out = '1')
+        
+        assert (clk_out = '1')
             report "Expected inverse clk_out value!" severity error;
         wait for 3.5 * CLK_PERIOD;
-		
-		assert (clk_out = '0')
+        
+        assert (clk_out = '0')
             report "Expected inverse clk_out value!" severity error;
-		wait;
+        wait;
         
     end process contr_proc;
     

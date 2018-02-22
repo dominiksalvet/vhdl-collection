@@ -13,7 +13,8 @@
 --     to the "face".
 --------------------------------------------------------------------------------
 -- Notes:
---     1. Do not change DIGIT_COUNT unless you know the impact.
+--     1. Do not change DIGIT_COUNT unless you know the impact on the
+--        simulation.
 --------------------------------------------------------------------------------
 
 
@@ -27,14 +28,6 @@ end entity seg7_driver_tb;
 
 architecture behavior of seg7_driver_tb is
     
-    constant CLK_PERIOD : time := 10 ns; -- clock period definition
-    
-    -- constants definitions for the "cafe" and "face" messages
-    constant C_SEG7_FORM : std_logic_vector(6 downto 0) := "1001110";
-    constant A_SEG7_FORM : std_logic_vector(6 downto 0) := "1110111";
-    constant F_SEG7_FORM : std_logic_vector(6 downto 0) := "1000111";
-    constant E_SEG7_FORM : std_logic_vector(6 downto 0) := "1001111";
-    
     -- seg7_driver generics
     constant LED_ON_VALUE    : std_logic := '1';
     constant DIGIT_SEL_VALUE : std_logic := '1';
@@ -47,6 +40,15 @@ architecture behavior of seg7_driver_tb is
     signal data_in   : std_logic_vector((DIGIT_COUNT * 4) - 1 downto 0) := (others => '0');
     signal seg7_sel  : std_logic_vector(DIGIT_COUNT - 1 downto 0);
     signal seg7_data : std_logic_vector(6 downto 0);
+    
+    -- constants definitions for the "cafe" and "face" messages
+    constant C_SEG7_FORM : std_logic_vector(6 downto 0) := "1001110";
+    constant A_SEG7_FORM : std_logic_vector(6 downto 0) := "1110111";
+    constant F_SEG7_FORM : std_logic_vector(6 downto 0) := "1000111";
+    constant E_SEG7_FORM : std_logic_vector(6 downto 0) := "1001111";
+    
+    -- clock period definition
+    constant CLK_PERIOD : time := 10 ns;
     
 begin
     

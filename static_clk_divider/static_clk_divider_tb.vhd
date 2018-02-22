@@ -24,8 +24,6 @@ end entity static_clk_divider_tb;
 
 architecture behavior of static_clk_divider_tb is
     
-    constant CLK_PERIOD : time := 10 ns; -- clock period definition
-    
     -- static_clk_divider generics
     constant FREQ_DIV : positive range 2 to positive'high := 5; 
     
@@ -33,6 +31,9 @@ architecture behavior of static_clk_divider_tb is
     signal clk     : std_logic := '0';
     signal rst     : std_logic := '0';
     signal clk_out : std_logic;
+    
+    -- clock period definition
+    constant CLK_PERIOD : time := 10 ns;
     
 begin
     
@@ -67,7 +68,7 @@ begin
         wait;
         
     end process stim_proc;
-
+    
     -- Purpose: Control process.
     contr_proc : process
     begin
@@ -77,8 +78,8 @@ begin
         assert (clk_out = '1') -- the first part of the output clock period
             report "Expected inverse clk_out value!" severity error;
         wait for (FREQ_DIV / 2) * CLK_PERIOD;
-		
-		assert (clk_out = '0') -- the second part of the output clock period
+        
+        assert (clk_out = '0') -- the second part of the output clock period
             report "Expected inverse clk_out value!" severity error;
         wait for ((FREQ_DIV - 1) / 2) * CLK_PERIOD;
         
