@@ -20,17 +20,18 @@ end entity pwm_tb;
 
 architecture behavior of pwm_tb is
     
-    constant CLK_PERIOD : time := 10 ns; -- clock period definition
-    
     -- pwm generics
     constant PERIOD : positive := 8; 
     
     -- pwm ports
-    signal clk : std_logic;
-    signal rst : std_logic;
+    signal clk : std_logic := '0';
+    signal rst : std_logic := '0';
     
-    signal duty    : natural range 0 to PERIOD;
+    signal duty    : natural range 0 to PERIOD := 0;
     signal pwm_out : std_logic;
+    
+    -- clock period definition
+    constant CLK_PERIOD : time := 10 ns;
     
 begin
     
@@ -42,7 +43,7 @@ begin
         port map (
             clk => clk,
             rst => rst,
-
+            
             duty    => duty,
             pwm_out => pwm_out
         ); 
@@ -59,7 +60,7 @@ begin
     -- Purpose: Stimulus process.
     stim_proc : process
     begin
-
+        
         wait;
         
     end process stim_proc;
@@ -67,7 +68,7 @@ begin
     -- Purpose: Control process.
     contr_proc : process
     begin
-    
+        
         wait;
         
     end process contr_proc;
@@ -98,4 +99,3 @@ end architecture behavior;
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --------------------------------------------------------------------------------
-
