@@ -28,11 +28,11 @@ use ieee.numeric_std.all;
 
 entity rom is
     generic (
-        ADDR_WIDTH : positive; -- bit width of rom address bus
-        DATA_WIDTH : positive; -- bit width of rom data bus
+        ADDR_WIDTH : positive := 8; -- bit width of rom address bus
+        DATA_WIDTH : positive := 8; -- bit width of rom data bus
         
-        INIT_DATA      : std_logic_vector; -- initialization data vector
-        INIT_BASE_ADDR : natural -- base address of the initialized data in the memory
+        INIT_DATA      : std_logic_vector := "10101010"; -- initialization data vector
+        INIT_BASE_ADDR : natural          := 0 -- base address of the initialized data in the memory
     );
     port (
         clk : in std_logic; -- clock signal
@@ -59,8 +59,8 @@ architecture rtl of rom is
         -- loop through all the data to initialize memory
         for i in 0 to (INIT_DATA'length / DATA_WIDTH) - 1 loop
             -- modulo write address and data sampling from original vector implementation
-            mem((INIT_BASE_ADDR + i) mod ADDR_COUNT) := 
-            INIT_DATA((i * DATA_WIDTH) + DATA_WIDTH - 1 downto (i * DATA_WIDTH));
+            mem((INIT_BASE_ADDR + i) mod ADDR_COUNT) :=
+            INIT_DATA((i * DATA_WIDTH) to (i * DATA_WIDTH) + DATA_WIDTH - 1);
         end loop;
         return mem;
     end function mem_init;
