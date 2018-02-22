@@ -39,29 +39,29 @@ end entity ram;
 architecture rtl of ram is
     
     -- definition of memory type
-    type memory_t is array((2 ** ADDR_WIDTH) - 1 downto 0) of
+    type mem_t is array((2 ** ADDR_WIDTH) - 1 downto 0) of
         std_logic_vector(DATA_WIDTH - 1 downto 0);
-    signal memory : memory_t; -- accessible memory signal
+    signal mem : mem_t; -- accessible memory signal
     
 begin
     
-    -- Inputs:  clk, re, addr, memory, we
-    -- Outputs: data_out, memory
+    -- Inputs:  clk, re, addr, mem, we
+    -- Outputs: data_out, mem
     -- Purpose: Memory read and write mechanism description.
-    memory_read_write : process (clk)
+    mem_read_write : process (clk)
     begin
         if (rising_edge(clk)) then
             
-            if (re = '1') then -- read from the memory
-                data_out <= memory(to_integer(unsigned(addr)));
+            if (re = '1') then -- read from the mememmory
+                data_out <= mem(to_integer(unsigned(addr)));
             end if;
             
             if (we = '1') then -- write to the memory
-                memory(to_integer(unsigned(addr))) <= data_in;
+                mem(to_integer(unsigned(addr))) <= data_in;
             end if;
             
         end if;
-    end process memory_read_write;
+    end process mem_read_write;
     
 end architecture rtl;
 

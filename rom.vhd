@@ -37,26 +37,26 @@ end entity rom;
 architecture rtl of rom is
     
     -- definition of memory type
-    type memory_t is array((2 ** ADDR_WIDTH) - 1 downto 0) of
+    type mem_t is array((2 ** ADDR_WIDTH) - 1 downto 0) of
         std_logic_vector(DATA_WIDTH - 1 downto 0);
     -- accessible memory signal, rom initialization
-    signal memory : memory_t := (
+    signal mem : mem_t := (
         others => (others => 'U')
         );
     
 begin
     
-    -- Inputs:  clk, re, addr, memory
+    -- Inputs:  clk, re, addr, mem
     -- Outputs: data_out
     -- Purpose: Memory read mechanism description.
-    memory_read : process (clk)
+    mem_read : process (clk)
     begin
         if (rising_edge(clk)) then
             if (re = '1') then
-                data_out <= memory(to_integer(unsigned(addr)));
+                data_out <= mem(to_integer(unsigned(addr)));
             end if;
         end if;
-    end process memory_read;
+    end process mem_read;
     
 end architecture rtl;
 
