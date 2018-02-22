@@ -4,13 +4,20 @@
 -- Dependecies: none
 --------------------------------------------------------------------------------
 -- Description:
---     Generic implementation of single port sychronous ROM memory.
+--     Generic implementation of single port sychronous ROM memory with an
+--     initialization option.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Since there is a read enable signal, data_out output will be
 --        implemented as register.
 --     2. The module can be implemented as a block memory, if the target
 --        platform supports it.
+--     3. The initialization data vector will be sampled to memory addresses
+--        based on DATA_WIDTH from address defined by INIT_BASE_ADDR.
+--     4. The amount of initialized memory addresses depends on the INIT_DATA
+--        vector length itself. When the initialization should exceed the memory
+--        maximal address, the modulo function with value of maximal address
+--        will be applied to calculate the final address.
 --------------------------------------------------------------------------------
 
 
@@ -22,7 +29,10 @@ use ieee.numeric_std.all;
 entity rom is
     generic (
         ADDR_WIDTH : positive; -- bit width of rom address bus
-        DATA_WIDTH : positive -- bit width of rom data bus
+        DATA_WIDTH : positive; -- bit width of rom data bus
+        
+        INIT_DATA      : std_logic_vector; -- initialization data vector
+        INIT_BASE_ADDR : natural -- base address of the initialized data in the memory
     );
     port (
         clk : in std_logic; -- clock signal
@@ -36,13 +46,31 @@ end entity rom;
 
 architecture rtl of rom is
     
-    -- definition of memory type
-    type mem_t is array((2 ** ADDR_WIDTH) - 1 downto 0) of
-        std_logic_vector(DATA_WIDTH - 1 downto 0);
-    -- accessible memory signal, rom initialization
-    signal mem : mem_t := (
-        others => (others => 'U')
-        );
+    -- amount of unique addresses
+    constant ADDR_COUNT : positive := 2 ** ADDR_WIDTH;
+    
+    -- definition of the memory type
+    type mem_t is array(ADDR_COUNT - 1 downto 0) of std_logic_vector(DATA_WIDTH - 1 downto 0);
+    
+    -- Purpose: Initialize memory by sample the INIT_DATA vector to memory data width.
+    function mem_init return mem_t is
+        variable mem : mem_t; -- memory to be initialized
+    begin
+        -- loop through all the data to initialize memory
+        for i in 0 to (INIT_DATA'length / DATA_WIDTH) - 1 loop
+            -- modulo write address and data sampling from original vector implementation
+            mem((INIT_BASE_ADDR + i) mod ADDR_COUNT) := 
+            INIT_DATA((i * DATA_WIDTH) + DATA_WIDTH - 1 downto (i * DATA_WIDTH));
+        end loop;
+        return mem;
+    end function mem_init;
+    
+    -- accessible memory signal, calling memory initialization
+    signal mem : mem_t := mem_init;
+    -- it is also possible to change to custom initialization, as shown below in a comment section:
+    -- signal mem : mem_t := (
+    --     others => (others => 'U')
+    --     );
     
 begin
     
