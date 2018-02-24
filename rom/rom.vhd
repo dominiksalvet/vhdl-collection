@@ -9,15 +9,19 @@
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Since there is a read enable signal, data_out output will be
---        implemented as register.
+--        implemented as a register.
 --     2. The module can be implemented as a block memory, if the target
---        platform supports it.
---     3. The initialization data vector will be sampled to memory addresses
---        based on DATA_WIDTH from address defined by INIT_BASE_ADDR.
+--        platform and used synthesizer support it.
+--     3. The initialization data vector will be sampled from the left to memory
+--        addresses based on DATA_WIDTH from address defined by INIT_START_ADDR.
+--        So the data on the INIT_START_ADDR match the leftmost part of
+--        DATA_WIDTH length of the INIT_DATA vector.
 --     4. The amount of initialized memory addresses depends on the INIT_DATA
 --        vector length itself. When the initialization should exceed the memory
 --        maximal address, the modulo function with value of maximal address
 --        will be applied to calculate the final address.
+--     5. When length of INIT_DATA modulo DATA_WIDTH is not equal 0, then the
+--        last initialized memory address will be left uninitialized.
 --------------------------------------------------------------------------------
 
 
@@ -28,11 +32,11 @@ use ieee.numeric_std.all;
 
 entity rom is
     generic (
-        ADDR_WIDTH : positive := 8; -- bit width of rom address bus
-        DATA_WIDTH : positive := 8; -- bit width of rom data bus
+        ADDR_WIDTH : positive; -- bit width of rom address bus
+        DATA_WIDTH : positive; -- bit width of rom data bus
         
-        INIT_DATA      : std_logic_vector := "10101010"; -- initialization data vector
-        INIT_BASE_ADDR : natural          := 0 -- base address of the initialized data in the memory
+        INIT_DATA       : std_logic_vector; -- initialization data vector
+        INIT_START_ADDR : natural -- start address of the initialized data in the memory
     );
     port (
         clk : in std_logic; -- clock signal
@@ -52,15 +56,15 @@ architecture rtl of rom is
     -- definition of the memory type
     type mem_t is array(ADDR_COUNT - 1 downto 0) of std_logic_vector(DATA_WIDTH - 1 downto 0);
     
-    -- Purpose: Initialize memory by sample the INIT_DATA vector to memory data width.
+    -- Purpose: Initialize memory by sampling the INIT_DATA vector to memory data width.
     function mem_init return mem_t is
         variable mem : mem_t; -- memory to be initialized
     begin
         -- loop through all the data to initialize memory
         for i in 0 to (INIT_DATA'length / DATA_WIDTH) - 1 loop
             -- modulo write address and data sampling from original vector implementation
-            mem((INIT_BASE_ADDR + i) mod ADDR_COUNT) :=
-            INIT_DATA((i * DATA_WIDTH) to (i * DATA_WIDTH) + DATA_WIDTH - 1);
+            mem((INIT_START_ADDR + i) mod ADDR_COUNT) := 
+            INIT_DATA(i * DATA_WIDTH to (i * DATA_WIDTH) + DATA_WIDTH - 1);
         end loop;
         return mem;
     end function mem_init;
