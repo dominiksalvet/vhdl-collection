@@ -1,7 +1,4 @@
 --------------------------------------------------------------------------------
--- Standard: VHDL-1993
--- Platform: independent
---------------------------------------------------------------------------------
 -- Description:
 --     Simulation represents an example where the message "cafe" will be
 --     displayed. The seven segment display, which shows "E", has the lowest

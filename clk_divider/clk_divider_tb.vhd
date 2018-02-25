@@ -1,7 +1,4 @@
 --------------------------------------------------------------------------------
--- Standard: VHDL-1993
--- Platform: independent
---------------------------------------------------------------------------------
 -- Description:
 --     Method of testing the module uses increasing freq_div to produce output
 --     clock with less frequency than original one. Then there is a jump to the

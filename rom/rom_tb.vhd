@@ -1,7 +1,4 @@
 --------------------------------------------------------------------------------
--- Standard: VHDL-1993
--- Platform: independent
---------------------------------------------------------------------------------
 -- Description:
 --     Initialize the ROM memory with data that match pattern address = data
 --     and the simulation will verify it with standard sequential reading memory

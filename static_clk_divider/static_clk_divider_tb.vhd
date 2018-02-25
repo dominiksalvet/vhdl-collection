@@ -1,7 +1,4 @@
 --------------------------------------------------------------------------------
--- Standard: VHDL-1993
--- Platform: independent
---------------------------------------------------------------------------------
 -- Description:
 --     Uses FREQ_DIV with value 5 to see that clk_out period is 5 times longer
 --     than the original one of clk. Also value '1' is assigned for 2 clk period
