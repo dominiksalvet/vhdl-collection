@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: pwm.vhd
+-- Standard: VHDL-1993
+-- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the pwm entity with the rtl architecture.
@@ -12,6 +11,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+
+use work.pwm; -- pwm.vhd
 
 
 entity pwm_tb is

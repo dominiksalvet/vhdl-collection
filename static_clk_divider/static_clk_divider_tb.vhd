@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: static_clk_divider.vhd
+-- Standard: VHDL-1993
+-- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the static_clk_divider entity with the rtl architecture.
@@ -16,6 +15,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+
+use work.static_clk_divider; -- static_clk_divider.vhd
 
 
 entity static_clk_divider_tb is

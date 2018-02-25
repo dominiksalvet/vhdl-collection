@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: seg7_driver.vhd
+-- Standard: VHDL-1993
+-- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the seg7_driver entity with the rtl architecture.
@@ -20,6 +19,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+
+use work.seg7_driver; -- seg7_driver.vhd
 
 
 entity seg7_driver_tb is

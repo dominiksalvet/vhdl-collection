@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: rom_shared.vhd, rom.vhd
+-- Standard: VHDL-1993
+-- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the rom entity with the rtl architecture.
@@ -18,7 +17,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.rom_shared.all;
+use work.rom_shared.all; -- rom_shared.vhd
+use work.rom; -- rom.vhd
 
 
 entity rom_tb is

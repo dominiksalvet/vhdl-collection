@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: clk_divider.vhd
+-- Standard: VHDL-1993
+-- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
 --     A test bench of the clk_divider entity with the rtl architecture.
@@ -19,6 +18,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+
+use work.clk_divider; -- clk_divider.vhd
 
 
 entity clk_divider_tb is

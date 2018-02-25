@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: hex_to_seg7.vhd
+-- Standard: VHDL-1993
+-- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
 --     Generic implementation of multiple seven segment displays driver.
@@ -21,12 +20,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+use work.hex_to_seg7; -- hex_to_seg7.vhd
+
 
 entity seg7_driver is
     generic (
-        LED_ON_VALUE    : std_logic; -- LED on state represents this value
-        DIGIT_SEL_VALUE : std_logic; -- digit select represents this value
-        DIGIT_COUNT     : positive -- number of controlled digits
+        LED_ON_VALUE    : std_logic := '1'; -- LED on state represents this value
+        DIGIT_SEL_VALUE : std_logic := '1'; -- digit select represents this value
+        DIGIT_COUNT     : positive := 4 -- number of controlled digits
     );
     port (
         clk : in std_logic; -- clock signal
