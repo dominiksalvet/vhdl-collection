@@ -3,8 +3,6 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     A test bench of the rom entity with the rtl architecture.
---
 --     Initialize the ROM memory with data that match pattern address = data
 --     and the simulation will verify it with standard sequential reading memory
 --     addresses.

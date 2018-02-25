@@ -3,8 +3,6 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     A test bench of the clk_divider entity with the rtl architecture.
-
 --     Method of testing the module uses increasing freq_div to produce output
 --     clock with less frequency than original one. Then there is a jump to the
 --     fastest frequency and it should be sheen a very slow react (at the end of

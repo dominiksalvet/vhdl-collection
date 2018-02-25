@@ -3,8 +3,6 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     A test bench of the seg7_driver entity with the rtl architecture.
---
 --     Simulation represents an example where the message "cafe" will be
 --     displayed. The seven segment display, which shows "E", has the lowest
 --     index and so it is selected by "0001" value on seg7_sel output signal
