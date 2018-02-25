@@ -12,7 +12,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.rom_shared.all; -- rom_shared.vhd
+use work.rom_public.all; -- rom_public.vhd
 use work.rom; -- rom.vhd
 
 

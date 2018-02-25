@@ -3,17 +3,17 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 
-package rom_shared is
+package rom_public is
     
     function create_simple_mem_init_data (
             addr_width : positive;
             data_width : positive
         ) return std_logic_vector;
     
-end package rom_shared;
+end package rom_public;
 
 
-package body rom_shared is
+package body rom_public is
     
     -- Purpose: Create initialization data of source memory with format address = data.
     function create_simple_mem_init_data (
@@ -32,7 +32,7 @@ package body rom_shared is
         return init_data;
     end function create_simple_mem_init_data;
     
-end package body rom_shared;
+end package body rom_public;
 
 
 --------------------------------------------------------------------------------
