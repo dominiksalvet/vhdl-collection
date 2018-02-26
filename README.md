@@ -1,6 +1,6 @@
 **Still need to complete:**
 
-* [`rom_shared.vhd`](rom/rom_shared.vhd)
+* [`ram_tb.vhd`](ram/ram_tb.vhd)
 * [`mem_copier.vhd`](mem_copier/mem_copier.vhd)
 * [`mem_copier_tb.vhd`](mem_copier/mem_copier_tb.vhd)
 * [`pwm.vhd`](pwm/pwm.vhd)
