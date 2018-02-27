@@ -51,7 +51,7 @@ begin
     begin
         if (rising_edge(clk)) then
             
-            if (re = '1') then -- read from the mememmory
+            if (re = '1') then -- read from the memory
                 data_out <= mem(to_integer(unsigned(addr)));
             end if;
             

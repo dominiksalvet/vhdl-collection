@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     First write the data to the memory with respect of the following pattern
---     address = data. Then the simulation will verify the correct memory data
---     by sequential reading the memory addresses.
+--     address=data. Then the simulation will verify the correct memory data by
+--     sequential reading the memory addresses.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. To verify the module by its current implemetantion, it is required

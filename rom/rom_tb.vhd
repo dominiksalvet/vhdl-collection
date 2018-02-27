@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- Description:
---     Initialize the ROM memory with data that match pattern address = data
---     and the simulation will verify it with standard sequential reading memory
+--     Initialize the ROM memory with data that match pattern address=data and
+--     the simulation will verify it with standard sequential reading memory
 --     addresses.
 --------------------------------------------------------------------------------
 -- Notes:

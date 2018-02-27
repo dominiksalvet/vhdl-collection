@@ -15,7 +15,7 @@ end package rom_public;
 
 package body rom_public is
     
-    -- Purpose: Create initialization data of source memory with format address = data.
+    -- Purpose: Create initialization data of source memory with format address=data.
     function create_simple_mem_init_data (
             addr_width : positive; -- target memory address bus bit width
             data_width : positive -- target memory data bus bit width

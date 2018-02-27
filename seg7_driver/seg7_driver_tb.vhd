@@ -3,8 +3,8 @@
 --     Simulation represents an example where the message "cafe" will be
 --     displayed. The seven segment display, which shows "E", has the lowest
 --     index and so it is selected by "0001" value on seg7_sel output signal
---     (eventually "1110"). After 8 * CLK_PERIOD, the message will be changed
---     to the "face".
+--     (eventually "1110"). After 8*CLK_PERIOD, the message will be changed to
+--     the "face".
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Do not change DIGIT_COUNT unless you know the impact on the
@@ -110,7 +110,7 @@ begin
         
         assert (seg7_data = (C_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
             report "Invalid data sent to the seg7_data output!" severity error;
-        wait for 5 * CLK_PERIOD; -- need to wait 9 * CLK_PERIOD until the "face" message starts
+        wait for 5 * CLK_PERIOD; -- need to wait 9*CLK_PERIOD until the "face" message starts
         
         -- "face" message
         assert (seg7_data = (E_SEG7_FORM xor (6 downto 0 => not LED_ON_VALUE)))
