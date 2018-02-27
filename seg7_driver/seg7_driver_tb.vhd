@@ -24,12 +24,12 @@ end entity seg7_driver_tb;
 
 architecture behavior of seg7_driver_tb is
     
-    -- seg7_driver generics
+    -- uut generics
     constant LED_ON_VALUE    : std_logic := '1';
     constant DIGIT_SEL_VALUE : std_logic := '1';
     constant DIGIT_COUNT     : positive  := 4;
     
-    -- seg7_driver ports
+    -- uut ports
     signal clk : std_logic := '0';
     signal rst : std_logic := '0';
     

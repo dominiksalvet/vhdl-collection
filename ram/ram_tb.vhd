@@ -23,11 +23,11 @@ end entity ram_tb;
 
 architecture behavior of ram_tb is
     
-    -- ram generics
+    -- uut generics
     constant ADDR_WIDTH : positive := 4;
     constant DATA_WIDTH : positive := 8;
     
-    -- ram ports
+    -- uut ports
     signal clk : std_logic := '0';
     
     signal we       : std_logic                                 := '0';

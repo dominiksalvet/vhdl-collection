@@ -22,7 +22,7 @@ end entity rom_tb;
 
 architecture behavior of rom_tb is
     
-    -- rom generics
+    -- uut generics
     constant ADDR_WIDTH : positive := 4;
     constant DATA_WIDTH : positive := 8;
     
@@ -30,7 +30,7 @@ architecture behavior of rom_tb is
         create_simple_mem_init_data(ADDR_WIDTH, DATA_WIDTH);
     constant INIT_START_ADDR : natural := 0;
     
-    -- rom ports
+    -- uut ports
     signal clk : std_logic := '0';
     
     signal re       : std_logic                                 := '0';

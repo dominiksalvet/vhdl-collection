@@ -17,10 +17,10 @@ end entity pwm_tb;
 
 architecture behavior of pwm_tb is
     
-    -- pwm generics
+    -- uut generics
     constant PERIOD : positive := 8; 
     
-    -- pwm ports
+    -- uut ports
     signal clk : std_logic := '0';
     signal rst : std_logic := '0';
     

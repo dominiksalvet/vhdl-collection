@@ -43,7 +43,7 @@ end entity seg7_driver;
 
 architecture rtl of seg7_driver is
     
-    -- hex_to_seg7 ports
+    -- hex_to_seg7_0 ports
     signal hts_hex_data  : std_logic_vector(3 downto 0);
     signal hts_seg7_data : std_logic_vector(6 downto 0);
     

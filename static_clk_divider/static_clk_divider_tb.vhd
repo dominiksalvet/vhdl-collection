@@ -20,10 +20,10 @@ end entity static_clk_divider_tb;
 
 architecture behavior of static_clk_divider_tb is
     
-    -- static_clk_divider generics
+    -- uut generics
     constant FREQ_DIV : positive range 2 to positive'high := 5; 
     
-    -- static_clk_divider ports
+    -- uut ports
     signal clk     : std_logic := '0';
     signal rst     : std_logic := '0';
     signal clk_out : std_logic;

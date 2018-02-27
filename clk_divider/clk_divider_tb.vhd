@@ -23,10 +23,10 @@ end entity clk_divider_tb;
 
 architecture behavior of clk_divider_tb is
     
-    -- clk_divider generics
+    -- uut generics
     constant FREQ_DIV_MAX_VALUE : positive := 7;
     
-    -- clk_divider ports
+    -- uut ports
     signal clk : std_logic := '0';
     signal rst : std_logic := '0';
     
