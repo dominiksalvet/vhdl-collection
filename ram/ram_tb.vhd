@@ -1,7 +1,12 @@
 --------------------------------------------------------------------------------
 -- Description:
+--     First write the data to the memory with respect of the following pattern
+--     address = data. Then the simulation will verify the correct memory data
+--     by sequential reading the memory addresses.
 --------------------------------------------------------------------------------
 -- Notes:
+--     1. To verify the module by its current implemetantion, it is required
+--        2^(n+1) steps where n=ADDR_WIDTH.
 --------------------------------------------------------------------------------
 
 
@@ -28,7 +33,7 @@ architecture behavior of ram_tb is
     signal we       : std_logic                                 := '0';
     signal re       : std_logic                                 := '0';
     signal addr     : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
-    signal data_in  : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal data_in  : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
     signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
@@ -44,7 +49,7 @@ begin
         )
         port map (
             clk => clk,
-
+            
             we       => we,
             re       => re,
             addr     => addr,
@@ -64,6 +69,22 @@ begin
     -- Purpose: Stimulus process.
     stim_proc : process
     begin
+        
+        we <= '1';
+        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
+            addr    <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
+            data_in <= std_logic_vector(to_unsigned(i, DATA_WIDTH));
+            wait for CLK_PERIOD;
+        end loop;
+        
+        we <= '0';
+        re <= '1';
+        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
+            addr <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
+            wait for CLK_PERIOD;
+            assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
+                report "The read data does not match pattern address=data!" severity error;
+        end loop;
         
         wait;
         
