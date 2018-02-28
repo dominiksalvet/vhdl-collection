@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
+--     The simulations increments the duty value per each pwm period. It also
+--     checks pwm_out value at critical points - half period before falling edge
+--     of the pwm_out signal (should be '1') and half period after (should be
+--     '0').
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -30,6 +34,8 @@ architecture behavior of pwm_tb is
     -- clock period definition
     constant CLK_PERIOD : time := 10 ns;
     
+    signal test_pwm_out : std_logic := '0';
+    
 begin
     
     -- instantiate the unit under test (uut)
@@ -57,6 +63,29 @@ begin
     -- Purpose: Stimulus process.
     stim_proc : process
     begin
+        
+        rst <= '1';
+        wait for CLK_PERIOD;
+        
+        rst <= '0';
+        wait for CLK_PERIOD;
+        
+        assert (pwm_out = '0')
+            report "Inverse pwm_out value expected!" severity error;
+        wait for (PERIOD - 2) * CLK_PERIOD;
+        
+        for i in 0 to (PERIOD ** 2) - 1 loop
+            if (i mod PERIOD = 0) then
+                duty <= duty + 1;
+            end if;
+            wait for CLK_PERIOD;
+            if (i mod PERIOD = duty) then
+                test_pwm_out <= '1';
+            end if;
+            if (i mod PERIOD = duty + 1) then
+                test_pwm_out <= '0';
+            end if;
+        end loop;
         
         wait;
         
