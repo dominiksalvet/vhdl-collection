@@ -31,7 +31,7 @@ entity clk_divider is
         clk : in std_logic; -- input clock signal
         rst : in std_logic; -- reset signal
         
-        -- clk frequency is divided by value of this number, clk_out=clk/freq_div
+        -- clk frequency is divided by value of this number, <clk_out_freq>=<clk_freq>/freq_div
         freq_div : in  positive range 1 to FREQ_DIV_MAX_VALUE;
         clk_out  : out std_logic -- final output clock
     );

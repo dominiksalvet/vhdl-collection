@@ -20,7 +20,8 @@ use ieee.numeric_std.all;
 
 entity static_clk_divider is
     generic (
-        FREQ_DIV : positive range 2 to positive'high -- frequency divisor, clk_out=clk/FREQ_DIV
+        -- frequency divisor, <clk_out_freq>=<clk_freq>/FREQ_DIV
+        FREQ_DIV : positive range 2 to positive'high
     );
     port (
         clk     : in  std_logic; -- input clock signal
