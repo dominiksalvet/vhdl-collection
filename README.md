@@ -2,8 +2,6 @@
 
 * [`mem_copier.vhd`](mem_copier/mem_copier.vhd)
 * [`mem_copier_tb.vhd`](mem_copier/mem_copier_tb.vhd)
-* [`pwm.vhd`](pwm/pwm.vhd)
-* [`pwm_tb.vhd`](pwm/pwm_tb.vhd)
 * `README.md` - this file
 
 # VHDL Utilites
