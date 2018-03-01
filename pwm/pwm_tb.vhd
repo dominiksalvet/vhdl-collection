@@ -1,9 +1,12 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     The simulations increments the duty value per each pwm period. It also
---     checks pwm_out value at critical points - half period before falling edge
---     of the pwm_out signal (should be '1') and half period after (should be
---     '0').
+--     checks pwm_out value at critical points - half clk period before falling
+--     edge of the pwm_out signal (should be '1') and half period after (should
+--     be '0'). Then, it will change duty from 8 to 0 half of clk period after
+--     the pwm_out period begins. This demonstrates the function of internal
+--     register and so duty is stored and will not change until new beginning
+--     of the pwm_out period.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -34,8 +37,6 @@ architecture behavior of pwm_tb is
     -- clock period definition
     constant CLK_PERIOD : time := 10 ns;
     
-    signal test_pwm_out : std_logic := '0';
-    
 begin
     
     -- instantiate the unit under test (uut)
@@ -64,40 +65,57 @@ begin
     stim_proc : process
     begin
         
-        rst <= '1';
+        rst <= '1'; -- module initialization
         wait for CLK_PERIOD;
         
         rst <= '0';
         wait for CLK_PERIOD;
         
+        -- checks correct value of the first part of the pwm_out signal for duty=0
         assert (pwm_out = '0')
             report "Inverse pwm_out value expected!" severity error;
-        wait for (PERIOD - 2) * CLK_PERIOD;
+        wait for (PERIOD - 1) * CLK_PERIOD; -- pass the section with duty=0
         
+        -- incrementing duty value, one duty per pwm_out period (as the loop parameters define)
         for i in 0 to (PERIOD ** 2) - 1 loop
-            if (i mod PERIOD = 0) then
+            
+            if (i mod PERIOD = 0) then -- new pwm_out period
                 duty <= duty + 1;
             end if;
-            wait for CLK_PERIOD;
-            if (i mod PERIOD = duty) then
-                test_pwm_out <= '1';
+            wait for CLK_PERIOD; -- wait to get to individual parts of pwm period
+            
+            -- half clk period before falling edge of the pwm_out signal
+            if (i mod PERIOD = (duty - 1) mod (PERIOD + 1)) then
+                assert (pwm_out = '1')
+                    report "Inverse pwm_out value expected!" severity error;
+                -- half clk period after falling edge of the pwm_out signal
+            elsif (i mod PERIOD = duty mod (PERIOD + 1)) then
+                assert (pwm_out = '0')
+                    report "Inverse pwm_out value expected!" severity error;
             end if;
-            if (i mod PERIOD = duty + 1) then
-                test_pwm_out <= '0';
-            end if;
+            
         end loop;
+        -- apply delay for simulate late duty change
+        wait for CLK_PERIOD;
         
+        duty <= 0; -- duty 0 will be accepted after already started pwm_out period
+        wait for CLK_PERIOD; -- wait one clk to verify the behavior described above
+        
+        assert (pwm_out = '1') -- pwm_out must be '1', duty to 0 has been changed too late
+            report "Inverse pwm_out value expected!" severity error;
+        -- get to the time half period before clk_pwm falling edge
+        wait for (PERIOD - 2) * CLK_PERIOD;
+        
+        assert (pwm_out = '1')
+            report "Inverse pwm_out value expected!" severity error;
+        -- get to the time half period after clk_pwm falling edge
+        wait for CLK_PERIOD;
+        
+        assert (pwm_out = '0')
+            report "Inverse pwm_out value expected!" severity error;
         wait;
         
     end process stim_proc;
-    
-    -- Purpose: Control process.
-    contr_proc : process
-    begin
-        
-        wait;
-        
-    end process contr_proc;
     
 end architecture behavior;
 
