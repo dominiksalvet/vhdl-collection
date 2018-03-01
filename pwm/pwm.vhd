@@ -14,7 +14,7 @@ use ieee.std_logic_1164.all;
 
 entity pwm is
     generic (
-        PERIOD : positive
+        PERIOD : positive := 8
     );
     port (
         clk : in std_logic;
@@ -31,28 +31,29 @@ begin
     
     pwm_sampling : process (clk)
         variable duty_reg : natural range 0 to PERIOD;
-        variable counter  : natural range 0 to PERIOD - 1;
+        variable counter  : natural range 0 to PERIOD;
     begin
         if (rising_edge(clk)) then
             if (rst = '1') then
-                
-                duty_reg := duty;
-                counter  := 0;
-                pwm_out  <= '0';
-                
+                counter := PERIOD;
+                pwm_out <= '0';
             else
                 
-                if (counter < duty_reg) then
-                    pwm_out <= '1';
-                else
-                    pwm_out <= '0';
-                end if;
-                
-                if (counter < PERIOD - 1) then
+                if (counter < PERIOD) then
+                    if (counter < duty_reg) then
+                        pwm_out <= '1';
+                    else
+                        pwm_out <= '0';
+                    end if;
                     counter := counter + 1;
                 else
+                    if (duty = 0) then
+                        pwm_out <= '0';
+                    else
+                        pwm_out <= '1';
+                    end if;
                     duty_reg := duty;
-                    counter  := 0;
+                    counter  := 1;
                 end if;
                 
             end if;
