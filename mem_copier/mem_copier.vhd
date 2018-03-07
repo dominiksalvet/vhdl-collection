@@ -90,10 +90,12 @@ begin
             end if;
             
             if (copy_en = '0') then
-                copy_cmplt <= '0';
-                src_re_reg <= '0';
-                tar_we_reg <= '0';
-                state      := READ_INIT;
+                copy_cmplt   <= '0';
+                src_re_reg   <= '0';
+                src_addr_reg <= (others => '0');
+                tar_we_reg   <= '0';
+                tar_addr_reg <= (others => '0');
+                state        := READ_INIT;
             else
                 case (state) is
                     when READ_INIT => 
