@@ -1,15 +1,9 @@
 --------------------------------------------------------------------------------
--- Standard:    VHDL-1993
--- Platform:    independent
--- Dependecies: mem_copier.vhd, rom.vhd, ram.vhd
---------------------------------------------------------------------------------
 -- Description:
---     A test bench of the mem_copier entity with the rtl architecture.
---
 --     The test bench simulates to copy first 4 bytes from the source memory to
 --     the last 4 bytes of the target memory. After verify that the data were
---     correctly written, the whole source memory image is transfered to the
---     target memory.
+--     correctly written, the whole source memory image is copied to the target
+--     memory.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -17,6 +11,14 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+use work.mem_copier; -- mem_copier.vhd
+
+use work.rom; -- rom.vhd
+use work.rom_public.all; -- rom_public.vhd
+
+use work.ram; -- ram.vhd
 
 
 entity mem_copier_tb is
@@ -25,28 +27,33 @@ end entity mem_copier_tb;
 
 architecture behavior of mem_copier_tb is
     
-    constant CLK_PERIOD : time := 10 ns; -- clock period definition
-    
-    -- mem_copier generics
+    -- uut generics
     constant SRC_ADDR_WIDTH : positive := 4;
     constant TAR_ADDR_WIDTH : positive := 4;
-    constant DATA_WIDTH     : positive := 8; -- addressing by bytes
+    constant DATA_WIDTH     : positive := 8;
     
-    -- mem_copier ports
+    -- uut ports
     signal clk        : std_logic := '0';
     signal copy_en    : std_logic := '0';
     signal copy_cmplt : std_logic;
     
     signal start_src_addr  : natural range 0 to (2 ** SRC_ADDR_WIDTH) - 1 := 0;
     signal start_tar_addr  : natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1 := 0;
-    signal copy_addr_count : natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1 := 0;
+    signal copy_addr_count : positive range 1 to 2 ** TAR_ADDR_WIDTH      := 1;
     
     signal src_data_in : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal src_re      : std_logic;
     signal src_addr    : std_logic_vector(SRC_ADDR_WIDTH - 1 downto 0);
     
     signal tar_we       : std_logic;
     signal tar_addr     : std_logic_vector(TAR_ADDR_WIDTH - 1 downto 0);
     signal tar_data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
+    
+    -- tar_mem ports
+    signal tm_data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
+    
+    -- clock period definition
+    constant CLK_PERIOD : time := 10 ns;
     
 begin
     
@@ -67,6 +74,7 @@ begin
             copy_addr_count => copy_addr_count,
             
             src_data_in => src_data_in,
+            src_re      => src_re,
             src_addr    => src_addr,
             
             tar_we       => tar_we,
@@ -74,11 +82,14 @@ begin
             tar_data_out => tar_data_out
         );
     
-    -- source memory that is used for simulation as read-only
+    -- instantiate source memory to copy data from
     src_mem : entity work.rom(rtl)
         generic map (
             ADDR_WIDTH => SRC_ADDR_WIDTH,
-            DATA_WIDTH => DATA_WIDTH
+            DATA_WIDTH => DATA_WIDTH,
+            
+            INIT_DATA       => create_simple_mem_init_data(SRC_ADDR_WIDTH, DATA_WIDTH),
+            INIT_START_ADDR => 0
         )
         port map (
             clk => clk,
@@ -88,10 +99,10 @@ begin
             data_out => src_data_in
         );
     
-    -- target memory to copy data to
+    -- instantiate target memory to copy data to
     tar_mem : entity work.ram(rtl)
         generic map (
-            ADDR_WIDTH => SRC_ADDR_WIDTH,
+            ADDR_WIDTH => TAR_ADDR_WIDTH,
             DATA_WIDTH => DATA_WIDTH
         )
         port map (
@@ -101,7 +112,7 @@ begin
             re       => '1',
             addr     => tar_addr,
             data_in  => tar_data_out,
-            data_out => open
+            data_out => tm_data_out
         );
     
     -- Purpose: Clock process definition.
@@ -117,6 +128,16 @@ begin
     stim_proc : process
     begin
         
+        -- serves as initialize the module as '0' value of copy_en behaves like that
+        wait for CLK_PERIOD;
+        
+        copy_en         <= '1';
+        start_tar_addr  <= (2 ** TAR_ADDR_WIDTH) - 4;
+        copy_addr_count <= 4;
+        wait until copy_cmplt = '1';
+        wait for CLK_PERIOD;
+        
+        copy_en <= '0';
         wait;
         
     end process stim_proc;
