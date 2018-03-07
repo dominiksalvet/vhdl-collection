@@ -10,6 +10,13 @@
 -- Notes:
 --     1. The copy_en input must have '1' value for all the time of copying the
 --        data as the '0' value behaves like synchronous reset signal.
+--     2. To reach the highest maximal clk frequency, the module uses internal
+--        buffer for read data, so there is 2 clk delay until read data actually
+--        write to the target memory.
+--     3. The src_re and tar_we signals have '1' value only for necessary time.
+--     4. When an address of one of the memories should exceed the maximal
+--        memory address, the modulo function with value of maximal address of
+--        the memory will be applied to calculate the final address.
 --------------------------------------------------------------------------------
 
 
@@ -20,24 +27,30 @@ use ieee.numeric_std.all;
 
 entity mem_copier is
     generic (
-        SRC_ADDR_WIDTH : positive;
-        TAR_ADDR_WIDTH : positive;
-        DATA_WIDTH     : positive
+        SRC_ADDR_WIDTH : positive; -- bit width of source memory address bus
+        TAR_ADDR_WIDTH : positive; -- bit width of target memory address bus
+        DATA_WIDTH     : positive -- bit width of data of both memories
     );
     port (
-        clk        : in  std_logic;
-        copy_en    : in  std_logic; -- in '0' reacts like a reset signal
+        clk : in std_logic; -- clock signal
+        -- use '1' to start the copying, the '0' value on this signal behaves like synchronous reset
+        copy_en : in std_logic;
+        -- when copying is done, '1' is hold on this signal until reset is performed
         copy_cmplt : out std_logic;
         
-        start_src_addr : in natural range 0 to (2 ** SRC_ADDR_WIDTH) - 1;
-        start_tar_addr : in natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1;
-        -- assign copy_addr_count to 0 to program the whole target's address space
+        -- start address to read from the source memory
+        src_start_addr : in natural range 0 to (2 ** SRC_ADDR_WIDTH) - 1;
+        -- start address to write to the target memory
+        tar_start_addr : in natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1;
+        -- number of addresses to copy
         copy_addr_count : in positive range 1 to 2 ** TAR_ADDR_WIDTH;
         
+        -- signals for the source memory (which will be read from)
         src_data_in : in  std_logic_vector(DATA_WIDTH - 1 downto 0);
         src_re      : out std_logic;
         src_addr    : out std_logic_vector(SRC_ADDR_WIDTH - 1 downto 0);
         
+        -- signals for the target memory (which will be written to)
         tar_we       : out std_logic;
         tar_addr     : out std_logic_vector(TAR_ADDR_WIDTH - 1 downto 0);
         tar_data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0)
@@ -47,13 +60,13 @@ end entity mem_copier;
 
 architecture rtl of mem_copier is
     
+    -- buffers for the source memory signals
     signal src_re_reg   : std_logic;
     signal src_addr_reg : unsigned(SRC_ADDR_WIDTH - 1 downto 0);
     
+    -- buffers for the target memory signals
     signal tar_we_reg   : std_logic;
     signal tar_addr_reg : unsigned(TAR_ADDR_WIDTH - 1 downto 0);
-    
-    signal steps_left : natural range 0 to (2 ** TAR_ADDR_WIDTH) + 1;
     
 begin
     
@@ -65,14 +78,18 @@ begin
     
     tar_addr <= std_logic_vector(tar_addr_reg);
     
+    -- Inputs:  clk, src_re_reg, src_addr_reg, tar_we_reg, tar_addr_reg, src_data_in, copy_en,
+    --          src_start_addr, tar_start_addr, copy_addr_count
+    -- Outputs: src_re_reg, src_addr_reg, copy_cmplt, tar_we_reg, tar_addr_reg, tar_data_out
+    -- Purpose: Performs memory copying by using internal buffer to speed up the process.
     mem_copying : process (clk)
+        -- definition of state of the process to describe individual stages
         type state_t is (READ_INIT, READ_WAIT, WRITE_INIT, WRITE);
-        variable state : state_t;
+        variable state : state_t; -- declaration of the state variable
+        -- number of steps left to complete the required copying (number of clk rising edges)
+        variable steps_left : natural range 0 to (2 ** TAR_ADDR_WIDTH) + 1;
     begin
         if (rising_edge(clk)) then
-            
-            tar_data_out <= src_data_in;
-            steps_left   <= steps_left - 1;
             
             if (src_re_reg = '1') then
                 if (steps_left = 2) then
@@ -89,6 +106,9 @@ begin
                 tar_addr_reg <= tar_addr_reg + 1;
             end if;
             
+            tar_data_out <= src_data_in;
+            steps_left   := steps_left - 1;
+            
             if (copy_en = '0') then
                 copy_cmplt   <= '0';
                 src_re_reg   <= '0';
@@ -100,9 +120,9 @@ begin
                 case (state) is
                     when READ_INIT => 
                         src_re_reg   <= '1';
-                        src_addr_reg <= to_unsigned(start_src_addr, SRC_ADDR_WIDTH);
-                        tar_addr_reg <= to_unsigned(start_tar_addr, TAR_ADDR_WIDTH);
-                        steps_left   <= copy_addr_count + 1;
+                        src_addr_reg <= to_unsigned(src_start_addr, SRC_ADDR_WIDTH);
+                        tar_addr_reg <= to_unsigned(tar_start_addr, TAR_ADDR_WIDTH);
+                        steps_left   := copy_addr_count + 1;
                         state        := READ_WAIT;
                     when READ_WAIT => 
                         state := WRITE_INIT;
