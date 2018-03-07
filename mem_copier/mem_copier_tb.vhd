@@ -37,8 +37,8 @@ architecture behavior of mem_copier_tb is
     signal copy_en    : std_logic := '0';
     signal copy_cmplt : std_logic;
     
-    signal start_src_addr  : natural range 0 to (2 ** SRC_ADDR_WIDTH) - 1 := 0;
-    signal start_tar_addr  : natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1 := 0;
+    signal src_start_addr  : natural range 0 to (2 ** SRC_ADDR_WIDTH) - 1 := 0;
+    signal tar_start_addr  : natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1 := 0;
     signal copy_addr_count : positive range 1 to 2 ** TAR_ADDR_WIDTH      := 1;
     
     signal src_data_in : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
@@ -69,8 +69,8 @@ begin
             copy_en    => copy_en,
             copy_cmplt => copy_cmplt,
             
-            start_src_addr  => start_src_addr,
-            start_tar_addr  => start_tar_addr,
+            src_start_addr  => src_start_addr,
+            tar_start_addr  => tar_start_addr,
             copy_addr_count => copy_addr_count,
             
             src_data_in => src_data_in,
@@ -132,7 +132,7 @@ begin
         wait for CLK_PERIOD;
         
         copy_en         <= '1';
-        start_tar_addr  <= 8;
+        tar_start_addr  <= 8;
         copy_addr_count <= 16;
         wait until copy_cmplt = '1';
         wait for CLK_PERIOD;
