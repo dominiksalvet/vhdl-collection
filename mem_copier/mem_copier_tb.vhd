@@ -94,7 +94,7 @@ begin
         port map (
             clk => clk,
             
-            re       => '1',
+            re       => src_re,
             addr     => src_addr,
             data_out => src_data_in
         );
@@ -109,7 +109,7 @@ begin
             clk => clk,
             
             we       => tar_we,
-            re       => '1',
+            re       => '0',
             addr     => tar_addr,
             data_in  => tar_data_out,
             data_out => tm_data_out
@@ -132,8 +132,8 @@ begin
         wait for CLK_PERIOD;
         
         copy_en         <= '1';
-        start_tar_addr  <= (2 ** TAR_ADDR_WIDTH) - 4;
-        copy_addr_count <= 4;
+        start_tar_addr  <= 8;
+        copy_addr_count <= 16;
         wait until copy_cmplt = '1';
         wait for CLK_PERIOD;
         
