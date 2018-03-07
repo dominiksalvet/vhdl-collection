@@ -64,7 +64,8 @@ begin
     tar_addr <= std_logic_vector(to_unsigned(tar_addr_reg, TAR_ADDR_WIDTH));
     
     mem_copying : process (clk)
-        variable to_copy_count : natural range 0 to 2 ** TAR_ADDR_WIDTH;
+        variable read_addr_count  : natural range 0 to 2 ** TAR_ADDR_WIDTH;
+        variable write_addr_count : natural range 0 to 2 ** TAR_ADDR_WIDTH;
         type state_t is (READ_INIT, READ_WAIT, WRITE_INIT, WRITE);
         variable state : state_t;
     begin
@@ -74,18 +75,19 @@ begin
             
             if (src_re_reg = '1') then
                 src_addr_reg <= src_addr_reg + 1;
-                if (to_copy_count = 3) then
+                if (read_addr_count = 1) then
                     src_re_reg <= '0';
                 end if;
+                read_addr_count := read_addr_count - 1;
             end if;
             
             if (tar_we_reg = '1') then
                 tar_addr_reg <= tar_addr_reg + 1;
-                if (to_copy_count = 1) then
+                if (write_addr_count = 1) then
                     copy_cmplt <= '1';
                     tar_we_reg <= '0';
                 end if;
-                to_copy_count := to_copy_count - 1;
+                write_addr_count := write_addr_count - 1;
             end if;
             
             if (copy_en = '0') then
@@ -97,11 +99,12 @@ begin
                 
                 case (state) is
                     when READ_INIT => 
-                        src_re_reg    <= '1';
-                        src_addr_reg  <= start_src_addr;
-                        tar_addr_reg  <= start_tar_addr;
-                        to_copy_count := copy_addr_count;
-                        state         := READ_WAIT;
+                        src_re_reg       <= '1';
+                        src_addr_reg     <= start_src_addr;
+                        tar_addr_reg     <= start_tar_addr;
+                        read_addr_count  := copy_addr_count;
+                        write_addr_count := copy_addr_count;
+                        state            := READ_WAIT;
                     when READ_WAIT => 
                         state := WRITE_INIT;
                     when WRITE_INIT => 
