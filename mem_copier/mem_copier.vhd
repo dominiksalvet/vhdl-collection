@@ -91,44 +91,48 @@ begin
     begin
         if (rising_edge(clk)) then
             
-            if (src_re_reg = '1') then
+            if (src_re_reg = '1') then -- read has been performed at previous clk rising edge
+                -- 2 steps left only when writing it is required to be completed
                 if (steps_left = 2) then
-                    src_re_reg <= '0';
+                    src_re_reg <= '0'; -- disable read the source memory
                 end if;
-                src_addr_reg <= src_addr_reg + 1;
+                src_addr_reg <= src_addr_reg + 1; -- increment source memory address
             end if;
             
-            if (tar_we_reg = '1') then
-                if (steps_left = 0) then
-                    copy_cmplt <= '1';
-                    tar_we_reg <= '0';
+            if (tar_we_reg = '1') then -- write has been performed at previous clk rising edge
+                if (steps_left = 0) then -- all the copying process is now completed
+                    copy_cmplt <= '1'; -- copy complete indicate
+                    tar_we_reg <= '0'; -- disable write to the target memory
                 end if;
-                tar_addr_reg <= tar_addr_reg + 1;
+                tar_addr_reg <= tar_addr_reg + 1; -- increment target memory address
             end if;
             
-            tar_data_out <= src_data_in;
-            steps_left   := steps_left - 1;
+            tar_data_out <= src_data_in; -- move data from source memory bus to target memory bus
+            steps_left   := steps_left - 1; -- decrement steps left
             
-            if (copy_en = '0') then
+            if (copy_en = '0') then -- synchronous reset clause, module initialization
                 copy_cmplt   <= '0';
                 src_re_reg   <= '0';
                 src_addr_reg <= (others => '0');
                 tar_we_reg   <= '0';
                 tar_addr_reg <= (others => '0');
-                state        := READ_INIT;
+                -- after the synchronous reset, the process will continue in state READ_INIT
+                state := READ_INIT;
             else
-                case (state) is
-                    when READ_INIT => 
+                case (state) is -- state transitions and driving control signals
+                    when READ_INIT => -- initialize the read process, store parameters
                         src_re_reg   <= '1';
+                        -- store memory start address to be independent of the inputs
                         src_addr_reg <= to_unsigned(src_start_addr, SRC_ADDR_WIDTH);
                         tar_addr_reg <= to_unsigned(tar_start_addr, TAR_ADDR_WIDTH);
+                        -- total steps must assume the first memory read delay
                         steps_left   := copy_addr_count + 1;
                         state        := READ_WAIT;
-                    when READ_WAIT => 
+                    when READ_WAIT => -- wait for the first read to fill a pipeline
                         state := WRITE_INIT;
-                    when WRITE_INIT => 
+                    when WRITE_INIT => -- perform the first write to the target memory
                         tar_we_reg <= '1';
-                        state      := WRITE;
+                        state      := WRITE; -- unlock forcing tar_we_reg signal to '1'
                     when others => null;
                 end case;
             end if;
