@@ -1,9 +1,10 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     The test bench simulates to copy first 4 bytes from the source memory to
---     the last 4 bytes of the target memory. After verify that the data were
---     correctly written, the whole source memory image is copied to the target
---     memory.
+--     the last 4 bytes of the target memory. After verifying that control
+--     signals were correct, the whole source memory image is copied to the
+--     target memory from it's half addresses to test the modulo function. The
+--     data transfering itself now will be verifying.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -88,6 +89,7 @@ begin
             ADDR_WIDTH => SRC_ADDR_WIDTH,
             DATA_WIDTH => DATA_WIDTH,
             
+            -- initialize the memory with the address=data pattern
             INIT_DATA       => create_simple_mem_init_data(SRC_ADDR_WIDTH, DATA_WIDTH),
             INIT_START_ADDR => 0
         )
@@ -109,7 +111,7 @@ begin
             clk => clk,
             
             we       => tar_we,
-            re       => '0',
+            re       => '0', -- it is not required to read the data back
             addr     => tar_addr,
             data_in  => tar_data_out,
             data_out => tm_data_out
@@ -128,27 +130,49 @@ begin
     stim_proc : process
     begin
         
-        -- serves as initialize the module as '0' value of copy_en behaves like that
-        wait for CLK_PERIOD;
+        wait for CLK_PERIOD; -- delay to initialize the uut
         
         copy_en         <= '1';
-        tar_start_addr  <= 8;
-        copy_addr_count <= 16;
-        wait until copy_cmplt = '1';
+        tar_start_addr  <= (2 ** TAR_ADDR_WIDTH) - 4; -- the last 4 addresses of the target memory
+        copy_addr_count <= 4;
         wait for CLK_PERIOD;
         
-        copy_en <= '0';
+        assert (src_re = '1')
+            report "Read should have been already started!" severity error;
+        wait for CLK_PERIOD;
+        
+        assert (tar_we = '0')
+            report "Data to be written to the target memory are not defined, " &
+            "write must not be enabled." severity error;
+        wait for CLK_PERIOD;
+        
+        assert (tar_we = '1')
+            report "Write should been already started!" severity error;
+        wait for CLK_PERIOD;
+        
+        assert (src_re = '1')
+            report "It is required to read another data!" severity error;
+        wait for CLK_PERIOD;
+        
+        assert (src_re = '0')
+            report "All required data are now read, read signal should be '0'!" severity error;
+        wait for CLK_PERIOD;
+        
+        assert (tar_we = '1')
+            report "It is required to write one more byte of data!" severity error;
+        wait for CLK_PERIOD;
+        
+        assert (tar_we = '0' and copy_cmplt = '1')
+            report "Write now must be done, tar_we signal should '0' " &
+            "and copy_cmplt should be '1' to indicate the finished copying!" severity error;
+        copy_en <= '0'; -- copying has been done
+        wait for CLK_PERIOD;
+        
+        assert (copy_cmplt = '0')
+            report "The copy_cmplt signal must have '0' now!" severity error;
         wait;
         
     end process stim_proc;
-    
-    -- Purpose: Control process.
-    contr_proc : process
-    begin
-        
-        wait;
-        
-    end process contr_proc;
     
 end architecture behavior;
 
