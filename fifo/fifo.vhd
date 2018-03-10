@@ -44,26 +44,35 @@ architecture rtl of fifo is
     
 begin
     
-    full <= '1' when wr_index + 1 = rd_index else '0';
-    
-    empty <= '1' when wr_index = rd_index else '0';
-    
     mem_access : process (clk)
     begin
         if (rising_edge(clk)) then
+            
             if (rst = '1') then
+                empty    <= '1';
+                full     <= '0';
                 wr_index <= (others => '0');
                 rd_index <= (others => '0');
             else
                 
                 if (we = '1') then
+                    empty                     <= '0';
                     mem(to_integer(wr_index)) <= data_in;
                     wr_index                  <= wr_index + 1;
+                    
+                    if (re = '0' and wr_index + 1 = rd_index) then
+                        full <= '1';
+                    end if;
                 end if;
                 
                 if (re = '1') then
+                    full     <= '0';
                     data_out <= mem(to_integer(rd_index));
                     rd_index <= rd_index + 1;
+                    
+                    if (we = '0' and rd_index + 1 = wr_index) then
+                        empty <= '1';
+                    end if;
                 end if;
                 
             end if;
