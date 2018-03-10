@@ -14,11 +14,77 @@ use ieee.numeric_std.all;
 
 
 entity lifo is
+    generic (
+        INDEX_WIDTH : positive := 8;
+        DATA_WIDTH  : positive := 8
+    );
+    port (
+        clk : in std_logic;
+        rst : in std_logic;
+        
+        we      : in  std_logic;
+        data_in : in  std_logic_vector(DATA_WIDTH - 1 downto 0);
+        full    : out std_logic;
+        
+        re       : in  std_logic;
+        data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0);
+        empty    : out std_logic
+    );
 end entity lifo;
 
 
 architecture rtl of lifo is
+    
+    type mem_t is array((2 ** INDEX_WIDTH) - 1 downto 0) of
+        std_logic_vector(DATA_WIDTH - 1 downto 0);
+    signal mem : mem_t;
+    
+    signal wr_index : unsigned(INDEX_WIDTH - 1 downto 0);
+    signal rd_index : unsigned(INDEX_WIDTH - 1 downto 0);
+    
 begin
+    
+    rd_index <= wr_index - 1;
+    
+    mem_access : process (clk)
+    begin
+        if (rising_edge(clk)) then
+            if (rst = '1') then
+                full     <= '0';
+                empty    <= '1';
+                wr_index <= (others => '0');
+            else
+                
+                if (we = '1' and re = '1') then
+                    data_out <= data_in;
+                else
+                    
+                    if (we = '1') then
+                        empty         <= '0';
+                        mem(to_integer(wr_index)) <= data_in;
+                        wr_index      <= wr_index + 1;
+                        
+                        if (wr_index = (2 ** INDEX_WIDTH) - 1) then
+                            full <= '1';
+                        end if;
+                    end if;
+                    
+                    if (re = '1') then
+                        full     <= '0';
+                        data_out <= mem(to_integer(rd_index));
+                        wr_index <= rd_index;
+                        
+                        if (rd_index = 0) then
+                            empty <= '1';
+                        end if;
+                    end if;
+                    
+                end if;
+                
+            end if;
+        end if;
+    end process mem_access;
+    
 end architecture rtl;
 
 
