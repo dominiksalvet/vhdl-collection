@@ -49,8 +49,8 @@ begin
         if (rising_edge(clk)) then
             
             if (rst = '1') then
-                empty    <= '1';
                 full     <= '0';
+                empty    <= '1';
                 wr_index <= (others => '0');
                 rd_index <= (others => '0');
             else
