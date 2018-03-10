@@ -82,7 +82,6 @@ begin
             assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
                 report "The read data does not match pattern address = data!" severity error;
         end loop;
-        
         wait;
         
     end process stim_proc;

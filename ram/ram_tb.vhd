@@ -84,12 +84,11 @@ begin
         for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
             addr <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
             wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
-
+            
             -- asserting to verify the ram module function
             assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
                 report "The read data does not match pattern address=data!" severity error;
         end loop;
-        
         wait;
         
     end process stim_proc;

@@ -200,7 +200,6 @@ begin
             report "The source memory address must be initialized to vector of '0'!" severity error;
         assert (tar_addr = (others => '0'))
             report "The target memory address must be initialized to vector of '0'!" severity error;
-        
         wait;
         
     end process stim_proc;
