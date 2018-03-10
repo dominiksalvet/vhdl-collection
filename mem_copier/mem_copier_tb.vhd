@@ -170,6 +170,37 @@ begin
         
         assert (copy_cmplt = '0')
             report "The copy_cmplt signal must have '0' now!" severity error;
+        wait for CLK_PERIOD;
+        
+        -- copying to all the target's addresses
+        src_start_addr  <= (2 ** SRC_ADDR_WIDTH) / 2;
+        tar_start_addr  <= (2 ** TAR_ADDR_WIDTH) / 2;
+        copy_addr_count <= 2 ** TAR_ADDR_WIDTH;
+        copy_en         <= '1';
+        wait for 3 * CLK_PERIOD;
+        
+        for i in 1 to copy_addr_count loop -- one pass per one write/read
+            -- the address=data pattern matching
+            assert (to_integer(unsigned(tar_addr)) = to_integer(unsigned(tar_data_out)))
+                report "Write to the target memory does not match the address=data pattern!"
+                severity error;
+            wait for CLK_PERIOD;
+        end loop;
+        
+        assert (tar_we = '0' and copy_cmplt = '1')
+            report "Write now must be done, tar_we signal should '0' " &
+            "and copy_cmplt should be '1' to indicate the finished copying!" severity error;
+        copy_en <= '0'; -- copying has been done
+        wait for CLK_PERIOD;
+        
+        -- check status after copying has been done and the module now must be in idle
+        assert (copy_cmplt = '0')
+            report "The copy_cmplt signal must have '0' now!" severity error;
+        assert (src_addr = (others => '0'))
+            report "The source memory address must be initialized to vector of '0'!" severity error;
+        assert (tar_addr = (others => '0'))
+            report "The target memory address must be initialized to vector of '0'!" severity error;
+        
         wait;
         
     end process stim_proc;
