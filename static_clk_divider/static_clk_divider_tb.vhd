@@ -44,8 +44,6 @@ begin
             clk_out => clk_out
         );
     
-    -- Description:
-    --     Clock process definition.
     clk_proc : process is
     begin
         clk <= '0';
@@ -54,8 +52,6 @@ begin
         wait for CLK_PERIOD / 2;
     end process clk_proc;
     
-    -- Description:
-    --     Stimulus process.
     stim_proc : process is
     begin 
         
@@ -67,8 +63,6 @@ begin
         
     end process stim_proc;
     
-    -- Description:
-    --     Control process.
     contr_proc : process is
     begin
         
