@@ -4,7 +4,7 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     This file represents a generic FIFO structure (also known as queue). It
---     possible to setup it's capacity and stored data's bit width.
+--     is possible to setup it's capacity and stored data's bit width.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. The final internal FIFO capacity is equal to 2^INDEX_WIDTH only. It is
