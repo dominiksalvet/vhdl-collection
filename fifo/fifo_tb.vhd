@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Description:
---     The test bench first fulls up all the FIFO internal memory defined by
+--     The test bench first fills up all the FIFO internal memory defined by
 --     INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then it
 --     will test the full indicator and read all the items. Then it will verify
 --     all the read data and empty indicator at the end.
@@ -96,14 +96,14 @@ begin
         re <= '1';
         wait for CLK_PERIOD;
         
-        for i in 0 to 2 loop
+        for i in 0 to 3 loop
             assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
                 report "Invalid value has been read from the FIFO!" severity error;
-            wait for CLK_PERIOD;
+            if (i /= 3) then
+                wait for CLK_PERIOD;
+            end if;
         end loop;
         
-        assert (data_out = std_logic_vector(to_unsigned(3, DATA_WIDTH)))
-            report "Invalid value has been read from the FIFO!" severity error;
         assert (empty = '1')
             report "The empty indicator should have '1' value!" severity error;
         
