@@ -4,7 +4,7 @@ Handy generic VHDL utilites that can be used as part of a VHDL project. Every VH
 
 ## Documentation
 
-The VHDL code is documented using comment header and inline comments.
+The VHDL code is documented using comment headers and inline comments.
 
 ## License
 
