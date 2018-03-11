@@ -3,8 +3,14 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
+--     This file represents a generic LIFO structure (also known as stack). It
+--     is possible to setup it's capacity and stored data's bit width.
 --------------------------------------------------------------------------------
 -- Notes:
+--     1. If both write and read operations are enabled simultaneously, nothing
+--        will happen.
+--     2. The final internal LIFO capacity is equal to 2^INDEX_WIDTH only. It is
+--        not possible to choose another capacity.
 --------------------------------------------------------------------------------
 
 
