@@ -15,6 +15,8 @@
 --     3. When it is not possible to perform clock frequency division without
 --        a remainder, the clk_out will have '1' value one clk period shorter
 --        than '0' value per clk_out period.
+--     4. To get the most effective optimization, choose FREQ_DIV_MAX_VALUE
+--        equal to (2^n)-1.
 --------------------------------------------------------------------------------
 
 
@@ -48,10 +50,9 @@ begin
     -- switch between direct clk and divided_clk
     clk_out <= clk when use_direct_clk = '1' else divided_clk;
     
-    -- Inputs:  clk, rst, freq_div
-    -- Outputs: use_direct_clk, divided_clk
-    -- Purpose: Perform clk frequency division, outputs need to be composed to get a final clock.
-    divide_clk_freq : process (clk)
+    -- Description:
+    --     Performs clk frequency division, outputs need to be composed to get the final clock.
+    divide_clk_freq : process (clk) is
         -- register to store internally freq_div value in a time
         variable freq_div_reg : positive range 1 to FREQ_DIV_MAX_VALUE;
         variable clk_counter  : positive range 1 to FREQ_DIV_MAX_VALUE; -- internal clk counter
