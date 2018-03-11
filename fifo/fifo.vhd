@@ -51,8 +51,9 @@ architecture rtl of fifo is
     
 begin
     
-    -- Purpose: Internal memory read and write mechanism description.
-    mem_access : process (clk)
+    -- Description:
+    --     Internal memory read and write mechanism description.
+    mem_access : process (clk) is
     begin
         if (rising_edge(clk)) then
             if (rst = '1') then -- sycnhronous reset

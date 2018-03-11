@@ -44,10 +44,9 @@ architecture rtl of ram is
     
 begin
     
-    -- Inputs:  clk, re, addr, mem, we
-    -- Outputs: data_out, mem
-    -- Purpose: Memory read and write mechanism description.
-    mem_read_write : process (clk)
+    -- Description:
+    --     Memory read and write mechanism description.
+    mem_read_write : process (clk) is
     begin
         if (rising_edge(clk)) then
             

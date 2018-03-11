@@ -62,8 +62,9 @@ begin
             empty    => empty
         ); 
     
-    -- Purpose: Clock process definition.
-    clk_proc : process
+    -- Description:
+    --     Clock process definition.
+    clk_proc : process is
     begin
         clk <= '0';
         wait for CLK_PERIOD / 2;
@@ -71,8 +72,9 @@ begin
         wait for CLK_PERIOD / 2;
     end process clk_proc;
     
-    -- Purpose: Stimulus process.
-    stim_proc : process
+    -- Description:
+    --     Stimulus process.
+    stim_proc : process is
     begin
         
         rst <= '1';

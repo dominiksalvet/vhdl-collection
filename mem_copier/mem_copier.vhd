@@ -78,11 +78,9 @@ begin
     
     tar_addr <= std_logic_vector(tar_addr_reg);
     
-    -- Inputs:  clk, src_re_reg, src_addr_reg, tar_we_reg, tar_addr_reg, src_data_in, copy_en,
-    --          src_start_addr, tar_start_addr, copy_addr_count
-    -- Outputs: src_re_reg, src_addr_reg, copy_cmplt, tar_we_reg, tar_addr_reg, tar_data_out
-    -- Purpose: Performs memory copying by using internal buffer to speed up the process.
-    mem_copying : process (clk)
+    -- Description:
+    --     Performs memory copying by using internal buffer to speed up the process.
+    mem_copying : process (clk) is
         -- definition of state of the process to describe individual stages
         type state_t is (READ_INIT, READ_WAIT, WRITE_INIT, WRITE);
         variable state : state_t; -- declaration of the state variable
