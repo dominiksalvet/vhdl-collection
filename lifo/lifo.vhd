@@ -55,30 +55,24 @@ begin
                 wr_index <= (others => '0');
             else
                 
-                if (we = '1' and re = '1') then
-                    data_out <= data_in;
-                else
+                if (we = '1' and re = '0') then
+                    empty                     <= '0';
+                    mem(to_integer(wr_index)) <= data_in;
+                    wr_index                  <= wr_index + 1;
                     
-                    if (we = '1') then
-                        empty         <= '0';
-                        mem(to_integer(wr_index)) <= data_in;
-                        wr_index      <= wr_index + 1;
-                        
-                        if (wr_index = (2 ** INDEX_WIDTH) - 1) then
-                            full <= '1';
-                        end if;
+                    if (wr_index = (2 ** INDEX_WIDTH) - 1) then
+                        full <= '1';
                     end if;
+                end if;
+                
+                if (re = '1' and we = '0') then
+                    full     <= '0';
+                    data_out <= mem(to_integer(rd_index));
+                    wr_index <= rd_index;
                     
-                    if (re = '1') then
-                        full     <= '0';
-                        data_out <= mem(to_integer(rd_index));
-                        wr_index <= rd_index;
-                        
-                        if (rd_index = 0) then
-                            empty <= '1';
-                        end if;
+                    if (rd_index = 0) then
+                        empty <= '1';
                     end if;
-                    
                 end if;
                 
             end if;
