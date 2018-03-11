@@ -8,4 +8,4 @@ The VHDL code is documented using comment header and inline comments.
 
 ## License
 
-Unless otherwise stated, the VHDL modules are licensed under the MIT license, see the [`LICENSE.txt`](LICENSE.txt) file for details. The license or a notice about license for a specific module must be found at the bottom of the file where it is the module defined.
+Unless otherwise stated, the VHDL modules are licensed under the MIT license, see the [`LICENSE.txt`](LICENSE.txt) file for details. The license or a notice about license for a specific module must be found at the bottom of the file where is the module defined.
