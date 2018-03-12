@@ -7,8 +7,8 @@
 --     is possible to setup it's capacity and stored data's bit width.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. If both write and read operations are enabled simultaneously, nothing
---        will happen.
+--     1. If both write and read operations are enabled at the same time,
+--        nothing will happen.
 --     2. The final internal LIFO capacity is equal to 2^INDEX_WIDTH only. It is
 --        not possible to choose another capacity.
 --------------------------------------------------------------------------------
@@ -21,62 +21,65 @@ use ieee.numeric_std.all;
 
 entity lifo is
     generic (
-        INDEX_WIDTH : positive := 8;
-        DATA_WIDTH  : positive := 8
+        INDEX_WIDTH : positive; -- internal index bit width affecting the FIFO capacity
+        DATA_WIDTH  : positive -- bit width of stored data
     );
     port (
-        clk : in std_logic;
-        rst : in std_logic;
+        clk : in std_logic; -- clock signal
+        rst : in std_logic; -- reset signal
         
-        we      : in  std_logic;
-        data_in : in  std_logic_vector(DATA_WIDTH - 1 downto 0);
-        full    : out std_logic;
+        we      : in  std_logic; -- write enable (push)
+        data_in : in  std_logic_vector(DATA_WIDTH - 1 downto 0); -- written data
+        full    : out std_logic; -- full LIFO indicator
         
-        re       : in  std_logic;
-        data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0);
-        empty    : out std_logic
+        re       : in  std_logic; -- read enable (pop)
+        data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0); -- read data
+        empty    : out std_logic -- empty LIFO indicator
     );
 end entity lifo;
 
 
 architecture rtl of lifo is
     
+    -- definition of internal memory type
     type mem_t is array((2 ** INDEX_WIDTH) - 1 downto 0) of
         std_logic_vector(DATA_WIDTH - 1 downto 0);
-    signal mem : mem_t;
+    signal mem : mem_t; -- accessible internal memory signal
     
-    signal wr_index : unsigned(INDEX_WIDTH - 1 downto 0);
-    signal rd_index : unsigned(INDEX_WIDTH - 1 downto 0);
+    signal wr_index : unsigned(INDEX_WIDTH - 1 downto 0); -- current write index
+    signal rd_index : unsigned(INDEX_WIDTH - 1 downto 0); -- current read index
     
 begin
     
-    rd_index <= wr_index - 1;
+    rd_index <= wr_index - 1; -- read index is always less by 1 than write index
     
+    -- Description:
+    --     Internal memory read and write mechanism description.
     mem_access : process (clk)
     begin
-        if (rising_edge(clk)) then
+        if (rising_edge(clk)) then -- synchronous reset
             if (rst = '1') then
                 full     <= '0';
                 empty    <= '1';
                 wr_index <= (others => '0');
             else
                 
-                if (we = '1' and re = '0') then
-                    empty                     <= '0';
+                if (we = '1' and re = '0') then -- writing
+                    empty                     <= '0'; -- the LIFO is never empty after write
                     mem(to_integer(wr_index)) <= data_in;
                     wr_index                  <= wr_index + 1;
                     
-                    if (wr_index = (2 ** INDEX_WIDTH) - 1) then
+                    if (wr_index = (2 ** INDEX_WIDTH) - 1) then -- full check
                         full <= '1';
                     end if;
                 end if;
                 
-                if (re = '1' and we = '0') then
-                    full     <= '0';
+                if (re = '1' and we = '0') then -- reading
+                    full     <= '0'; -- the LIFO is never full after read
                     data_out <= mem(to_integer(rd_index));
                     wr_index <= rd_index;
                     
-                    if (rd_index = 0) then
+                    if (rd_index = 0) then -- empty check
                         empty <= '1';
                     end if;
                 end if;
