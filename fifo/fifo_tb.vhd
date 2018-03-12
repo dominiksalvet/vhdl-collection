@@ -76,6 +76,8 @@ begin
         rst <= '1';
         wait for CLK_PERIOD; -- intitialize the uut
         
+        -- FIRST FIFO FILL UP FROM 0 TO 3
+
         rst <= '0';
         we  <= '1'; -- write process start
         wait for CLK_PERIOD;
@@ -91,15 +93,29 @@ begin
         
         assert (full = '1')
             report "The full indicator should have '1' value!" severity error;
+
+        -- READ AND WRITE AT THE SAME TIME, FROM 3 DOWNTO 0
+        
+        re <= '1';
+        for i in 3 downto 0 loop
+            data_in <= std_logic_vector(to_unsigned(i, DATA_WIDTH));
+            
+            wait for CLK_PERIOD;
+            
+            assert (full = '1')
+                report "The full indicator should have '1' value, because write and read " &
+                "at the same time must have no effect at the empty and full states!" severity error;
+        end loop;
         
         we <= '0';
-        re <= '1';
         wait for CLK_PERIOD;
+
+        -- ONLY READING AND VERIFYING DATA BACK, EXPECT 3 DOWNTO 0
         
-        for i in 0 to 3 loop
+        for i in 3 downto 0 loop
             assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
                 report "Invalid value has been read from the FIFO!" severity error;
-            if (i /= 3) then
+            if (i /= 0) then
                 wait for CLK_PERIOD;
             end if;
         end loop;
@@ -107,6 +123,14 @@ begin
         assert (empty = '1')
             report "The empty indicator should have '1' value!" severity error;
         
+        we <= '1';
+        wait for CLK_PERIOD;
+        
+        assert (empty = '1')
+            report "The empty indicator should have '1' value, because write and read " &
+            "at the same time must have no effect at the empty and full states!" severity error;
+        
+        we <= '0';
         re <= '0';
         wait;
         

@@ -4,13 +4,21 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     This file represents a generic FIFO structure (also known as queue). It
---     is possible to setup it's capacity and stored data's bit width.
+--     is possible to setup it's capacity and stored data's bit width. It is
+--     possible to write and read at the same time, see "Notes".
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. The final internal FIFO capacity is equal to 2^INDEX_WIDTH only. It is
 --        not possible to choose another capacity.
 --     2. The FIFO module is implemented as memory with separated indexes for
 --        write and read operations.
+--     3. If the FIFO is empty, write and read operations can't be performed at
+--        the same time. Otherwise the output data will be undefined and input
+--        data will be lost. Nevertheless, it is still possible to use FIFO next
+--        time like it should be used - it does not require to perform reset
+--        after a violation of this access rule.
+--     4. If the FIFO is full, write and read operation can be performed at the
+--        same time.
 --------------------------------------------------------------------------------
 
 
@@ -21,8 +29,8 @@ use ieee.numeric_std.all;
 
 entity fifo is
     generic (
-        INDEX_WIDTH : positive := 8; -- internal index bit width affecting the fifo capacity
-        DATA_WIDTH  : positive := 8 -- bit width of stored data
+        INDEX_WIDTH : positive; -- internal index bit width affecting the FIFO capacity
+        DATA_WIDTH  : positive -- bit width of stored data
     );
     port (
         clk : in std_logic; -- clock signal
@@ -64,22 +72,26 @@ begin
             else
                 
                 if (we = '1') then -- write enable
-                    empty                     <= '0'; -- the FIFO is never empty after write
                     mem(to_integer(wr_index)) <= data_in;
                     wr_index                  <= wr_index + 1;
                     
-                    if (re = '0' and wr_index + 1 = rd_index) then -- full check
-                        full <= '1';
+                    if (re = '0') then
+                        empty <= '0'; -- the FIFO is never empty after write and no read
+                        if (wr_index + 1 = rd_index) then -- full FIFO check
+                            full <= '1';
+                        end if;
                     end if;
                 end if;
                 
                 if (re = '1') then -- read enable
-                    full     <= '0'; -- the FIFO is never full after read
                     data_out <= mem(to_integer(rd_index));
                     rd_index <= rd_index + 1;
                     
-                    if (we = '0' and rd_index + 1 = wr_index) then -- empty check
-                        empty <= '1';
+                    if (we = '0') then
+                        full <= '0'; -- the FIFO is never full after read and no write
+                        if (rd_index + 1 = wr_index) then -- empty FIFO check
+                            empty <= '1';
+                        end if;
                     end if;
                 end if;
                 
