@@ -36,7 +36,7 @@ entity fifo is
         clk : in std_logic; -- clock signal
         rst : in std_logic; -- reset signal
         
-        we      : in  std_logic; -- wrte enable (enqueue)
+        we      : in  std_logic; -- write enable (enqueue)
         data_in : in  std_logic_vector(DATA_WIDTH - 1 downto 0); -- written data
         full    : out std_logic; -- full FIFO indicator
         
@@ -49,7 +49,7 @@ end entity fifo;
 
 architecture rtl of fifo is
     
-    -- definition of internal memeory type
+    -- definition of internal memory type
     type mem_t is array((2 ** INDEX_WIDTH) - 1 downto 0) of
         std_logic_vector(DATA_WIDTH - 1 downto 0);
     signal mem : mem_t; -- accessible internal memory signal
@@ -64,7 +64,7 @@ begin
     mem_access : process (clk) is
     begin
         if (rising_edge(clk)) then
-            if (rst = '1') then -- sycnhronous reset
+            if (rst = '1') then -- synchronous reset
                 full     <= '0';
                 empty    <= '1';
                 wr_index <= (others => '0');
