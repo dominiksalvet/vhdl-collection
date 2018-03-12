@@ -63,10 +63,9 @@ begin
     -- window with the converted hexadecimal number
     hts_hex_data <= data_in((seg7_sel_index * 4) + 3 downto (seg7_sel_index * 4));
     
-    -- Inputs:  clk, seg7_sel_index, rst
-    -- Outputs: seg7_sel_index
-    -- Purpose: Compute next index of the seven segment digits.
-    seg7_display_digit : process (clk)
+    -- Description:
+    --     Compute next index of the seven segment digits.
+    seg7_display_digit : process (clk) is
     begin
         if (rising_edge(clk)) then
             
@@ -83,9 +82,9 @@ begin
         end if;
     end process seg7_display_digit;
     
-    -- Outputs: seg7_sel
-    -- Purpose: Propage changes of digit index to the seg7_sel output.
-    seg7_sel_switch : process (seg7_sel_index)
+    -- Description:
+    --     Propage changes of digit index to the seg7_sel output.
+    seg7_sel_switch : process (seg7_sel_index) is
     begin
         seg7_sel                 <= (others => not DIGIT_SEL_VALUE);
         seg7_sel(seg7_sel_index) <= DIGIT_SEL_VALUE;

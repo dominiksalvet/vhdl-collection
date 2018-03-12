@@ -77,10 +77,9 @@ architecture rtl of rom is
     
 begin
     
-    -- Inputs:  clk, re, addr, mem
-    -- Outputs: data_out
-    -- Purpose: Memory read mechanism description.
-    mem_read : process (clk)
+    -- Description:
+    --     Memory read mechanism description.
+    mem_read : process (clk) is
     begin
         if (rising_edge(clk)) then
             if (re = '1') then

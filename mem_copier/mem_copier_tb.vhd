@@ -117,8 +117,7 @@ begin
             data_out => tm_data_out
         );
     
-    -- Purpose: Clock process definition.
-    clk_proc : process
+    clk_proc : process is
     begin
         clk <= '0';
         wait for CLK_PERIOD / 2;
@@ -126,8 +125,7 @@ begin
         wait for CLK_PERIOD / 2;
     end process clk_proc;
     
-    -- Purpose: Stimulus process.
-    stim_proc : process
+    stim_proc : process is
     begin
         
         wait for CLK_PERIOD; -- delay to initialize the uut
@@ -200,7 +198,6 @@ begin
             report "The source memory address must be initialized to vector of '0'!" severity error;
         assert (tar_addr = (others => '0'))
             report "The target memory address must be initialized to vector of '0'!" severity error;
-        
         wait;
         
     end process stim_proc;

@@ -37,10 +37,9 @@ end entity pwm;
 architecture rtl of pwm is
 begin
     
-    -- Inputs:  clk, rst, duty
-    -- Outputs: pwm_out
-    -- Purpose: Create final PWM signal.
-    pwm_sampling : process (clk)
+    -- Description:
+    --     Create final PWM signal.
+    pwm_sampling : process (clk) is
         variable duty_reg : natural range 0 to PERIOD; -- internal register of the duty input
         variable counter  : positive range 1 to PERIOD; -- pwm_out period counter
     begin

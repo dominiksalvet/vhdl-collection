@@ -1,12 +1,11 @@
 --------------------------------------------------------------------------------
 -- Description:
---     First write the data to the memory with respect of the following pattern
---     address=data. Then the simulation will verify the correct memory data by
---     sequential reading the memory addresses.
+--     The test bench first fills up all the FIFO internal memory defined by
+--     INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then it
+--     will test the full indicator and read all the items. Then it will verify
+--     all the read data and empty indicator at the end.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. To verify the module by its current implemetantion, it is required
---        2^(n+1) steps where n=ADDR_WIDTH.
 --------------------------------------------------------------------------------
 
 
@@ -14,27 +13,30 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.ram; -- ram.vhd
+use work.fifo; -- fifo.vhd
 
 
-entity ram_tb is
-end entity ram_tb;
+entity fifo_tb is
+end entity fifo_tb;
 
 
-architecture behavior of ram_tb is
+architecture behavior of fifo_tb is
     
     -- uut generics
-    constant ADDR_WIDTH : positive := 4;
-    constant DATA_WIDTH : positive := 8;
+    constant INDEX_WIDTH : positive := 2;
+    constant DATA_WIDTH  : positive := 8;
     
     -- uut ports
     signal clk : std_logic := '0';
+    signal rst : std_logic := '0';
     
-    signal we       : std_logic                                 := '0';
-    signal re       : std_logic                                 := '0';
-    signal addr     : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
-    signal data_in  : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal we      : std_logic                                 := '0';
+    signal data_in : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal full    : std_logic;
+    
+    signal re       : std_logic := '0';
     signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
+    signal empty    : std_logic;
     
     -- clock period definition
     constant CLK_PERIOD : time := 10 ns;
@@ -42,20 +44,23 @@ architecture behavior of ram_tb is
 begin
     
     -- instantiate the unit under test (uut)
-    uut : entity work.ram(rtl)
+    uut : entity work.fifo(rtl)
         generic map (
-            ADDR_WIDTH => ADDR_WIDTH,
-            DATA_WIDTH => DATA_WIDTH
+            INDEX_WIDTH => INDEX_WIDTH,
+            DATA_WIDTH  => DATA_WIDTH
         )
         port map (
             clk => clk,
+            rst => rst,
             
-            we       => we,
+            we      => we,
+            data_in => data_in,
+            full    => full,
+            
             re       => re,
-            addr     => addr,
-            data_in  => data_in,
-            data_out => data_out
-        );
+            data_out => data_out,
+            empty    => empty
+        ); 
     
     clk_proc : process is
     begin
@@ -68,25 +73,41 @@ begin
     stim_proc : process is
     begin
         
-        -- write to every address it's value
-        we <= '1';
-        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr    <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
-            data_in <= std_logic_vector(to_unsigned(i, DATA_WIDTH));
-            wait for CLK_PERIOD;
-        end loop;
+        rst <= '1';
+        wait for CLK_PERIOD; -- intitialize the uut
+        
+        rst <= '0';
+        we  <= '1'; -- write process start
+        wait for CLK_PERIOD;
+        
+        data_in <= std_logic_vector(unsigned(data_in) + 1);
+        wait for CLK_PERIOD;
+        
+        data_in <= std_logic_vector(unsigned(data_in) + 1);
+        wait for CLK_PERIOD;
+        
+        data_in <= std_logic_vector(unsigned(data_in) + 1);
+        wait for CLK_PERIOD;
+        
+        assert (full = '1')
+            report "The full indicator should have '1' value!" severity error;
         
         we <= '0';
-        -- read each address and verify it's data correctness
         re <= '1';
-        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
-            wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
-            
-            -- asserting to verify the ram module function
+        wait for CLK_PERIOD;
+        
+        for i in 0 to 3 loop
             assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
-                report "The read data does not match pattern address=data!" severity error;
+                report "Invalid value has been read from the FIFO!" severity error;
+            if (i /= 3) then
+                wait for CLK_PERIOD;
+            end if;
         end loop;
+        
+        assert (empty = '1')
+            report "The empty indicator should have '1' value!" severity error;
+        
+        re <= '0';
         wait;
         
     end process stim_proc;

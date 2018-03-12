@@ -51,8 +51,7 @@ begin
             clk_out  => clk_out
         );
     
-    -- Purpose: Clock process definition.
-    clk_proc : process
+    clk_proc : process is
     begin
         clk <= '0';
         wait for CLK_PERIOD / 2;
@@ -60,8 +59,7 @@ begin
         wait for CLK_PERIOD / 2;
     end process clk_proc;
     
-    -- Purpose: Stimulus process.
-    stim_proc : process
+    stim_proc : process is
     begin
         
         rst <= '1'; -- initialize the module
@@ -91,8 +89,7 @@ begin
         
     end process stim_proc;
     
-    -- Purpose: Control process.
-    contr_proc : process
+    contr_proc : process is
     begin
         
         -- asserting only at critical simulation times

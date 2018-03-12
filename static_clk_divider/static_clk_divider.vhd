@@ -34,10 +34,9 @@ end entity static_clk_divider;
 architecture rtl of static_clk_divider is
 begin
     
-    -- Inputs:  clk, rst
-    -- Outputs: clk_out
-    -- Purpose: Perform clk frequency division by counting and create the final clk_out signal.
-    divide_clk_freq : process (clk)
+    -- Description:
+    --     Perform clk frequency division by counting and create the final clk_out signal.
+    divide_clk_freq : process (clk) is
         variable clk_counter : positive range 1 to FREQ_DIV; -- internal clk counter
     begin
         if (rising_edge(clk)) then

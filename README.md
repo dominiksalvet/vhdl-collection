@@ -4,8 +4,8 @@ Handy generic VHDL utilites that can be used as part of a VHDL project. Every VH
 
 ## Documentation
 
-The VHDL code is documented using comment header and inline comments.
+The VHDL code is documented using comment headers and inline comments.
 
 ## License
 
-Unless otherwise stated, the VHDL modules are licensed under the MIT license, see the [`LICENSE.txt`](LICENSE.txt) file for details. The license or a notice about license for a specific module must be found at the bottom of the file where it is the module defined.
+Unless otherwise stated, the VHDL modules are licensed under the MIT license, see the [`LICENSE.txt`](LICENSE.txt) file for details. The license or a notice about license for a specific module must be found at the bottom of the file where is the module defined.

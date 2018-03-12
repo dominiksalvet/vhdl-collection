@@ -59,8 +59,7 @@ begin
             data_out => data_out
         ); 
     
-    -- Purpose: Clock process definition.
-    clk_proc : process
+    clk_proc : process is
     begin
         clk <= '0';
         wait for CLK_PERIOD / 2;
@@ -68,8 +67,7 @@ begin
         wait for CLK_PERIOD / 2;
     end process clk_proc;
     
-    -- Purpose: Stimulus process.
-    stim_proc : process
+    stim_proc : process is
     begin
         
         re <= '1';
@@ -82,7 +80,6 @@ begin
             assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
                 report "The read data does not match pattern address = data!" severity error;
         end loop;
-        
         wait;
         
     end process stim_proc;
