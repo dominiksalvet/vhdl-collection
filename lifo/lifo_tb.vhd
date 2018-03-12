@@ -107,6 +107,14 @@ begin
         assert (empty = '1')
             report "The empty indicator should have '1' value!" severity error;
         
+        we <= '1';
+        wait for CLK_PERIOD;
+        
+        assert (empty = '1')
+            report "The empty indicator should have '1' value, because write and read " &
+            "at the same time must have no effect!" severity error;
+        
+        we <= '0';
         re <= '0';
         wait;
         
