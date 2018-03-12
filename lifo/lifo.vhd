@@ -21,7 +21,7 @@ use ieee.numeric_std.all;
 
 entity lifo is
     generic (
-        INDEX_WIDTH : positive; -- internal index bit width affecting the FIFO capacity
+        INDEX_WIDTH : positive; -- internal index bit width affecting the LIFO capacity
         DATA_WIDTH  : positive -- bit width of stored data
     );
     port (
@@ -64,22 +64,23 @@ begin
                 wr_index <= (others => '0');
             else
                 
-                if (we = '1' and re = '0') then -- writing
-                    empty                     <= '0'; -- the LIFO is never empty after write
+                if (we = '1' and re = '0') then -- write machanism
+                    -- the LIFO is never empty after write and no read
+                    empty                     <= '0';
                     mem(to_integer(wr_index)) <= data_in;
                     wr_index                  <= wr_index + 1;
                     
-                    if (wr_index = (2 ** INDEX_WIDTH) - 1) then -- full check
+                    if (wr_index = (2 ** INDEX_WIDTH) - 1) then -- full LIFO check
                         full <= '1';
                     end if;
                 end if;
                 
-                if (re = '1' and we = '0') then -- reading
-                    full     <= '0'; -- the LIFO is never full after read
+                if (re = '1' and we = '0') then -- read mechanism
+                    full     <= '0'; -- the LIFO is never full after read and no write
                     data_out <= mem(to_integer(rd_index));
                     wr_index <= rd_index;
                     
-                    if (rd_index = 0) then -- empty check
+                    if (rd_index = 0) then -- empty LIFO check
                         empty <= '1';
                     end if;
                 end if;
