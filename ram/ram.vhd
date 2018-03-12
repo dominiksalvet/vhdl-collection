@@ -20,8 +20,8 @@ use ieee.numeric_std.all;
 
 entity ram is
     generic (
-        ADDR_WIDTH : positive; -- bit width of ram address bus
-        DATA_WIDTH : positive -- bit width of ram data bus
+        ADDR_WIDTH : positive; -- bit width of RAM address bus
+        DATA_WIDTH : positive -- bit width of RAM data bus
     );
     port (
         clk : in std_logic; -- clock signal

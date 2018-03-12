@@ -8,7 +8,7 @@
 --     produce only value '0' on the pwm_out.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. The pwm module uses internal register to keep value of duty in a time,
+--     1. The PWM module uses internal register to keep value of duty in a time,
 --        the module then work only with this value.
 --     2. Changes of the duty input are propagated to the internal register only
 --        at the beginning of the pwm_out period.
@@ -45,7 +45,7 @@ begin
     begin
         if (rising_edge(clk)) then
             if (rst = '1') then -- initialization
-                counter := PERIOD; -- use the value so it will automatically start a new pwm period
+                counter := PERIOD; -- use the value so it will automatically start a new PWM period
                 pwm_out <= '0';
             else
                 

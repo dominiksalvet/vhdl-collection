@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Description:
---     The simulations increments the duty value per each pwm period. It also
+--     The simulations increments the duty value per each PWM period. It also
 --     checks pwm_out value at critical points - half clk period before falling
 --     edge of the pwm_out signal (should be '1') and half period after (should
 --     be '0'). Then, it will change duty from 8 to 0 half of clk period after
@@ -80,7 +80,7 @@ begin
             if (i mod PERIOD = 0) then -- new pwm_out period
                 duty <= duty + 1;
             end if;
-            wait for CLK_PERIOD; -- wait to get to individual parts of pwm period
+            wait for CLK_PERIOD; -- wait to get to individual parts of PWM period
             
             -- half clk period before falling edge of the pwm_out signal
             if (i mod PERIOD = (duty - 1) mod (PERIOD + 1)) then

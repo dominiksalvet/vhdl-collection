@@ -31,8 +31,8 @@ use ieee.numeric_std.all;
 
 entity rom is
     generic (
-        ADDR_WIDTH : positive; -- bit width of rom address bus
-        DATA_WIDTH : positive; -- bit width of rom data bus
+        ADDR_WIDTH : positive; -- bit width of ROM address bus
+        DATA_WIDTH : positive; -- bit width of ROM data bus
         
         INIT_DATA       : std_logic_vector; -- initialization data vector
         INIT_START_ADDR : natural -- start address of the initialized data in the memory
