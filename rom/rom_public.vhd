@@ -24,10 +24,10 @@ package body rom_public is
         -- definition of amount of unique addresses
         constant ADDR_MAX : positive := (2 ** addr_width) - 1;
         -- vector of initialization data
-        variable init_data : std_logic_vector(0 to (ADDR_MAX * data_width) + data_width - 1);
+        variable init_data : std_logic_vector(0 to ((ADDR_MAX + 1) * data_width) - 1);
     begin
         for i in 0 to ADDR_MAX loop -- creating initialization data image
-            init_data(i * data_width to (i * data_width) + data_width - 1) := 
+            init_data(i * data_width to ((i + 1) * data_width) - 1) := 
             std_logic_vector(to_unsigned(i, data_width));
         end loop;
         return init_data;

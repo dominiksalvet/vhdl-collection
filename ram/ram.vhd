@@ -20,15 +20,15 @@ use ieee.numeric_std.all;
 
 entity ram is
     generic (
-        ADDR_WIDTH : positive; -- bit width of RAM address bus
-        DATA_WIDTH : positive -- bit width of RAM data bus
+        ADDR_WIDTH : positive := 4; -- bit width of RAM address bus
+        DATA_WIDTH : positive := 8 -- bit width of RAM data bus
     );
     port (
         clk : in std_logic; -- clock signal
         
         we       : in  std_logic; -- write enable
         re       : in  std_logic; -- read enable
-        addr     : in  std_logic_vector(ADDR_WIDTH - 1 downto 0); -- address bus
+        addr     : in  unsigned(ADDR_WIDTH - 1 downto 0); -- address bus
         data_in  : in  std_logic_vector(DATA_WIDTH - 1 downto 0); -- input data bus
         data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0) -- output data bus
     );
@@ -51,11 +51,11 @@ begin
         if (rising_edge(clk)) then
             
             if (re = '1') then -- read from the memory
-                data_out <= mem(to_integer(unsigned(addr)));
+                data_out <= mem(to_integer(addr));
             end if;
             
             if (we = '1') then -- write to the memory
-                mem(to_integer(unsigned(addr))) <= data_in;
+                mem(to_integer(addr)) <= data_in;
             end if;
             
         end if;

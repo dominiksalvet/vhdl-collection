@@ -77,29 +77,24 @@ begin
         wait for CLK_PERIOD; -- intitialize the uut
         
         -- FIRST FIFO FILL UP FROM 0 TO 3
-
+        
         rst <= '0';
         we  <= '1'; -- write process start
         wait for CLK_PERIOD;
         
-        data_in <= std_logic_vector(unsigned(data_in) + 1);
-        wait for CLK_PERIOD;
-        
-        data_in <= std_logic_vector(unsigned(data_in) + 1);
-        wait for CLK_PERIOD;
-        
-        data_in <= std_logic_vector(unsigned(data_in) + 1);
-        wait for CLK_PERIOD;
+        for i in 1 to 3 loop
+            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
+            wait for CLK_PERIOD;
+        end loop;
         
         assert (full = '1')
             report "The full indicator should have '1' value!" severity error;
-
+        
         -- READ AND WRITE AT THE SAME TIME, FROM 3 DOWNTO 0
         
         re <= '1';
         for i in 3 downto 0 loop
-            data_in <= std_logic_vector(to_unsigned(i, DATA_WIDTH));
-            
+            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
             wait for CLK_PERIOD;
             
             assert (full = '1')
@@ -109,11 +104,11 @@ begin
         
         we <= '0';
         wait for CLK_PERIOD;
-
+        
         -- ONLY READING AND VERIFYING DATA BACK, EXPECT 3 DOWNTO 0
         
         for i in 3 downto 0 loop
-            assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
+            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
                 report "Invalid value has been read from the FIFO!" severity error;
             if (i /= 0) then
                 wait for CLK_PERIOD;

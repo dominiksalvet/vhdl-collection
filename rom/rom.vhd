@@ -28,20 +28,24 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.rom_public.all; -- rom_public.vhd
+
 
 entity rom is
     generic (
-        ADDR_WIDTH : positive; -- bit width of ROM address bus
-        DATA_WIDTH : positive; -- bit width of ROM data bus
+        ADDR_WIDTH : positive := 4; -- bit width of ROM address bus
+        DATA_WIDTH : positive := 8; -- bit width of ROM data bus
         
-        INIT_DATA       : std_logic_vector; -- initialization data vector
-        INIT_START_ADDR : natural -- start address of the initialized data in the memory
+        -- initialization data vector
+        INIT_DATA : std_logic_vector := create_simple_mem_init_data(4, 8);
+        -- start address of the initialized data in the memory
+        INIT_START_ADDR : natural := 0
     );
     port (
         clk : in std_logic; -- clock signal
         
         re       : in  std_logic; -- read enable
-        addr     : in  std_logic_vector(ADDR_WIDTH - 1 downto 0); -- address bus
+        addr     : in  unsigned(ADDR_WIDTH - 1 downto 0); -- address bus
         data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0) -- output data bus
     );
 end entity rom;
@@ -55,7 +59,8 @@ architecture rtl of rom is
     -- definition of the memory type
     type mem_t is array(ADDR_COUNT - 1 downto 0) of std_logic_vector(DATA_WIDTH - 1 downto 0);
     
-    -- Purpose: Initialize memory by sampling the INIT_DATA vector to memory data width.
+    -- Description:
+    --     Initialize memory by sampling the INIT_DATA vector to memory data width.
     function mem_init return mem_t is
         variable mem : mem_t; -- memory to be initialized
     begin
@@ -63,14 +68,14 @@ architecture rtl of rom is
         for i in 0 to (INIT_DATA'length / DATA_WIDTH) - 1 loop
             -- modulo write address and data sampling from original vector implementation
             mem((INIT_START_ADDR + i) mod ADDR_COUNT) := 
-            INIT_DATA(i * DATA_WIDTH to (i * DATA_WIDTH) + DATA_WIDTH - 1);
+            INIT_DATA(i * DATA_WIDTH to ((i + 1) * DATA_WIDTH) - 1);
         end loop;
         return mem;
     end function mem_init;
     
-    -- accessible memory signal, calling memory initialization
+    -- accessible memory signal, calling the memory initialization
     signal mem : mem_t := mem_init;
-    -- it is also possible to change to custom initialization, as shown below in a comment section:
+    -- also possible to change to a custom initialization, as shown below in a comment section:
     -- signal mem : mem_t := (
     --     others => (others => 'U')
     --     );
@@ -83,7 +88,7 @@ begin
     begin
         if (rising_edge(clk)) then
             if (re = '1') then
-                data_out <= mem(to_integer(unsigned(addr)));
+                data_out <= mem(to_integer(addr));
             end if;
         end if;
     end process mem_read;

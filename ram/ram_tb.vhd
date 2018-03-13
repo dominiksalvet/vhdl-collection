@@ -32,7 +32,7 @@ architecture behavior of ram_tb is
     
     signal we       : std_logic                                 := '0';
     signal re       : std_logic                                 := '0';
-    signal addr     : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal addr     : unsigned(ADDR_WIDTH - 1 downto 0)         := (others => '0');
     signal data_in  : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
     signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
     
@@ -71,8 +71,8 @@ begin
         -- write to every address it's value
         we <= '1';
         for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr    <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
-            data_in <= std_logic_vector(to_unsigned(i, DATA_WIDTH));
+            addr    <= to_unsigned(i, addr'length);
+            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
             wait for CLK_PERIOD;
         end loop;
         
@@ -80,11 +80,11 @@ begin
         -- read each address and verify it's data correctness
         re <= '1';
         for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr <= std_logic_vector(to_unsigned(i, ADDR_WIDTH));
+            addr <= to_unsigned(i, addr'length);
             wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
             
             -- asserting to verify the RAM module function
-            assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
+            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
                 report "The read data does not match pattern address=data!" severity error;
         end loop;
         wait;

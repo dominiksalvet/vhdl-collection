@@ -80,14 +80,10 @@ begin
         we  <= '1'; -- write process start
         wait for CLK_PERIOD;
         
-        data_in <= std_logic_vector(unsigned(data_in) + 1);
-        wait for CLK_PERIOD;
-        
-        data_in <= std_logic_vector(unsigned(data_in) + 1);
-        wait for CLK_PERIOD;
-        
-        data_in <= std_logic_vector(unsigned(data_in) + 1);
-        wait for CLK_PERIOD;
+        for i in 1 to 3 loop
+            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
+            wait for CLK_PERIOD;
+        end loop;
         
         assert (full = '1')
             report "The full indicator should have '1' value!" severity error;
@@ -97,7 +93,7 @@ begin
         wait for CLK_PERIOD;
         
         for i in 3 downto 0 loop -- LIFO structure needs downto loop to verify data
-            assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
+            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
                 report "Invalid value has been read from the LIFO!" severity error;
             if (i /= 0) then
                 wait for CLK_PERIOD;

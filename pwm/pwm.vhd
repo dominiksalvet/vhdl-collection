@@ -21,7 +21,7 @@ use ieee.std_logic_1164.all;
 
 entity pwm is
     generic (
-        PERIOD : positive -- pwm_out period, it is equal to <clk_period>*PERIOD
+        PERIOD : positive := 8 -- pwm_out period, it is equal to <clk_period>*PERIOD
     );
     port (
         clk : in std_logic; -- clock signal

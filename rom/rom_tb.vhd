@@ -33,8 +33,8 @@ architecture behavior of rom_tb is
     -- uut ports
     signal clk : std_logic := '0';
     
-    signal re       : std_logic                                 := '0';
-    signal addr     : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal re       : std_logic                         := '0';
+    signal addr     : unsigned(ADDR_WIDTH - 1 downto 0) := (others => '0');
     signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
@@ -73,11 +73,11 @@ begin
         re <= '1';
         -- read every unique address value, one value per each CLK_PERIOD from 0 address
         for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr <= std_logic_vector(to_unsigned(i, ADDR_WIDTH)); -- read memory
+            addr <= to_unsigned(i, addr'length); -- read memory
             wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
             
             -- asserting to verify the ROM module function
-            assert (data_out = std_logic_vector(to_unsigned(i, DATA_WIDTH)))
+            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
                 report "The read data does not match pattern address = data!" severity error;
         end loop;
         wait;

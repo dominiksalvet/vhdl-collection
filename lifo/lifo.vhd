@@ -21,8 +21,8 @@ use ieee.numeric_std.all;
 
 entity lifo is
     generic (
-        INDEX_WIDTH : positive; -- internal index bit width affecting the LIFO capacity
-        DATA_WIDTH  : positive -- bit width of stored data
+        INDEX_WIDTH : positive := 2; -- internal index bit width affecting the LIFO capacity
+        DATA_WIDTH  : positive := 8 -- bit width of stored data
     );
     port (
         clk : in std_logic; -- clock signal
@@ -61,7 +61,7 @@ begin
             if (rst = '1') then
                 full     <= '0';
                 empty    <= '1';
-                wr_index <= (others => '0');
+                wr_index <= to_unsigned(0, wr_index'length);
             else
                 
                 if (we = '1' and re = '0') then -- write machanism

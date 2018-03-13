@@ -40,7 +40,7 @@ architecture behavior of pwm_tb is
 begin
     
     -- instantiate the unit under test (uut)
-    uut : entity work.pwm
+    uut : entity work.pwm(rtl)
         generic map (
             PERIOD => PERIOD
         )

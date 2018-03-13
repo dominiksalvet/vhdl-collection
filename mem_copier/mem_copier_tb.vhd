@@ -38,16 +38,16 @@ architecture behavior of mem_copier_tb is
     signal copy_en    : std_logic := '0';
     signal copy_cmplt : std_logic;
     
-    signal src_start_addr  : natural range 0 to (2 ** SRC_ADDR_WIDTH) - 1 := 0;
-    signal tar_start_addr  : natural range 0 to (2 ** TAR_ADDR_WIDTH) - 1 := 0;
-    signal copy_addr_count : positive range 1 to 2 ** TAR_ADDR_WIDTH      := 1;
+    signal src_start_addr  : unsigned(SRC_ADDR_WIDTH - 1 downto 0)   := (others => '0');
+    signal tar_start_addr  : unsigned(TAR_ADDR_WIDTH - 1 downto 0)   := (others => '0');
+    signal copy_addr_count : positive range 1 to 2 ** TAR_ADDR_WIDTH := 1;
     
     signal src_data_in : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
     signal src_re      : std_logic;
-    signal src_addr    : std_logic_vector(SRC_ADDR_WIDTH - 1 downto 0);
+    signal src_addr    : unsigned(SRC_ADDR_WIDTH - 1 downto 0);
     
     signal tar_we       : std_logic;
-    signal tar_addr     : std_logic_vector(TAR_ADDR_WIDTH - 1 downto 0);
+    signal tar_addr     : unsigned(TAR_ADDR_WIDTH - 1 downto 0);
     signal tar_data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
     
     -- tar_mem ports
@@ -130,8 +130,9 @@ begin
         
         wait for CLK_PERIOD; -- delay to initialize the uut
         
-        copy_en         <= '1';
-        tar_start_addr  <= (2 ** TAR_ADDR_WIDTH) - 4; -- the last 4 addresses of the target memory
+        copy_en <= '1';
+        -- the last 4 addresses of the target memory
+        tar_start_addr  <= to_unsigned((2 ** TAR_ADDR_WIDTH) - 4, tar_start_addr'length);
         copy_addr_count <= 4;
         wait for CLK_PERIOD;
         
@@ -171,8 +172,8 @@ begin
         wait for CLK_PERIOD;
         
         -- copying to all the target's addresses
-        src_start_addr  <= (2 ** SRC_ADDR_WIDTH) / 2;
-        tar_start_addr  <= (2 ** TAR_ADDR_WIDTH) / 2;
+        src_start_addr  <= to_unsigned((2 ** SRC_ADDR_WIDTH) / 2, src_start_addr'length);
+        tar_start_addr  <= to_unsigned((2 ** TAR_ADDR_WIDTH) / 2, tar_start_addr'length);
         copy_addr_count <= 2 ** TAR_ADDR_WIDTH;
         copy_en         <= '1';
         wait for 3 * CLK_PERIOD;
@@ -194,9 +195,9 @@ begin
         -- check status after copying has been done and the module now must be in idle
         assert (copy_cmplt = '0')
             report "The copy_cmplt signal must have '0' now!" severity error;
-        assert (src_addr = (others => '0'))
+        assert (src_addr = (src_addr'range => '0'))
             report "The source memory address must be initialized to vector of '0'!" severity error;
-        assert (tar_addr = (others => '0'))
+        assert (tar_addr = (tar_addr'range => '0'))
             report "The target memory address must be initialized to vector of '0'!" severity error;
         wait;
         

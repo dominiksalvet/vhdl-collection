@@ -27,7 +27,7 @@ use ieee.numeric_std.all;
 
 entity clk_divider is
     generic (
-        FREQ_DIV_MAX_VALUE : positive -- maximum available frequency divisor value
+        FREQ_DIV_MAX_VALUE : positive := 7 -- maximum available frequency divisor value
     );
     port (
         clk : in std_logic; -- input clock signal
