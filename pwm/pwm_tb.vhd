@@ -18,11 +18,11 @@ use ieee.std_logic_1164.all;
 use work.pwm; -- pwm.vhd
 
 
-entity tb_pwm is
-end entity tb_pwm;
+entity pwm_tb is
+end entity pwm_tb;
 
 
-architecture behavior of tb_pwm is
+architecture behavior of pwm_tb is
     
     -- uut generics
     constant g_PERIOD : positive := 8; 

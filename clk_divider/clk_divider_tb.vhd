@@ -17,11 +17,11 @@ use ieee.std_logic_1164.all;
 use work.clk_divider; -- clk_divider.vhd
 
 
-entity tb_clk_divider is
-end entity tb_clk_divider;
+entity clk_divider_tb is
+end entity clk_divider_tb;
 
 
-architecture behavior of tb_clk_divider is
+architecture behavior of clk_divider_tb is
     
     -- uut generics
     constant g_FREQ_DIV_MAX_VALUE : positive := 7;

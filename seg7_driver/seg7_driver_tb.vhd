@@ -20,11 +20,11 @@ use work.seg7_driver; -- seg7_driver.vhd
 use work.hex_to_seg7_public.all; -- hex_to_seg7_public.vhd
 
 
-entity tb_seg7_driver is
-end entity tb_seg7_driver;
+entity seg7_driver_tb is
+end entity seg7_driver_tb;
 
 
-architecture behavior of tb_seg7_driver is
+architecture behavior of seg7_driver_tb is
     
     -- uut generics
     constant g_LED_ON_VALUE    : std_logic := '1';

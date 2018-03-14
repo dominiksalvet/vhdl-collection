@@ -22,11 +22,11 @@ use work.util.all; -- util.vhd
 use work.ram; -- ram.vhd
 
 
-entity tb_mem_copier is
-end entity tb_mem_copier;
+entity mem_copier_tb is
+end entity mem_copier_tb;
 
 
-architecture behavior of tb_mem_copier is
+architecture behavior of mem_copier_tb is
     
     -- uut generics
     constant g_SRC_ADDR_WIDTH : positive := 4;

@@ -16,11 +16,11 @@ use ieee.numeric_std.all;
 use work.lifo; -- lifo.vhd
 
 
-entity tb_lifo is
-end entity tb_lifo;
+entity lifo_tb is
+end entity lifo_tb;
 
 
-architecture behavior of tb_lifo is
+architecture behavior of lifo_tb is
     
     -- uut generics
     constant g_INDEX_WIDTH : positive := 2;

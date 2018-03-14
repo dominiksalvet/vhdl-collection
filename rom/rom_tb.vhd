@@ -16,11 +16,11 @@ use work.util.all; -- util.vhd
 use work.rom; -- rom.vhd
 
 
-entity tb_rom is
-end entity tb_rom;
+entity rom_tb is
+end entity rom_tb;
 
 
-architecture behavior of tb_rom is
+architecture behavior of rom_tb is
     
     -- uut generics
     constant g_ADDR_WIDTH : positive := 4;

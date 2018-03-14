@@ -14,11 +14,11 @@ use ieee.std_logic_1164.all;
 use work.static_clk_divider; -- static_clk_divider.vhd
 
 
-entity tb_static_clk_divider is
-end entity tb_static_clk_divider;
+entity static_clk_divider_tb is
+end entity static_clk_divider_tb;
 
 
-architecture behavior of tb_static_clk_divider is
+architecture behavior of static_clk_divider_tb is
     
     -- uut generics
     constant g_FREQ_DIV : positive range 2 to positive'high := 5; 
