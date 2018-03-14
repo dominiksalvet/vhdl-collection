@@ -2,7 +2,7 @@
 -- Description:
 --     Initialize the ROM memory with data that match pattern address=data and
 --     the simulation will verify it with standard sequential reading memory
---     addresses.
+--     addresses. The simulation uses nibbles as data width (4 bits).
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.rom_public.all; -- rom_public.vhd
+use work.util.all; -- util.vhd
 use work.rom; -- rom.vhd
 
 
@@ -23,60 +23,59 @@ end entity tb_rom;
 architecture behavior of tb_rom is
     
     -- uut generics
-    constant ADDR_WIDTH : positive := 4;
-    constant DATA_WIDTH : positive := 8;
+    constant g_ADDR_WIDTH : positive := 4;
+    constant g_DATA_WIDTH : positive := 4;
     
-    constant INIT_DATA : std_logic_vector := 
-        create_simple_mem_init_data(ADDR_WIDTH, DATA_WIDTH);
-    constant INIT_START_ADDR : natural := 0;
+    constant g_INIT_VECTOR     : std_logic_vector := create_linear_vector(2 ** 4, 4);
+    constant g_INIT_START_ADDR : natural          := 0;
     
     -- uut ports
-    signal clk : std_logic := '0';
+    signal i_clk : std_logic := '0';
     
-    signal re       : std_logic                         := '0';
-    signal addr     : unsigned(ADDR_WIDTH - 1 downto 0) := (others => '0');
-    signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
+    signal i_re   : std_logic                           := '0';
+    signal i_addr : unsigned(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
-    constant CLK_PERIOD : time := 10 ns;
+    constant c_CLK_PERIOD : time := 10 ns;
     
 begin
     
     -- instantiate the unit under test (uut)
     uut : entity work.rom(rtl)
         generic map (
-            ADDR_WIDTH => ADDR_WIDTH,
-            DATA_WIDTH => DATA_WIDTH,
+            g_ADDR_WIDTH => g_ADDR_WIDTH,
+            g_DATA_WIDTH => g_DATA_WIDTH,
             
-            INIT_DATA       => INIT_DATA,
-            INIT_START_ADDR => INIT_START_ADDR
+            g_INIT_VECTOR     => g_INIT_VECTOR,
+            g_INIT_START_ADDR => g_INIT_START_ADDR
         )
         port map (
-            clk => clk,
+            i_clk => i_clk,
             
-            re       => re,
-            addr     => addr,
-            data_out => data_out
+            i_re   => i_re,
+            i_addr => i_addr,
+            o_data => o_data
         ); 
     
-    clk <= not clk after CLK_PERIOD / 2;
+    i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
-    stim_proc : process is
+    stimulus : process is
     begin
         
-        re <= '1';
-        -- read every unique address value, one value per each CLK_PERIOD from 0 address
-        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr <= to_unsigned(i, addr'length); -- read memory
-            wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
+        i_re <= '1';
+        -- read every unique address value, one value per each c_CLK_PERIOD from 0 address
+        for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
+            i_addr <= to_unsigned(i, i_addr'length); -- read memory
+            wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             
             -- asserting to verify the ROM module function
-            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
-                report "The read data does not match pattern address = data!" severity error;
+            assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
+                report "The read data does not match pattern address=data!" severity error;
         end loop;
         wait;
         
-    end process stim_proc;
+    end process stimulus;
     
 end architecture behavior;
 

@@ -6,7 +6,7 @@
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. To verify the module by its current implemetantion, it is required
---        2^(n+1) steps where n=ADDR_WIDTH.
+--        2^(n+1) steps where n=g_ADDR_WIDTH.
 --------------------------------------------------------------------------------
 
 
@@ -24,66 +24,66 @@ end entity tb_ram;
 architecture behavior of tb_ram is
     
     -- uut generics
-    constant ADDR_WIDTH : positive := 4;
-    constant DATA_WIDTH : positive := 8;
+    constant g_ADDR_WIDTH : positive := 4;
+    constant g_DATA_WIDTH : positive := 8;
     
     -- uut ports
-    signal clk : std_logic := '0';
+    signal i_clk : std_logic := '0';
     
-    signal we       : std_logic                                 := '0';
-    signal re       : std_logic                                 := '0';
-    signal addr     : unsigned(ADDR_WIDTH - 1 downto 0)         := (others => '0');
-    signal data_in  : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
+    signal i_we   : std_logic                                   := '0';
+    signal i_re   : std_logic                                   := '0';
+    signal i_addr : unsigned(g_ADDR_WIDTH - 1 downto 0)         := (others => '0');
+    signal i_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
-    constant CLK_PERIOD : time := 10 ns;
+    constant c_CLK_PERIOD : time := 10 ns;
     
 begin
     
     -- instantiate the unit under test (uut)
     uut : entity work.ram(rtl)
         generic map (
-            ADDR_WIDTH => ADDR_WIDTH,
-            DATA_WIDTH => DATA_WIDTH
+            g_ADDR_WIDTH => g_ADDR_WIDTH,
+            g_DATA_WIDTH => g_DATA_WIDTH
         )
         port map (
-            clk => clk,
+            i_clk => i_clk,
             
-            we       => we,
-            re       => re,
-            addr     => addr,
-            data_in  => data_in,
-            data_out => data_out
+            i_we   => i_we,
+            i_re   => i_re,
+            i_addr => i_addr,
+            i_data => i_data,
+            o_data => o_data
         );
     
-    clk <= not clk after CLK_PERIOD / 2;
+    i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
-    stim_proc : process is
+    stimulus : process is
     begin
         
         -- write to every address it's value
-        we <= '1';
-        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr    <= to_unsigned(i, addr'length);
-            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
-            wait for CLK_PERIOD;
+        i_we <= '1';
+        for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
+            i_addr <= to_unsigned(i, i_addr'length);
+            i_data <= std_logic_vector(to_unsigned(i, i_data'length));
+            wait for c_CLK_PERIOD;
         end loop;
         
-        we <= '0';
+        i_we <= '0';
         -- read each address and verify it's data correctness
-        re <= '1';
-        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr <= to_unsigned(i, addr'length);
-            wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
+        i_re <= '1';
+        for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
+            i_addr <= to_unsigned(i, i_addr'length);
+            wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             
             -- asserting to verify the RAM module function
-            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
+            assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
                 report "The read data does not match pattern address=data!" severity error;
         end loop;
         wait;
         
-    end process stim_proc;
+    end process stimulus;
     
 end architecture behavior;
 

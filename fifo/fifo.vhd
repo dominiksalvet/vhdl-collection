@@ -8,8 +8,8 @@
 --     possible to write and read at the same time, see "Notes".
 --------------------------------------------------------------------------------
 -- Notes:
---     1. The final internal FIFO capacity is equal to 2^INDEX_WIDTH only. It is
---        not possible to choose another capacity.
+--     1. The final internal FIFO capacity is equal to 2^g_INDEX_WIDTH only. It
+--        is not possible to choose another capacity.
 --     2. The FIFO module is implemented as memory with separated indexes for
 --        write and read operations.
 --     3. If the FIFO is empty, write and read operations can't be performed at
@@ -29,20 +29,20 @@ use ieee.numeric_std.all;
 
 entity fifo is
     generic (
-        INDEX_WIDTH : positive := 2; -- internal index bit width affecting the FIFO capacity
-        DATA_WIDTH  : positive := 8 -- bit width of stored data
+        g_INDEX_WIDTH : positive := 2; -- internal index bit width affecting the FIFO capacity
+        g_DATA_WIDTH  : positive := 8 -- bit width of stored data
     );
     port (
-        clk : in std_logic; -- clock signal
-        rst : in std_logic; -- reset signal
+        i_clk : in std_logic; -- clock signal
+        i_rst : in std_logic; -- reset signal
         
-        we      : in  std_logic; -- write enable (enqueue)
-        data_in : in  std_logic_vector(DATA_WIDTH - 1 downto 0); -- written data
-        full    : out std_logic; -- full FIFO indicator
+        i_we   : in  std_logic; -- write enable (enqueue)
+        i_data : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- written data
+        o_full : out std_logic; -- full FIFO indicator
         
-        re       : in  std_logic; -- read enable (dequeue)
-        data_out : out std_logic_vector(DATA_WIDTH - 1 downto 0); -- read data
-        empty    : out std_logic -- empty FIFO indicator
+        i_re    : in  std_logic; -- read enable (dequeue)
+        o_data  : out std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- read data
+        o_empty : out std_logic -- empty FIFO indicator
     );
 end entity fifo;
 
@@ -50,47 +50,47 @@ end entity fifo;
 architecture rtl of fifo is
     
     -- definition of internal memory type
-    type mem_t is array((2 ** INDEX_WIDTH) - 1 downto 0) of
-        std_logic_vector(DATA_WIDTH - 1 downto 0);
-    signal mem : mem_t; -- accessible internal memory signal
+    type t_mem is array((2 ** g_INDEX_WIDTH) - 1 downto 0) of
+        std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal r_mem : t_mem; -- accessible internal memory signal
     
-    signal wr_index : unsigned(INDEX_WIDTH - 1 downto 0); -- current write index
-    signal rd_index : unsigned(INDEX_WIDTH - 1 downto 0); -- current read index
+    signal r_wr_index : unsigned(g_INDEX_WIDTH - 1 downto 0); -- current write index
+    signal r_rd_index : unsigned(g_INDEX_WIDTH - 1 downto 0); -- current read index
     
 begin
     
     -- Description:
     --     Internal memory read and write mechanism description.
-    mem_access : process (clk) is
+    mem_access : process (i_clk) is
     begin
-        if (rising_edge(clk)) then
-            if (rst = '1') then -- synchronous reset
-                full     <= '0';
-                empty    <= '1';
-                wr_index <= to_unsigned(0, wr_index'length);
-                rd_index <= to_unsigned(0, rd_index'length);
+        if (rising_edge(i_clk)) then
+            if (i_rst = '1') then -- synchronous reset
+                o_full     <= '0';
+                o_empty    <= '1';
+                r_wr_index <= to_unsigned(0, r_wr_index'length);
+                r_rd_index <= to_unsigned(0, r_rd_index'length);
             else
                 
-                if (we = '1') then -- write enable
-                    mem(to_integer(wr_index)) <= data_in;
-                    wr_index                  <= wr_index + 1;
+                if (i_we = '1') then -- write enable
+                    r_mem(to_integer(r_wr_index)) <= i_data;
+                    r_wr_index                    <= r_wr_index + 1;
                     
-                    if (re = '0') then
-                        empty <= '0'; -- the FIFO is never empty after write and no read
-                        if (wr_index + 1 = rd_index) then -- full FIFO check
-                            full <= '1';
+                    if (i_re = '0') then
+                        o_empty <= '0'; -- the FIFO is never empty after write and no read
+                        if (r_wr_index + 1 = r_rd_index) then -- full FIFO check
+                            o_full <= '1';
                         end if;
                     end if;
                 end if;
                 
-                if (re = '1') then -- read enable
-                    data_out <= mem(to_integer(rd_index));
-                    rd_index <= rd_index + 1;
+                if (i_re = '1') then -- read enable
+                    o_data     <= r_mem(to_integer(r_rd_index));
+                    r_rd_index <= r_rd_index + 1;
                     
-                    if (we = '0') then
-                        full <= '0'; -- the FIFO is never full after read and no write
-                        if (rd_index + 1 = wr_index) then -- empty FIFO check
-                            empty <= '1';
+                    if (i_we = '0') then
+                        o_full <= '0'; -- the FIFO is never full after read and no write
+                        if (r_rd_index + 1 = r_wr_index) then -- empty FIFO check
+                            o_empty <= '1';
                         end if;
                     end if;
                 end if;

@@ -1,12 +1,12 @@
 --------------------------------------------------------------------------------
 -- Description:
---     The simulations increments the duty value per each PWM period. It also
---     checks pwm_out value at critical points - half clk period before falling
---     edge of the pwm_out signal (should be '1') and half period after (should
---     be '0'). Then, it will change duty from 8 to 0 half of clk period after
---     the pwm_out period begins. This demonstrates the function of internal
---     register and so duty is stored and will not change until new beginning
---     of the pwm_out period.
+--     The simulations increments the i_duty value per each PWM period. It also
+--     checks o_signal value at critical points - half i_clk period before
+--     falling edge of the o_signal signal (should be '1') and half period after
+--     (should be '0'). Then, it will change i_duty from 8 to 0 half of i_clk
+--     period after the o_signal period begins. This demonstrates the function
+--     of internal register and so i_duty is stored and will not change until
+--     new beginning of the o_signal period.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -25,89 +25,91 @@ end entity tb_pwm;
 architecture behavior of tb_pwm is
     
     -- uut generics
-    constant PERIOD : positive := 8; 
+    constant g_PERIOD : positive := 8; 
     
     -- uut ports
-    signal clk : std_logic := '0';
-    signal rst : std_logic := '0';
+    signal i_clk : std_logic := '0';
+    signal i_rst : std_logic := '0';
     
-    signal duty    : natural range 0 to PERIOD := 0;
-    signal pwm_out : std_logic;
+    signal i_duty   : natural range 0 to g_PERIOD := 0;
+    signal o_signal : std_logic;
     
     -- clock period definition
-    constant CLK_PERIOD : time := 10 ns;
+    constant c_CLK_PERIOD : time := 10 ns;
     
 begin
     
     -- instantiate the unit under test (uut)
     uut : entity work.pwm(rtl)
         generic map (
-            PERIOD => PERIOD
+            g_PERIOD => g_PERIOD
         )
         port map (
-            clk => clk,
-            rst => rst,
+            i_clk => i_clk,
+            i_rst => i_rst,
             
-            duty    => duty,
-            pwm_out => pwm_out
+            i_duty   => i_duty,
+            o_signal => o_signal
         ); 
     
-    clk <= not clk after CLK_PERIOD / 2;
+    i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
-    stim_proc : process is
+    stimulus : process is
     begin
         
-        rst <= '1'; -- module initialization
-        wait for CLK_PERIOD;
+        i_rst <= '1'; -- module initialization
+        wait for c_CLK_PERIOD;
         
-        rst <= '0';
-        wait for CLK_PERIOD;
+        i_rst <= '0';
+        wait for c_CLK_PERIOD;
         
-        -- checks correct value of the first part of the pwm_out signal for duty=0
-        assert (pwm_out = '0')
-            report "Inverse pwm_out value expected!" severity error;
-        wait for (PERIOD - 1) * CLK_PERIOD; -- pass the section with duty=0
+        -- checks correct value of the first part of the o_signal signal for i_duty=0
+        assert (o_signal = '0')
+            report "Inverse o_signal value expected!" severity error;
+        wait for (g_PERIOD - 1) * c_CLK_PERIOD; -- pass the section with i_duty=0
         
-        -- incrementing duty value, one duty per pwm_out period (as the loop parameters define)
-        for i in 0 to (PERIOD ** 2) - 1 loop
+        -- incrementing i_duty value, one i_duty per o_signal period (as the loop parameters define)
+        for i in 0 to (g_PERIOD ** 2) - 1 loop
             
-            if (i mod PERIOD = 0) then -- new pwm_out period
-                duty <= duty + 1;
+            if (i mod g_PERIOD = 0) then -- new o_signal period
+                i_duty <= i_duty + 1;
             end if;
-            wait for CLK_PERIOD; -- wait to get to individual parts of PWM period
+            wait for c_CLK_PERIOD; -- wait to get to individual parts of PWM period
             
-            -- half clk period before falling edge of the pwm_out signal
-            if (i mod PERIOD = (duty - 1) mod (PERIOD + 1)) then
-                assert (pwm_out = '1')
-                    report "Inverse pwm_out value expected!" severity error;
-                -- half clk period after falling edge of the pwm_out signal
-            elsif (i mod PERIOD = duty mod (PERIOD + 1)) then
-                assert (pwm_out = '0')
-                    report "Inverse pwm_out value expected!" severity error;
+            -- half i_clk period before falling edge of the o_signal signal
+            if (i mod g_PERIOD = (i_duty - 1) mod (g_PERIOD + 1)) then
+                assert (o_signal = '1')
+                    report "Inverse o_signal value expected!" severity error;
+            end if;
+            
+            -- half i_clk period after falling edge of the o_signal signal
+            if (i mod g_PERIOD = i_duty mod (g_PERIOD + 1)) then
+                assert (o_signal = '0')
+                    report "Inverse o_signal value expected!" severity error;
             end if;
             
         end loop;
-        -- apply delay for simulate late duty change
-        wait for CLK_PERIOD;
+        -- apply delay for simulate late i_duty change
+        wait for c_CLK_PERIOD;
         
-        duty <= 0; -- duty 0 will be accepted after already started pwm_out period
-        wait for CLK_PERIOD; -- wait one clk to verify the behavior described above
+        i_duty <= 0; -- i_duty 0 will be accepted after already started o_signal period
+        wait for c_CLK_PERIOD; -- wait one i_clk to verify the behavior described above
         
-        assert (pwm_out = '1') -- pwm_out must be '1', duty to 0 has been changed too late
-            report "Inverse pwm_out value expected!" severity error;
+        assert (o_signal = '1') -- o_signal must be '1', i_duty to 0 has been changed too late
+            report "Inverse o_signal value expected!" severity error;
         -- get to the time half period before clk_pwm falling edge
-        wait for (PERIOD - 2) * CLK_PERIOD;
+        wait for (g_PERIOD - 2) * c_CLK_PERIOD;
         
-        assert (pwm_out = '1')
-            report "Inverse pwm_out value expected!" severity error;
+        assert (o_signal = '1')
+            report "Inverse o_signal value expected!" severity error;
         -- get to the time half period after clk_pwm falling edge
-        wait for CLK_PERIOD;
+        wait for c_CLK_PERIOD;
         
-        assert (pwm_out = '0')
-            report "Inverse pwm_out value expected!" severity error;
+        assert (o_signal = '0')
+            report "Inverse o_signal value expected!" severity error;
         wait;
         
-    end process stim_proc;
+    end process stimulus;
     
 end architecture behavior;
 

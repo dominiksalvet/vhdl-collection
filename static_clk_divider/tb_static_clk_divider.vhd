@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- Description:
---     Uses FREQ_DIV with value 5 to see that clk_out period is 5 times longer
---     than the original one of clk. Also value '1' is assigned for 2 clk period
---     while value '0' is assigned for 3 clk period.
+--     Uses g_FREQ_DIV with value 5 to see that o_clk period is 5 times longer
+--     than the original one of i_clk. Also value '1' is assigned for 2 i_clk
+--     period while value '0' is assigned for 3 i_clk period.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -21,56 +21,56 @@ end entity tb_static_clk_divider;
 architecture behavior of tb_static_clk_divider is
     
     -- uut generics
-    constant FREQ_DIV : positive range 2 to positive'high := 5; 
+    constant g_FREQ_DIV : positive range 2 to positive'high := 5; 
     
     -- uut ports
-    signal clk     : std_logic := '0';
-    signal rst     : std_logic := '0';
-    signal clk_out : std_logic;
+    signal i_clk : std_logic := '0';
+    signal i_rst : std_logic := '0';
+    signal o_clk : std_logic;
     
     -- clock period definition
-    constant CLK_PERIOD : time := 10 ns;
+    constant c_CLK_PERIOD : time := 10 ns;
     
 begin
     
     -- instantiate the unit under test (uut)
     uut : entity work.static_clk_divider(rtl)
         generic map (
-            FREQ_DIV => FREQ_DIV
+            g_FREQ_DIV => g_FREQ_DIV
         )
         port map (
-            clk     => clk,
-            rst     => rst,
-            clk_out => clk_out
+            i_clk => i_clk,
+            i_rst => i_rst,
+            o_clk => o_clk
         );
     
-    clk <= not clk after CLK_PERIOD / 2;
+    i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
-    stim_proc : process is
+    stimulus : process is
     begin 
         
-        rst <= '1'; -- initialize the module
-        wait for CLK_PERIOD;
+        i_rst <= '1'; -- initialize the module
+        wait for c_CLK_PERIOD;
         
-        rst <= '0';
+        i_rst <= '0';
         wait;
         
-    end process stim_proc;
+    end process stimulus;
     
-    contr_proc : process is
+    verification : process is
     begin
         
-        wait for CLK_PERIOD;
+        wait for c_CLK_PERIOD;
         
-        assert (clk_out = '1') -- the first part of the output clock period
-            report "Expected inverse clk_out value!" severity error;
-        wait for (FREQ_DIV / 2) * CLK_PERIOD;
+        assert (o_clk = '1') -- the first part of the output clock period
+            report "Expected inverse o_clk value!" severity error;
+        wait for (g_FREQ_DIV / 2) * c_CLK_PERIOD;
         
-        assert (clk_out = '0') -- the second part of the output clock period
-            report "Expected inverse clk_out value!" severity error;
-        wait for ((FREQ_DIV - 1) / 2) * CLK_PERIOD;
+        assert (o_clk = '0') -- the second part of the output clock period
+            report "Expected inverse o_clk value!" severity error;
+        wait for ((g_FREQ_DIV - 1) / 2) * c_CLK_PERIOD;
         
-    end process contr_proc;
+    end process verification;
     
 end architecture behavior;
 

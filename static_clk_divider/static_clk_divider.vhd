@@ -7,9 +7,9 @@
 --     with a fixed frequency divisor.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. Period of output clk_out starts with '1' value, followed by '0'.
---     2. When the FREQ_DIV is set as an odd number, the clk_out will have '1'
---        value one clk period shorter than '0' value per clk_out period.
+--     1. Period of output o_clk starts with '1' value, followed by '0'.
+--     2. When the g_FREQ_DIV is set as an odd number, the o_clk will have '1'
+--        value one i_clk period shorter than '0' value per o_clk period.
 --------------------------------------------------------------------------------
 
 
@@ -20,13 +20,13 @@ use ieee.numeric_std.all;
 
 entity static_clk_divider is
     generic (
-        -- frequency divisor, <clk_out_freq>=<clk_freq>/FREQ_DIV
-        FREQ_DIV : positive range 2 to positive'high := 5
+        -- frequency divisor, <o_clk_freq>=<i_clk_freq>/g_FREQ_DIV
+        g_FREQ_DIV : positive range 2 to positive'high := 5
     );
     port (
-        clk     : in  std_logic; -- input clock signal
-        rst     : in  std_logic; -- reset signal
-        clk_out : out std_logic -- final output clock
+        i_clk : in  std_logic; -- input clock signal
+        i_rst : in  std_logic; -- reset signal
+        o_clk : out std_logic -- final output clock
     );
 end entity static_clk_divider;
 
@@ -35,26 +35,26 @@ architecture rtl of static_clk_divider is
 begin
     
     -- Description:
-    --     Perform clk frequency division by counting and create the final clk_out signal.
-    divide_clk_freq : process (clk) is
-        variable clk_counter : positive range 1 to FREQ_DIV; -- internal clk counter
+    --     Perform i_clk frequency division by counting and create the final o_clk signal.
+    divide_i_clk_freq : process (i_clk) is
+        variable r_i_clk_counter : positive range 1 to g_FREQ_DIV; -- internal i_clk counter
     begin
-        if (rising_edge(clk)) then
-            -- need to reset the clk_counter and begin the new clk_out period
-            if (rst = '1' or clk_counter = FREQ_DIV) then
-                clk_out     <= '1';
-                clk_counter := 1;
+        if (rising_edge(i_clk)) then
+            -- need to reset the r_i_clk_counter and begin the new o_clk period
+            if (i_rst = '1' or r_i_clk_counter = g_FREQ_DIV) then
+                o_clk           <= '1';
+                r_i_clk_counter := 1;
             else
                 
-                if (clk_counter = (FREQ_DIV / 2)) then -- half of the clk_out period
-                    clk_out <= '0';
+                if (r_i_clk_counter = (g_FREQ_DIV / 2)) then -- half of the o_clk period
+                    o_clk <= '0';
                 end if;
                 
-                clk_counter := clk_counter + 1; -- counting clk rising edges
+                r_i_clk_counter := r_i_clk_counter + 1; -- counting i_clk rising edges
                 
             end if;
         end if;
-    end process divide_clk_freq;
+    end process divide_i_clk_freq;
     
 end architecture rtl;
 

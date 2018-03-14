@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     The test bench first fills up all the LIFO internal memory defined by
---     INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then it
---     will test the full indicator and read all the items. Then it will verify
---     all the read data and empty indicator at the end.
+--     g_INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then
+--     it will test the o_full indicator and read all the items. Then it will
+--     verify all the read data and the o_empty indicator at the end.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -23,92 +23,92 @@ end entity tb_lifo;
 architecture behavior of tb_lifo is
     
     -- uut generics
-    constant INDEX_WIDTH : positive := 2;
-    constant DATA_WIDTH  : positive := 8;
+    constant g_INDEX_WIDTH : positive := 2;
+    constant g_DATA_WIDTH  : positive := 8;
     
     -- uut ports
-    signal clk : std_logic := '0';
-    signal rst : std_logic := '0';
+    signal i_clk : std_logic := '0';
+    signal i_rst : std_logic := '0';
     
-    signal we      : std_logic                                 := '0';
-    signal data_in : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal full    : std_logic;
+    signal i_we   : std_logic                                   := '0';
+    signal i_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal o_full : std_logic;
     
-    signal re       : std_logic := '0';
-    signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
-    signal empty    : std_logic;
+    signal i_re    : std_logic := '0';
+    signal o_data  : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal o_empty : std_logic;
     
     -- clock period definition
-    constant CLK_PERIOD : time := 10 ns;
+    constant c_CLK_PERIOD : time := 10 ns;
     
 begin
     
     -- instantiate the unit under test (uut)
     uut : entity work.lifo(rtl)
         generic map (
-            INDEX_WIDTH => INDEX_WIDTH,
-            DATA_WIDTH  => DATA_WIDTH
+            g_INDEX_WIDTH => g_INDEX_WIDTH,
+            g_DATA_WIDTH  => g_DATA_WIDTH
         )
         port map (
-            clk => clk,
-            rst => rst,
+            i_clk => i_clk,
+            i_rst => i_rst,
             
-            we      => we,
-            data_in => data_in,
-            full    => full,
+            i_we   => i_we,
+            i_data => i_data,
+            o_full => o_full,
             
-            re       => re,
-            data_out => data_out,
-            empty    => empty
+            i_re    => i_re,
+            o_data  => o_data,
+            o_empty => o_empty
         ); 
     
-    clk <= not clk after CLK_PERIOD / 2;
+    i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
-    stim_proc : process is
+    stimulus : process is
     begin
         
-        rst <= '1';
-        wait for CLK_PERIOD; -- intitialize the uut
+        i_rst <= '1';
+        wait for c_CLK_PERIOD; -- intitialize the uut
         
-        rst <= '0';
-        we  <= '1'; -- write process start
-        wait for CLK_PERIOD;
+        i_rst <= '0';
+        i_we  <= '1'; -- write process start
+        wait for c_CLK_PERIOD;
         
         for i in 1 to 3 loop
-            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
-            wait for CLK_PERIOD;
+            i_data <= std_logic_vector(to_unsigned(i, i_data'length));
+            wait for c_CLK_PERIOD;
         end loop;
         
-        assert (full = '1')
-            report "The full indicator should have '1' value!" severity error;
+        assert (o_full = '1')
+            report "The o_full indicator should have '1' value!" severity error;
         
-        we <= '0';
-        re <= '1';
-        wait for CLK_PERIOD;
+        i_we <= '0';
+        i_re <= '1';
+        wait for c_CLK_PERIOD;
         
         for i in 3 downto 0 loop -- LIFO structure needs downto loop to verify data
-            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
+            assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
                 report "Invalid value has been read from the LIFO!" severity error;
             if (i /= 0) then
-                wait for CLK_PERIOD;
+                wait for c_CLK_PERIOD;
             end if;
         end loop;
         
-        assert (empty = '1')
-            report "The empty indicator should have '1' value!" severity error;
+        assert (o_empty = '1')
+            report "The o_empty indicator should have '1' value!" severity error;
         
-        we <= '1';
-        wait for CLK_PERIOD;
+        i_we <= '1';
+        wait for c_CLK_PERIOD;
         
-        assert (empty = '1')
-            report "The empty indicator should have '1' value, because write and read " &
+        assert (o_empty = '1')
+            report "The o_empty indicator should have '1' value, because write and read " &
             "at the same time must have no effect!" severity error;
         
-        we <= '0';
-        re <= '0';
+        i_we <= '0';
+        i_re <= '0';
         wait;
         
-    end process stim_proc;
+    end process stimulus;
     
 end architecture behavior;
 
