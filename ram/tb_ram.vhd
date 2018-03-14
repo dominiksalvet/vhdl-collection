@@ -17,11 +17,11 @@ use ieee.numeric_std.all;
 use work.ram; -- ram.vhd
 
 
-entity ram_tb is
-end entity ram_tb;
+entity tb_ram is
+end entity tb_ram;
 
 
-architecture behavior of ram_tb is
+architecture behavior of tb_ram is
     
     -- uut generics
     constant ADDR_WIDTH : positive := 4;

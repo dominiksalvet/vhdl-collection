@@ -16,11 +16,11 @@ use ieee.numeric_std.all;
 use work.fifo; -- fifo.vhd
 
 
-entity fifo_tb is
-end entity fifo_tb;
+entity tb_fifo is
+end entity tb_fifo;
 
 
-architecture behavior of fifo_tb is
+architecture behavior of tb_fifo is
     
     -- uut generics
     constant INDEX_WIDTH : positive := 2;

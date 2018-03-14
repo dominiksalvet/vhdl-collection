@@ -18,11 +18,11 @@ use ieee.std_logic_1164.all;
 use work.seg7_driver; -- seg7_driver.vhd
 
 
-entity seg7_driver_tb is
-end entity seg7_driver_tb;
+entity tb_seg7_driver is
+end entity tb_seg7_driver;
 
 
-architecture behavior of seg7_driver_tb is
+architecture behavior of tb_seg7_driver is
     
     -- uut generics
     constant LED_ON_VALUE    : std_logic := '1';

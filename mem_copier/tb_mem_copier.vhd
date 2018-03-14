@@ -22,11 +22,11 @@ use work.rom_public.all; -- rom_public.vhd
 use work.ram; -- ram.vhd
 
 
-entity mem_copier_tb is
-end entity mem_copier_tb;
+entity tb_mem_copier is
+end entity tb_mem_copier;
 
 
-architecture behavior of mem_copier_tb is
+architecture behavior of tb_mem_copier is
     
     -- uut generics
     constant SRC_ADDR_WIDTH : positive := 4;

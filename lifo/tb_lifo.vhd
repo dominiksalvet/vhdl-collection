@@ -1,8 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
---     Initialize the ROM memory with data that match pattern address=data and
---     the simulation will verify it with standard sequential reading memory
---     addresses.
+--     The test bench first fills up all the LIFO internal memory defined by
+--     INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then it
+--     will test the full indicator and read all the items. Then it will verify
+--     all the read data and empty indicator at the end.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -12,30 +13,30 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.rom_public.all; -- rom_public.vhd
-use work.rom; -- rom.vhd
+use work.lifo; -- lifo.vhd
 
 
-entity rom_tb is
-end entity rom_tb;
+entity tb_lifo is
+end entity tb_lifo;
 
 
-architecture behavior of rom_tb is
+architecture behavior of tb_lifo is
     
     -- uut generics
-    constant ADDR_WIDTH : positive := 4;
-    constant DATA_WIDTH : positive := 8;
-    
-    constant INIT_DATA : std_logic_vector := 
-        create_simple_mem_init_data(ADDR_WIDTH, DATA_WIDTH);
-    constant INIT_START_ADDR : natural := 0;
+    constant INDEX_WIDTH : positive := 2;
+    constant DATA_WIDTH  : positive := 8;
     
     -- uut ports
     signal clk : std_logic := '0';
+    signal rst : std_logic := '0';
     
-    signal re       : std_logic                         := '0';
-    signal addr     : unsigned(ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal we      : std_logic                                 := '0';
+    signal data_in : std_logic_vector(DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal full    : std_logic;
+    
+    signal re       : std_logic := '0';
     signal data_out : std_logic_vector(DATA_WIDTH - 1 downto 0);
+    signal empty    : std_logic;
     
     -- clock period definition
     constant CLK_PERIOD : time := 10 ns;
@@ -43,20 +44,22 @@ architecture behavior of rom_tb is
 begin
     
     -- instantiate the unit under test (uut)
-    uut : entity work.rom(rtl)
+    uut : entity work.lifo(rtl)
         generic map (
-            ADDR_WIDTH => ADDR_WIDTH,
-            DATA_WIDTH => DATA_WIDTH,
-            
-            INIT_DATA       => INIT_DATA,
-            INIT_START_ADDR => INIT_START_ADDR
+            INDEX_WIDTH => INDEX_WIDTH,
+            DATA_WIDTH  => DATA_WIDTH
         )
         port map (
             clk => clk,
+            rst => rst,
+            
+            we      => we,
+            data_in => data_in,
+            full    => full,
             
             re       => re,
-            addr     => addr,
-            data_out => data_out
+            data_out => data_out,
+            empty    => empty
         ); 
     
     clk_proc : process is
@@ -70,16 +73,45 @@ begin
     stim_proc : process is
     begin
         
-        re <= '1';
-        -- read every unique address value, one value per each CLK_PERIOD from 0 address
-        for i in 0 to (2 ** ADDR_WIDTH) - 1 loop
-            addr <= to_unsigned(i, addr'length); -- read memory
-            wait for CLK_PERIOD; -- wait for clk rising edge to read the desired data
-            
-            -- asserting to verify the ROM module function
-            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
-                report "The read data does not match pattern address = data!" severity error;
+        rst <= '1';
+        wait for CLK_PERIOD; -- intitialize the uut
+        
+        rst <= '0';
+        we  <= '1'; -- write process start
+        wait for CLK_PERIOD;
+        
+        for i in 1 to 3 loop
+            data_in <= std_logic_vector(to_unsigned(i, data_in'length));
+            wait for CLK_PERIOD;
         end loop;
+        
+        assert (full = '1')
+            report "The full indicator should have '1' value!" severity error;
+        
+        we <= '0';
+        re <= '1';
+        wait for CLK_PERIOD;
+        
+        for i in 3 downto 0 loop -- LIFO structure needs downto loop to verify data
+            assert (data_out = std_logic_vector(to_unsigned(i, data_out'length)))
+                report "Invalid value has been read from the LIFO!" severity error;
+            if (i /= 0) then
+                wait for CLK_PERIOD;
+            end if;
+        end loop;
+        
+        assert (empty = '1')
+            report "The empty indicator should have '1' value!" severity error;
+        
+        we <= '1';
+        wait for CLK_PERIOD;
+        
+        assert (empty = '1')
+            report "The empty indicator should have '1' value, because write and read " &
+            "at the same time must have no effect!" severity error;
+        
+        we <= '0';
+        re <= '0';
         wait;
         
     end process stim_proc;
