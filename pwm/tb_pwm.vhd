@@ -52,13 +52,7 @@ begin
             pwm_out => pwm_out
         ); 
     
-    clk_proc : process is
-    begin
-        clk <= '0';
-        wait for CLK_PERIOD / 2;
-        clk <= '1';
-        wait for CLK_PERIOD / 2;
-    end process clk_proc;
+    clk <= not clk after CLK_PERIOD / 2;
     
     stim_proc : process is
     begin
