@@ -3,7 +3,7 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     Generic implementation of single port sychronous ROM memory with an
+--     Generic implementation of single port synchronous ROM memory with an
 --     initialization option.
 --------------------------------------------------------------------------------
 -- Notes:

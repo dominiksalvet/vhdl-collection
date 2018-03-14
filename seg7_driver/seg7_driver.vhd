@@ -83,7 +83,7 @@ begin
     end process compute_next_index;
     
     -- Description:
-    --     Propage changes of digit index to the o_seg7_sel output.
+    --     Propagate changes of digit index to the o_seg7_sel output.
     seg7_sel_switch : process (r_seg7_sel_index) is
     begin
         o_seg7_sel                   <= (others => not g_DIGIT_SEL_VALUE);

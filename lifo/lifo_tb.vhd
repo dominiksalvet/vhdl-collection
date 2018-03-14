@@ -68,7 +68,7 @@ begin
     begin
         
         i_rst <= '1';
-        wait for c_CLK_PERIOD; -- intitialize the uut
+        wait for c_CLK_PERIOD; -- initialize the uut
         
         i_rst <= '0';
         i_we  <= '1'; -- write process start

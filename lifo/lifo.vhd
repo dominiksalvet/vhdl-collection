@@ -64,7 +64,7 @@ begin
                 r_wr_index <= to_unsigned(0, r_wr_index'length);
             else
                 
-                if (i_we = '1' and i_re = '0') then -- write machanism
+                if (i_we = '1' and i_re = '0') then -- write mechanism
                     -- the LIFO is never empty after write and no read
                     o_empty                       <= '0';
                     r_mem(to_integer(r_wr_index)) <= i_data;

@@ -5,7 +5,7 @@
 --     sequential reading the memory addresses.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. To verify the module by its current implemetantion, it is required
+--     1. To verify the module by its current implementation, it is required
 --        2^(n+1) steps where n=g_ADDR_WIDTH.
 --------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@
 --     the last 4 bytes of the target memory. After verifying that control
 --     signals were correct, the whole source memory image is copied to the
 --     target memory from it's half addresses to test the modulo function. The
---     data transfering itself now will be verifying.
+--     data transferring itself now will be verifying.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------

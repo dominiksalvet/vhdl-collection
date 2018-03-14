@@ -6,8 +6,8 @@
 --     Converter from hexadecimal data to seven segment data.
 --------------------------------------------------------------------------------
 -- Notes:
---     1. If the output o_seg7_data signal is propaged to LEDs, it is required
---        to respect the LEDs on/off value and inverse the signal eventually.
+--     1. If the output o_seg7_data signal is wired to LEDs, it is required to
+--        respect the LEDs on/off value and inverse the signal eventually.
 --     2. This implementation assumes LED on state as '0' value and LED off
 --        state as '1' value.
 --------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ use work.hex_to_seg7_public.all; -- hex_to_seg7_public.vhd
 entity hex_to_seg7 is
     port (
         i_hex_data  : in  std_logic_vector(3 downto 0); -- 4-bit data as encoded hexadecimal number
-        o_seg7_data : out std_logic_vector(6 downto 0) -- 7-bit sigment data, bit per each segment
+        o_seg7_data : out std_logic_vector(6 downto 0) -- 7-bit segment data, bit per each segment
     );
 end entity hex_to_seg7;
 

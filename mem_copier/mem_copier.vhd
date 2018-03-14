@@ -5,7 +5,7 @@
 -- Description:
 --     This VHDL description represents a generic memory copier module. It can
 --     operate in wide ways of use. It behaves like a simple DMA module with two
---     separated memory busses.
+--     separated memory buses.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. The i_copy_en input must have '1' value for all the time of copying

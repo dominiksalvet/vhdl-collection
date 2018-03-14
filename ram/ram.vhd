@@ -3,7 +3,7 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     Generic implementation of single port sychronous RW type RAM memory.
+--     Generic implementation of single port synchronous RW type RAM memory.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Since there is a read enable signal, o_data output will be implemented
