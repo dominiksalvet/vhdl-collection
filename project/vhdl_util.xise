@@ -83,7 +83,7 @@
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="29"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="29"/>
     </file>
-    <file xil_pn:name="../util.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="../packages/util.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="2"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
@@ -117,7 +117,7 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
-    <file xil_pn:name="../verif_util.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="../packages/verif_util.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="1"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
