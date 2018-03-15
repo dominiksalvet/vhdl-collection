@@ -94,7 +94,7 @@ begin
             i_clk => i_clk,
             
             i_re   => o_src_re,
-            i_addr => o_src_addr,
+            i_addr => std_logic_vector(o_src_addr),
             o_data => i_src_data
         );
     
@@ -109,7 +109,7 @@ begin
             
             i_we   => o_tar_we,
             i_re   => '0', -- it is not required to read the data back
-            i_addr => o_tar_addr,
+            i_addr => std_logic_vector(o_tar_addr),
             i_data => o_tar_data,
             o_data => open
         );
@@ -132,8 +132,8 @@ begin
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '0')
-            report "Data to be written to the target memory are not defined, " &
-            "write must not be enabled." severity error;
+            report "Data to be written to the target memory are not defined, write must not be" &
+            " enabled." severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '1')
@@ -153,8 +153,8 @@ begin
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '0' and o_copy_done = '1')
-            report "Write now must be done, o_tar_we signal should '0' " &
-            "and o_copy_done should be '1' to indicate the finished copying!" severity error;
+            report "Write now must be done, o_tar_we signal should '0' and o_copy_done should be" &
+            " '1' to indicate the finished copying!" severity error;
         i_copy_en <= '0'; -- copying has been done
         wait for c_CLK_PERIOD;
         
@@ -178,8 +178,8 @@ begin
         end loop;
         
         assert (o_tar_we = '0' and o_copy_done = '1')
-            report "Write now must be done, o_tar_we signal should '0' " &
-            "and o_copy_done should be '1' to indicate the finished copying!" severity error;
+            report "Write now must be done, o_tar_we signal should '0' and o_copy_done should be" &
+            " '1' to indicate the finished copying!" severity error;
         i_copy_en <= '0'; -- copying has been done
         wait for c_CLK_PERIOD;
         

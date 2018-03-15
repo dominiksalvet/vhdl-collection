@@ -32,8 +32,8 @@ architecture behavior of rom_tb is
     -- uut ports
     signal i_clk : std_logic := '0';
     
-    signal i_re   : std_logic                           := '0';
-    signal i_addr : unsigned(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal i_re   : std_logic                                   := '0';
+    signal i_addr : std_logic_vector(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
     signal o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
@@ -66,7 +66,7 @@ begin
         i_re <= '1';
         -- read every unique address value, one value per each c_CLK_PERIOD from 0 address
         for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
-            i_addr <= to_unsigned(i, i_addr'length); -- read memory
+            i_addr <= std_logic_vector(to_unsigned(i, i_addr'length)); -- read memory
             wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             
             -- asserting to verify the ROM module function

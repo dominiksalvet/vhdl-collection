@@ -30,6 +30,8 @@ use ieee.numeric_std.all;
 
 use work.util.all; -- util.vhd
 
+use work.verif_util.all; -- verif_util.vhd
+
 
 entity rom is
     generic (
@@ -45,13 +47,16 @@ entity rom is
         i_clk : in std_logic; -- clock signal
         
         i_re   : in  std_logic; -- read enable
-        i_addr : in  unsigned(g_ADDR_WIDTH - 1 downto 0); -- address bus
+        i_addr : in  std_logic_vector(g_ADDR_WIDTH - 1 downto 0); -- address bus
         o_data : out std_logic_vector(g_DATA_WIDTH - 1 downto 0) -- output data bus
     );
 end entity rom;
 
 
 architecture rtl of rom is
+    
+    -- output buffers
+    signal b_o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- amount of unique addresses
     constant c_ADDR_COUNT : positive := 2 ** g_ADDR_WIDTH;
@@ -61,7 +66,7 @@ architecture rtl of rom is
     
     -- Description:
     --     Initialize memory by sampling the g_INIT_VECTOR vector to memory data width.
-    function create_mem_image return t_mem is
+    function create_mem_image return t_mem is -- returns final memory image
         variable r_mem : t_mem; -- memory to be initialized
     begin
         -- loop through all the data to initialize memory
@@ -73,25 +78,50 @@ architecture rtl of rom is
         return r_mem;
     end function create_mem_image;
     
-    -- accessible memory signal, calling the memory initialization
-    signal r_mem : t_mem := create_mem_image;
-    -- also possible to change to a direct initialization, as shown below in a comment section:
-    -- signal r_mem : t_mem := (
-    --     others => (others => 'U')
-    --     );
-    
 begin
+    
+    o_data <= b_o_data;
     
     -- Description:
     --     Memory read mechanism description.
     mem_read : process (i_clk) is
+        -- accessible memory signal (rather constant), calling the memory initialization
+        constant r_mem : t_mem := create_mem_image;
+        -- it is also possible to change to a direct initialization, as shown commented below:
+        -- constant r_mem : t_mem := (
+        --         others => (others => 'U')
+        --     );
     begin
         if (rising_edge(i_clk)) then
             if (i_re = '1') then
-                o_data <= r_mem(to_integer(i_addr));
+                b_o_data <= r_mem(to_integer(unsigned(i_addr)));
             end if;
         end if;
     end process mem_read;
+    
+    -- synthesis translate_off
+    input_prevention : process (i_clk) is
+    begin
+        if (rising_edge(i_clk)) then
+            if (i_re = '1') then -- read means that address must be defined
+                if (not is_vector_of_01(i_addr)) then
+                    report "ROM - undefined address, the address is not exactly defined by '0'" &
+                    " and '1' values only!" severity failure;
+                end if;
+            end if;
+        end if;
+    end process input_prevention;
+    
+    output_prevention : process (b_o_data) is
+    begin
+        if (now > 0 ps) then -- the prevention must start after the simulation initialization
+            if (not is_vector_of_01(b_o_data)) then
+                report "ROM - undefined output data, the output data are not exactly defined by" &
+                " '0' and '1' values only!" severity error;
+            end if;
+        end if;
+    end process output_prevention;
+    -- synthesis translate_on
     
 end architecture rtl;
 

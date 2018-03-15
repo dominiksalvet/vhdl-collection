@@ -32,7 +32,7 @@ architecture behavior of ram_tb is
     
     signal i_we   : std_logic                                   := '0';
     signal i_re   : std_logic                                   := '0';
-    signal i_addr : unsigned(g_ADDR_WIDTH - 1 downto 0)         := (others => '0');
+    signal i_addr : std_logic_vector(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
     signal i_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
     signal o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
@@ -65,7 +65,7 @@ begin
         -- write to every address it's value
         i_we <= '1';
         for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
-            i_addr <= to_unsigned(i, i_addr'length);
+            i_addr <= std_logic_vector(to_unsigned(i, i_addr'length));
             i_data <= std_logic_vector(to_unsigned(i, i_data'length));
             wait for c_CLK_PERIOD;
         end loop;
@@ -74,7 +74,7 @@ begin
         -- read each address and verify it's data correctness
         i_re <= '1';
         for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
-            i_addr <= to_unsigned(i, i_addr'length);
+            i_addr <= std_logic_vector(to_unsigned(i, i_addr'length));
             wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             
             -- asserting to verify the RAM module function
