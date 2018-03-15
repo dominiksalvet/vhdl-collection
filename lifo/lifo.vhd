@@ -8,7 +8,8 @@
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. If both write and read operations are enabled at the same time,
---        nothing will happen.
+--        only write will be performed. In this case it is needed to be careful
+--        when LIFO is full as write will be performed anyway.
 --     2. The final internal LIFO capacity is equal to 2^g_INDEX_WIDTH only. It
 --        is not possible to choose another capacity.
 --------------------------------------------------------------------------------
@@ -41,6 +42,10 @@ end entity lifo;
 
 architecture rtl of lifo is
     
+    -- output buffers
+    signal b_full  : std_logic;
+    signal b_empty : std_logic;
+    
     -- definition of internal memory type
     type t_mem is array((2 ** g_INDEX_WIDTH) - 1 downto 0) of
         std_logic_vector(g_DATA_WIDTH - 1 downto 0);
@@ -51,6 +56,10 @@ architecture rtl of lifo is
     
 begin
     
+    o_full <= b_full;
+    
+    o_empty <= b_empty;
+    
     w_rd_index <= r_wr_index - 1; -- read index is always less by 1 than write index
     
     -- Description:
@@ -59,35 +68,48 @@ begin
     begin
         if (rising_edge(i_clk)) then -- synchronous reset
             if (i_rst = '1') then
-                o_full     <= '0';
-                o_empty    <= '1';
+                b_full     <= '0';
+                b_empty    <= '1';
                 r_wr_index <= to_unsigned(0, r_wr_index'length);
             else
                 
-                if (i_we = '1' and i_re = '0') then -- write mechanism
+                if (i_we = '1') then -- write mechanism
                     -- the LIFO is never empty after write and no read
-                    o_empty                       <= '0';
+                    b_empty                       <= '0';
                     r_mem(to_integer(r_wr_index)) <= i_data;
                     r_wr_index                    <= r_wr_index + 1;
                     
                     if (r_wr_index = (2 ** g_INDEX_WIDTH) - 1) then -- full LIFO check
-                        o_full <= '1';
+                        b_full <= '1';
                     end if;
-                end if;
-                
-                if (i_re = '1' and i_we = '0') then -- read mechanism
-                    o_full     <= '0'; -- the LIFO is never full after read and no write
+                elsif (i_re = '1') then -- read mechanism
+                    b_full     <= '0'; -- the LIFO is never full after read and no write
                     o_data     <= r_mem(to_integer(w_rd_index));
                     r_wr_index <= w_rd_index;
                     
                     if (w_rd_index = 0) then -- empty LIFO check
-                        o_empty <= '1';
+                        b_empty <= '1';
                     end if;
                 end if;
                 
             end if;
         end if;
     end process mem_access;
+    
+    -- synthesis translate_off
+    prevention : process (i_clk) is
+    begin
+        if (rising_edge(i_clk)) then
+            if (b_full = '1' and i_we = '1') then
+                report "LIFO overflow - the LIFO is full and being written!" severity failure;
+            end if;
+            
+            if (b_empty = '1' and i_re = '1' and i_we = '0') then
+                report "LIFO underflow, output data undefined - read when empty!" severity failure;
+            end if;
+        end if;
+    end process prevention;
+    -- synthesis translate_on
     
 end architecture rtl;
 

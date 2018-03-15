@@ -113,14 +113,6 @@ begin
         assert (o_empty = '1')
             report "The o_empty indicator should have '1' value!" severity error;
         
-        i_we <= '1';
-        wait for c_CLK_PERIOD;
-        
-        assert (o_empty = '1')
-            report "The o_empty indicator should have '1' value, because write and read " &
-            "at the same time must have no effect at the o_empty and o_full states!" severity error;
-        
-        i_we <= '0';
         i_re <= '0';
         wait;
         

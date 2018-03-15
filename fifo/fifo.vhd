@@ -12,11 +12,12 @@
 --        is not possible to choose another capacity.
 --     2. The FIFO module is implemented as memory with separated indexes for
 --        write and read operations.
---     3. If the FIFO is empty, write and read operations can't be performed at
---        the same time. Otherwise the output data will be undefined and input
---        data will be lost. Nevertheless, it is still possible to use FIFO next
---        time like it should be used - it does not require to perform reset
---        after a violation of this access rule.
+--     3. If the FIFO is empty, read operation can't be performed, it is also
+--        not possible to do it at the same time even with write. Otherwise the
+--        output data will be undefined and input data will be lost.
+--        Nevertheless, it is still possible to use the FIFO next time like it
+--        should be used, but the simulation will be interrupted if the
+--        situation will occur.
 --     4. If the FIFO is full, write and read operation can be performed at the
 --        same time.
 --------------------------------------------------------------------------------
@@ -49,12 +50,20 @@ end entity fifo;
 
 architecture rtl of fifo is
     
+    -- output buffers
+    signal b_full  : std_logic;
+    signal b_empty : std_logic;
+    
     -- definition of internal memory type
     type t_mem is array((2 ** g_INDEX_WIDTH) - 1 downto 0) of
         std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     signal r_mem : t_mem; -- accessible internal memory signal
     
 begin
+    
+    o_full <= b_full;
+    
+    o_empty <= b_empty;
     
     -- Description:
     --     Internal memory read and write mechanism description.
@@ -64,8 +73,8 @@ begin
     begin
         if (rising_edge(i_clk)) then
             if (i_rst = '1') then -- synchronous reset
-                o_full     <= '0';
-                o_empty    <= '1';
+                b_full     <= '0';
+                b_empty    <= '1';
                 r_wr_index := to_unsigned(0, r_wr_index'length);
                 r_rd_index := to_unsigned(0, r_rd_index'length);
             else
@@ -74,9 +83,9 @@ begin
                     r_mem(to_integer(r_wr_index)) <= i_data;
                     
                     if (i_re = '0') then
-                        o_empty <= '0'; -- the FIFO is never empty after write and no read
+                        b_empty <= '0'; -- the FIFO is never empty after write and no read
                         if (r_wr_index + 1 = r_rd_index) then -- full FIFO check
-                            o_full <= '1';
+                            b_full <= '1';
                         end if;
                     end if;
                     
@@ -87,9 +96,9 @@ begin
                     o_data <= r_mem(to_integer(r_rd_index));
                     
                     if (i_we = '0') then
-                        o_full <= '0'; -- the FIFO is never full after read and no write
+                        b_full <= '0'; -- the FIFO is never full after read and no write
                         if (r_rd_index + 1 = r_wr_index) then -- empty FIFO check
-                            o_empty <= '1';
+                            b_empty <= '1';
                         end if;
                     end if;
                     
@@ -99,6 +108,22 @@ begin
             end if;
         end if;
     end process mem_access;
+    
+    -- synthesis translate_off
+    prevention : process (i_clk) is
+    begin
+        if (rising_edge(i_clk)) then
+            if (b_full = '1' and i_we = '1' and i_re = '0') then
+                report "FIFO overwrite - the FIFO is full and being written without read!"
+                severity failure;
+            end if;
+            
+            if (b_empty = '1' and i_re = '1') then
+                report "Undefined FIFO output data - read when empty!" severity failure;
+            end if;
+        end if;
+    end process prevention;
+    -- synthesis translate_on
     
 end architecture rtl;
 
