@@ -54,26 +54,24 @@ architecture rtl of fifo is
         std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     signal r_mem : t_mem; -- accessible internal memory signal
     
-    signal r_wr_index : unsigned(g_INDEX_WIDTH - 1 downto 0); -- current write index
-    signal r_rd_index : unsigned(g_INDEX_WIDTH - 1 downto 0); -- current read index
-    
 begin
     
     -- Description:
     --     Internal memory read and write mechanism description.
     mem_access : process (i_clk) is
+        variable r_wr_index : unsigned(g_INDEX_WIDTH - 1 downto 0); -- current write index
+        variable r_rd_index : unsigned(g_INDEX_WIDTH - 1 downto 0); -- current read index
     begin
         if (rising_edge(i_clk)) then
             if (i_rst = '1') then -- synchronous reset
                 o_full     <= '0';
                 o_empty    <= '1';
-                r_wr_index <= to_unsigned(0, r_wr_index'length);
-                r_rd_index <= to_unsigned(0, r_rd_index'length);
+                r_wr_index := to_unsigned(0, r_wr_index'length);
+                r_rd_index := to_unsigned(0, r_rd_index'length);
             else
                 
                 if (i_we = '1') then -- write enable
                     r_mem(to_integer(r_wr_index)) <= i_data;
-                    r_wr_index                    <= r_wr_index + 1;
                     
                     if (i_re = '0') then
                         o_empty <= '0'; -- the FIFO is never empty after write and no read
@@ -81,11 +79,12 @@ begin
                             o_full <= '1';
                         end if;
                     end if;
+                    
+                    r_wr_index := r_wr_index + 1;
                 end if;
                 
                 if (i_re = '1') then -- read enable
-                    o_data     <= r_mem(to_integer(r_rd_index));
-                    r_rd_index <= r_rd_index + 1;
+                    o_data <= r_mem(to_integer(r_rd_index));
                     
                     if (i_we = '0') then
                         o_full <= '0'; -- the FIFO is never full after read and no write
@@ -93,6 +92,8 @@ begin
                             o_empty <= '1';
                         end if;
                     end if;
+                    
+                    r_rd_index := r_rd_index + 1;
                 end if;
                 
             end if;
