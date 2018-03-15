@@ -16,7 +16,7 @@ package util is
     function create_linear_vector (
             c_COUNT      : positive; -- total number of items (subvectors)
             c_ITEM_WIDTH : positive -- bit width of one item (subvector)
-        ) return std_logic_vector;
+        ) return std_logic_vector; -- final linear vector
     
 end package util;
 
