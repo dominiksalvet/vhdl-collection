@@ -92,8 +92,8 @@ begin
             wait for c_CLK_PERIOD;
             
             assert (o_full = '1')
-                report "The o_full indicator should have '1' value, because write and read " &
-                "at the same time must have no effect at the o_empty and o_full states!"
+                report "The o_full indicator should have '1' value, because write and read at the" &
+                " same time must have no effect at the o_empty and o_full states!"
                 severity error;
         end loop;
         

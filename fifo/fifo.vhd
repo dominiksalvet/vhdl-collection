@@ -110,19 +110,19 @@ begin
     end process mem_access;
     
     -- synthesis translate_off
-    prevention : process (i_clk) is
+    input_prevention : process (i_clk) is
     begin
         if (rising_edge(i_clk)) then
             if (b_full = '1' and i_we = '1' and i_re = '0') then
-                report "FIFO overwrite - the FIFO is full and being written without read!"
+                report "FIFO - overwrite, the FIFO is full and being written without read!"
                 severity failure;
             end if;
             
             if (b_empty = '1' and i_re = '1') then
-                report "Undefined FIFO output data - read when empty!" severity failure;
+                report "FIFO - undefined output data, read when empty!" severity failure;
             end if;
         end if;
-    end process prevention;
+    end process input_prevention;
     -- synthesis translate_on
     
 end architecture rtl;

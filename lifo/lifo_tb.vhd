@@ -101,8 +101,8 @@ begin
         wait for c_CLK_PERIOD;
         
         assert (o_empty = '0')
-            report "The o_empty indicator should have '0' value, because write and read " &
-            "at the same time must lead to write!" severity error;
+            report "The o_empty indicator should have '0' value, because write and read at the" &
+            " same time must lead to write!" severity error;
         
         i_we <= '0';
         i_re <= '0';

@@ -97,18 +97,19 @@ begin
     end process mem_access;
     
     -- synthesis translate_off
-    prevention : process (i_clk) is
+    input_prevention : process (i_clk) is
     begin
         if (rising_edge(i_clk)) then
             if (b_full = '1' and i_we = '1') then
-                report "LIFO overflow - the LIFO is full and being written!" severity failure;
+                report "LIFO - overflow, the LIFO is full and being written!" severity failure;
             end if;
             
             if (b_empty = '1' and i_re = '1' and i_we = '0') then
-                report "LIFO underflow, output data undefined - read when empty!" severity failure;
+                report "LIFO - undefined output data, read when empty causes underflow!"
+                severity failure;
             end if;
         end if;
-    end process prevention;
+    end process input_prevention;
     -- synthesis translate_on
     
 end architecture rtl;
