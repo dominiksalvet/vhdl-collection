@@ -61,7 +61,7 @@ architecture rtl of rom is
     
     -- Description:
     --     Initialize memory by sampling the g_INIT_VECTOR vector to memory data width.
-    function init_mem return t_mem is
+    function create_mem_image return t_mem is
         variable r_mem : t_mem; -- memory to be initialized
     begin
         -- loop through all the data to initialize memory
@@ -71,10 +71,10 @@ architecture rtl of rom is
             g_INIT_VECTOR(i * g_DATA_WIDTH to ((i + 1) * g_DATA_WIDTH) - 1);
         end loop;
         return r_mem;
-    end function init_mem;
+    end function create_mem_image;
     
     -- accessible memory signal, calling the memory initialization
-    signal r_mem : t_mem := init_mem;
+    signal r_mem : t_mem := create_mem_image;
     -- also possible to change to a direct initialization, as shown below in a comment section:
     -- signal r_mem : t_mem := (
     --     others => (others => 'U')
