@@ -1,6 +1,19 @@
+--------------------------------------------------------------------------------
+-- Standard: VHDL-1993
+-- Platform: independent
+--------------------------------------------------------------------------------
+-- Description:
+--------------------------------------------------------------------------------
+-- Notes:
+--------------------------------------------------------------------------------
+
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+library std;
+use std.textio.all;
 
 
 package util is
@@ -17,6 +30,12 @@ package util is
             c_COUNT      : positive; -- total number of items (subvectors)
             c_ITEM_WIDTH : positive -- bit width of one item (subvector)
         ) return std_logic_vector; -- final linear vector
+     
+    impure function create_vector_from_file (
+            c_FILENAME   : string;
+            c_COUNT      : positive;
+            c_ITEM_WIDTH : positive
+        ) return std_logic_vector;
     
 end package util;
 
@@ -37,6 +56,39 @@ package body util is
         end loop;
         return std_logic_vector(r_linear_vector);
     end function create_linear_vector;
+    
+    impure function create_vector_from_file (
+            c_FILENAME   : string;
+            c_COUNT      : positive;
+            c_ITEM_WIDTH : positive
+        ) return std_logic_vector is
+        
+        file c_FILE     : text open read_mode is "../" & c_FILENAME;
+        variable r_line : line;
+        variable r_string : string(1 to c_ITEM_WIDTH);
+
+        variable r_vector : std_logic_vector(0 to (c_COUNT * c_ITEM_WIDTH) - 1);
+
+    begin
+        
+        for i in 0 to c_COUNT - 1 loop
+            if (not endfile(c_FILE)) then
+                readline(c_FILE, r_line);
+                read(r_line, r_string);
+                for j in 1 to c_ITEM_WIDTH loop
+                    if (r_string(j) = '1') then
+                        r_vector((i * c_ITEM_WIDTH) + (j - 1)) := '1';
+                    elsif (r_string(j) = '0') then
+                        r_vector((i * c_ITEM_WIDTH) + (j - 1)) := '0';
+                    end if;
+                end loop;
+            else
+                exit;
+            end if;
+        end loop;
+        return r_vector;
+        
+    end function create_vector_from_file;
     
 end package body util;
 
