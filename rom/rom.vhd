@@ -99,7 +99,7 @@ begin
         end if;
     end process mem_read;
     
-    -- synthesis translate_off
+    -- rtl_synthesis off
     input_prevention : process (i_clk) is
     begin
         if (rising_edge(i_clk)) then
@@ -121,7 +121,7 @@ begin
             end if;
         end if;
     end process output_prevention;
-    -- synthesis translate_on
+    -- rtl_synthesis on
     
 end architecture rtl;
 
