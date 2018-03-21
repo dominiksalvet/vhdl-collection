@@ -14,8 +14,8 @@
 --     3. If it is required to use a linear initialization, set the
 --        g_MEM_IMG_FILENAME generic to "".
 --     4. If the initialization from a file will be used, the file must contain
---        only ASCII "0" and "1" values, each line's length must be equal to set
---        g_DATA_WIDTH and file must have 2**g_ADDR_WIDTH lines.
+--        only ASCII "0" and "1" characters, each line's length must be equal to
+--        set g_DATA_WIDTH and file must have 2**g_ADDR_WIDTH lines.
 --------------------------------------------------------------------------------
 
 
