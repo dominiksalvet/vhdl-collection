@@ -26,7 +26,7 @@ architecture behavior of rom_tb is
     constant g_ADDR_WIDTH : positive := 4;
     constant g_DATA_WIDTH : positive := 4;
     
-    constant g_MEM_IMG_FILENAME : string := "../mem_img/linear_vector.txt";
+    constant g_MEM_IMG_FILENAME : string := "../mem_img/linear_vector_4_4.txt";
     
     -- uut ports
     signal i_clk : std_logic := '0';
