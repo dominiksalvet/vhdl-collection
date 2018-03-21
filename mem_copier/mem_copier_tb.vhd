@@ -86,8 +86,7 @@ begin
             g_ADDR_WIDTH => g_SRC_ADDR_WIDTH,
             g_DATA_WIDTH => g_DATA_WIDTH,
             
-            -- initialize the memory with the address=data pattern
-            g_MEM_IMG_FILENAME => ""
+            g_MEM_IMG_FILENAME => "" -- initialize the memory with the address=data pattern
         )
         port map (
             i_clk => i_clk,
@@ -101,7 +100,9 @@ begin
     tar_mem : entity work.ram(rtl)
         generic map (
             g_ADDR_WIDTH => g_TAR_ADDR_WIDTH,
-            g_DATA_WIDTH => g_DATA_WIDTH
+            g_DATA_WIDTH => g_DATA_WIDTH,
+            
+            g_MEM_IMG_FILENAME => "" -- no previous initialization
         )
         port map (
             i_clk => i_clk,

@@ -27,6 +27,8 @@ architecture behavior of ram_tb is
     constant g_ADDR_WIDTH : positive := 4;
     constant g_DATA_WIDTH : positive := 8;
     
+    constant g_MEM_IMG_FILENAME : string := "";
+    
     -- uut ports
     signal i_clk : std_logic := '0';
     
@@ -45,7 +47,9 @@ begin
     uut : entity work.ram(rtl)
         generic map (
             g_ADDR_WIDTH => g_ADDR_WIDTH,
-            g_DATA_WIDTH => g_DATA_WIDTH
+            g_DATA_WIDTH => g_DATA_WIDTH,
+            
+            g_MEM_IMG_FILENAME => g_MEM_IMG_FILENAME
         )
         port map (
             i_clk => i_clk,
