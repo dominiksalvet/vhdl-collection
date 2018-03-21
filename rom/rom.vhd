@@ -3,24 +3,19 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     Generic implementation of single port synchronous ROM memory with an
---     initialization option.
+--     Generic implementation of single port synchronous ROM memory with
+--     initialization from a file or a linear initialization (address=data).
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Since there is a read enable signal, o_data output will be implemented
 --        as a register.
 --     2. The module can be implemented as a block memory, if the target
 --        platform and used synthesizer support it.
---     3. The initialization data vector will be sampled from the left to memory
---        addresses based on g_DATA_WIDTH from address defined by
---        g_INIT_START_ADDR. So the data on the g_INIT_START_ADDR match the
---        leftmost part of g_DATA_WIDTH length of the g_INIT_VECTOR vector.
---     4. The amount of initialized memory addresses depends on the
---        g_INIT_VECTOR vector length itself. When the initialization should
---        exceed the memory maximal address, the modulo function with value of
---        maximal address will be applied to calculate the final address.
---     5. When length of g_INIT_VECTOR modulo g_DATA_WIDTH is not equal 0, then
---        the last initialized memory address will be left uninitialized.
+--     3. If it is required to use a linear initialization, set the
+--        g_MEM_IMG_FILENAME generic to "".
+--     4. If the initialization from a file will be used, the file must contain
+--        only ASCII "0" and "1" values, each line's length must be equal to set
+--        g_DATA_WIDTH and file must have 2**g_ADDR_WIDTH lines.
 --------------------------------------------------------------------------------
 
 
@@ -28,9 +23,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.util.all; -- util.vhd
+use std.textio.all;
 
-use work.verif_util.all; -- verif_util.vhd
+use work.util.all; -- util.vhd
 
 
 entity rom is
@@ -38,10 +33,8 @@ entity rom is
         g_ADDR_WIDTH : positive := 4; -- bit width of ROM address bus
         g_DATA_WIDTH : positive := 4; -- bit width of ROM data bus
         
-        -- initialization data vector
-        g_INIT_VECTOR : std_logic_vector := create_linear_vector(2 ** 4, 4);
-        -- start address of the initialized data in the memory
-        g_INIT_START_ADDR : natural := 0
+        -- relative path of memory image file
+        g_MEM_IMG_FILENAME : string := "../mem_img/linear_vector.txt"
     );
     port (
         i_clk : in std_logic; -- clock signal
@@ -55,38 +48,49 @@ end entity rom;
 
 architecture rtl of rom is
     
-    -- output buffers
-    signal b_o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
-    
-    -- amount of unique addresses
+    -- number of unique addresses
     constant c_ADDR_COUNT : positive := 2 ** g_ADDR_WIDTH;
     
-    -- definition of the memory type
-    type t_mem is array(c_ADDR_COUNT - 1 downto 0) of std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    -- definition of the used memory type
+    type t_mem is array(0 to c_ADDR_COUNT - 1) of std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- Description:
-    --     Initialize memory by sampling the g_INIT_VECTOR vector to memory data width.
-    function create_mem_image return t_mem is -- returns final memory image
-        variable r_mem : t_mem; -- memory to be initialized
+    --     Creates the memory image based on the module's generics.
+    impure function create_mem_img return t_mem is -- returns memory image
+        file r_file     : text; -- file pointer
+        variable r_line : line; -- read line
+        
+        variable r_mem        : t_mem; -- memory image
+        variable r_bit_vector : bit_vector(g_DATA_WIDTH - 1 downto 0); -- auxiliary vector for read
     begin
-        -- loop through all the data to initialize memory
-        for i in 0 to (g_INIT_VECTOR'length / g_DATA_WIDTH) - 1 loop
-            -- modulo write address and data sampling from original vector implementation
-            r_mem((g_INIT_START_ADDR + i) mod c_ADDR_COUNT) := 
-            g_INIT_VECTOR(i * g_DATA_WIDTH to ((i + 1) * g_DATA_WIDTH) - 1);
-        end loop;
+        
+        if (g_MEM_IMG_FILENAME'length = 0) then -- linear initialization
+            for i in t_mem'range loop
+                r_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- address=data
+            end loop;
+        else -- initialization from a file
+            file_open(r_file, g_MEM_IMG_FILENAME, read_mode);
+            
+            for i in t_mem'range loop
+                readline(r_file, r_line);
+                -- read function from std.textio package does not work with std_logic_vector
+                read(r_line, r_bit_vector);
+                r_mem(i) := to_stdlogicvector(r_bit_vector); -- cast to std_logic_vector
+            end loop;
+            
+            file_close(r_file);
+        end if;
+        
         return r_mem;
-    end function create_mem_image;
+    end function create_mem_img;
     
 begin
-    
-    o_data <= b_o_data;
     
     -- Description:
     --     Memory read mechanism description.
     mem_read : process (i_clk) is
-        -- accessible memory signal (rather constant), calling the memory initialization
-        constant r_mem : t_mem := create_mem_image;
+        -- accessible memory identifier
+        constant r_mem : t_mem := create_mem_img; -- calling the memory initialization
         -- it is also possible to change to a direct initialization, as shown commented below:
         -- constant r_mem : t_mem := (
         --         others => (others => 'U')
@@ -94,7 +98,7 @@ begin
     begin
         if (rising_edge(i_clk)) then
             if (i_re = '1') then
-                b_o_data <= r_mem(to_integer(unsigned(i_addr)));
+                o_data <= r_mem(to_integer(unsigned(i_addr)));
             end if;
         end if;
     end process mem_read;
@@ -104,23 +108,13 @@ begin
     begin
         if (rising_edge(i_clk)) then
             if (i_re = '1') then -- read means that address must be defined
-                if (not is_vector_of_01(i_addr)) then
+                if (not contains_only_01(i_addr)) then
                     report "ROM - undefined address, the address is not exactly defined by '0'" &
                     " and '1' values only!" severity failure;
                 end if;
             end if;
         end if;
     end process input_prevention;
-    
-    output_prevention : process (b_o_data) is
-    begin
-        if (now > 0 ps) then -- the prevention must start after the simulation initialization
-            if (not is_vector_of_01(b_o_data)) then
-                report "ROM - undefined output data, the output data are not exactly defined by" &
-                " '0' and '1' values only!" severity error;
-            end if;
-        end if;
-    end process output_prevention;
     -- rtl_synthesis on
     
 end architecture rtl;

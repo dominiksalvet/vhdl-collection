@@ -3,6 +3,7 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
+--     The package contains useful utility functions.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -10,85 +11,34 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-library std;
-use std.textio.all;
 
 
 package util is
     
     -- Description:
-    --     Create a vector composed of c_COUNT items, each with c_ITEM_WIDTH bit width. It is called
-    --     linear vector, because n-th item of the vector holds n value in binary (for n from 0)
-    --     when returned. It can be used as simple ROM initialization.
-    -- Example:
-    --     c_COUNT = 8
-    --     c_ITEM_WIDTH = 4
-    --     return: "0000" & "0001" & "0010" & "0011" & "0100" & "0101" & "0110" & "0111"
-    function create_linear_vector (
-            c_COUNT      : positive; -- total number of items (subvectors)
-            c_ITEM_WIDTH : positive -- bit width of one item (subvector)
-        ) return std_logic_vector; -- final linear vector
-     
-    impure function create_vector_from_file (
-            c_FILENAME   : string;
-            c_COUNT      : positive;
-            c_ITEM_WIDTH : positive
-        ) return std_logic_vector;
+    --     The function checks the input vector c_VECTOR and returns false if it contains any other
+    --     value than '1' or '0' in it's scalar components. The function is not intended to be
+    --     synthesized.
+    function contains_only_01 (
+            c_VECTOR : std_logic_vector -- input vector
+        ) return boolean;
     
 end package util;
 
 
 package body util is
     
-    function create_linear_vector (
-            c_COUNT      : positive;
-            c_ITEM_WIDTH : positive
-        ) return std_logic_vector is
-        -- linear vector
-        variable r_linear_vector : unsigned(0 to (c_COUNT * c_ITEM_WIDTH) - 1);
+    function contains_only_01 (
+            c_VECTOR : std_logic_vector
+        ) return boolean is
     begin
-        for i in 0 to c_COUNT - 1 loop -- creating linear vector
-            -- i-th address means i value
-            r_linear_vector(i * c_ITEM_WIDTH to ((i + 1) * c_ITEM_WIDTH) - 1) := 
-            to_unsigned(i, c_ITEM_WIDTH);
-        end loop;
-        return std_logic_vector(r_linear_vector);
-    end function create_linear_vector;
-    
-    impure function create_vector_from_file (
-            c_FILENAME   : string;
-            c_COUNT      : positive;
-            c_ITEM_WIDTH : positive
-        ) return std_logic_vector is
-        
-        file c_FILE     : text open read_mode is "../" & c_FILENAME;
-        variable r_line : line;
-        variable r_string : string(1 to c_ITEM_WIDTH);
-
-        variable r_vector : std_logic_vector(0 to (c_COUNT * c_ITEM_WIDTH) - 1);
-
-    begin
-        
-        for i in 0 to c_COUNT - 1 loop
-            if (not endfile(c_FILE)) then
-                readline(c_FILE, r_line);
-                read(r_line, r_string);
-                for j in 1 to c_ITEM_WIDTH loop
-                    if (r_string(j) = '1') then
-                        r_vector((i * c_ITEM_WIDTH) + (j - 1)) := '1';
-                    elsif (r_string(j) = '0') then
-                        r_vector((i * c_ITEM_WIDTH) + (j - 1)) := '0';
-                    end if;
-                end loop;
-            else
-                exit;
+        for i in c_VECTOR'range loop -- check every vector's scalar component
+            if (c_VECTOR(i) /= '0' and c_VECTOR(i) /= '1') then
+                return false;
             end if;
         end loop;
-        return r_vector;
-        
-    end function create_vector_from_file;
+        return true;
+    end function contains_only_01;
     
 end package body util;
 

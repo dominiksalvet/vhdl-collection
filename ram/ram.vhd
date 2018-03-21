@@ -17,7 +17,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.verif_util.all; -- verif_util.vhd
+use work.util.all; -- util.vhd
 
 
 entity ram is
@@ -74,14 +74,14 @@ begin
         if (rising_edge(i_clk)) then
             
             if (i_we = '1' or i_re = '1') then -- read or write means that address must be defined
-                if (not is_vector_of_01(i_addr)) then
+                if (not contains_only_01(i_addr)) then
                     report "RAM - undefined address, the address is not exactly defined by '0'" &
                     " and '1' values only!" severity failure;
                 end if;
             end if;
             
             if (i_we = '1') then -- write also means that input data must be defined
-                if (not is_vector_of_01(i_data)) then
+                if (not contains_only_01(i_data)) then
                     report "RAM - undefined input data, the input data are not exactly defined by" &
                     " '0' and '1' values only!" severity failure;
                 end if;
@@ -93,7 +93,7 @@ begin
     output_prevention : process (b_o_data) is
     begin
         if (now > 0 ps) then -- the prevention must start after the simulation initialization
-            if (not is_vector_of_01(b_o_data)) then
+            if (not contains_only_01(b_o_data)) then
                 report "RAM - undefined output data, the output data are not exactly defined by" &
                 " '0' and '1' values only!" severity error;
             end if;

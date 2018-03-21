@@ -87,8 +87,7 @@ begin
             g_DATA_WIDTH => g_DATA_WIDTH,
             
             -- initialize the memory with the address=data pattern
-            g_INIT_VECTOR     => create_linear_vector(2 ** g_SRC_ADDR_WIDTH, g_DATA_WIDTH),
-            g_INIT_START_ADDR => 0
+            g_MEM_IMG_FILENAME => ""
         )
         port map (
             i_clk => i_clk,

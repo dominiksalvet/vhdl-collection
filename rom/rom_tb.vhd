@@ -1,8 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
---     Initialize the ROM memory with data that match pattern address=data and
---     the simulation will verify it with standard sequential reading memory
---     addresses. The simulation uses nibbles as data width (4 bits).
+--     Initializes the ROM memory from the linear_vector.txt file, which matches
+--     pattern address=data and simulation will verify it with standard
+--     sequential reading memory addresses. The simulation uses nibbles as data
+--     width (4 bits).
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -12,7 +13,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.util.all; -- util.vhd
 use work.rom; -- rom.vhd
 
 
@@ -26,9 +26,7 @@ architecture behavior of rom_tb is
     constant g_ADDR_WIDTH : positive := 4;
     constant g_DATA_WIDTH : positive := 4;
     
-    constant g_INIT_VECTOR : std_logic_vector := 
-        create_vector_from_file("mem_img/linear_vector.txt", 2 ** 4, 4);
-    constant g_INIT_START_ADDR : natural := 0;
+    constant g_MEM_IMG_FILENAME : string := "../mem_img/linear_vector.txt";
     
     -- uut ports
     signal i_clk : std_logic := '0';
@@ -40,9 +38,6 @@ architecture behavior of rom_tb is
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
     
-    -- TODO: REMOVE
-    constant lol : std_logic := g_INIT_VECTOR(g_INIT_VECTOR'left); -- equivalent to 0 
-    
 begin
     
     -- instantiate the unit under test (uut)
@@ -51,8 +46,7 @@ begin
             g_ADDR_WIDTH => g_ADDR_WIDTH,
             g_DATA_WIDTH => g_DATA_WIDTH,
             
-            g_INIT_VECTOR     => g_INIT_VECTOR,
-            g_INIT_START_ADDR => g_INIT_START_ADDR
+            g_MEM_IMG_FILENAME => g_MEM_IMG_FILENAME
         )
         port map (
             i_clk => i_clk,
