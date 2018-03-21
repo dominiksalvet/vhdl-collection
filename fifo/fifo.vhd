@@ -55,9 +55,9 @@ architecture rtl of fifo is
     signal b_empty : std_logic;
     
     -- definition of internal memory type
-    type t_mem is array((2 ** g_INDEX_WIDTH) - 1 downto 0) of
+    type t_MEM is array((2 ** g_INDEX_WIDTH) - 1 downto 0) of
         std_logic_vector(g_DATA_WIDTH - 1 downto 0);
-    signal r_mem : t_mem; -- accessible internal memory signal
+    signal r_mem : t_MEM; -- accessible internal memory signal
     
 begin
     

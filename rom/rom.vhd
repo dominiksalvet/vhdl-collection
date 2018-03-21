@@ -52,36 +52,36 @@ architecture rtl of rom is
     constant c_ADDR_COUNT : positive := 2 ** g_ADDR_WIDTH;
     
     -- definition of the used memory type
-    type t_mem is array(0 to c_ADDR_COUNT - 1) of std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    type t_MEM is array(0 to c_ADDR_COUNT - 1) of std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- Description:
     --     Creates the memory image based on the module's generics.
-    impure function create_mem_img return t_mem is -- returns memory image
-        file r_file     : text; -- file pointer
-        variable r_line : line; -- read line
+    impure function create_mem_img return t_MEM is -- returns memory image
+        file v_file     : text; -- file pointer
+        variable v_line : line; -- read line
         
-        variable r_mem        : t_mem; -- memory image
-        variable r_bit_vector : bit_vector(g_DATA_WIDTH - 1 downto 0); -- auxiliary vector for read
+        variable v_mem        : t_MEM; -- memory image
+        variable v_bit_vector : bit_vector(g_DATA_WIDTH - 1 downto 0); -- auxiliary vector for read
     begin
         
         if (g_MEM_IMG_FILENAME'length = 0) then -- linear initialization
-            for i in t_mem'range loop
-                r_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- address=data
+            for i in t_MEM'range loop
+                v_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- address=data
             end loop;
         else -- initialization from a file
-            file_open(r_file, g_MEM_IMG_FILENAME, read_mode);
+            file_open(v_file, g_MEM_IMG_FILENAME, read_mode);
             
-            for i in t_mem'range loop
-                readline(r_file, r_line);
+            for i in t_MEM'range loop
+                readline(v_file, v_line);
                 -- read function from std.textio package does not work with std_logic_vector
-                read(r_line, r_bit_vector);
-                r_mem(i) := to_stdlogicvector(r_bit_vector); -- cast to std_logic_vector
+                read(v_line, v_bit_vector);
+                v_mem(i) := to_stdlogicvector(v_bit_vector); -- cast to std_logic_vector
             end loop;
             
-            file_close(r_file);
+            file_close(v_file);
         end if;
         
-        return r_mem;
+        return v_mem;
     end function create_mem_img;
     
 begin
@@ -90,9 +90,9 @@ begin
     --     Memory read mechanism description.
     mem_read : process (i_clk) is
         -- accessible memory identifier
-        constant r_mem : t_mem := create_mem_img; -- calling the memory initialization
+        constant r_mem : t_MEM := create_mem_img; -- calling the memory initialization
         -- it is also possible to change to a direct initialization, as shown commented below:
-        -- constant r_mem : t_mem := (
+        -- constant r_mem : t_MEM := (
         --         others => (others => 'U')
         --     );
     begin

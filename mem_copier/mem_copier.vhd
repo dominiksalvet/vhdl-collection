@@ -83,8 +83,8 @@ begin
     --     Performs memory copying by using internal buffer to speed up the process.
     mem_copying : process (i_clk) is
         -- definition of state of the process to describe individual stages
-        type t_state is (READ_INIT, READ_WAIT, WRITE_INIT, WRITE);
-        variable r_state : t_state; -- declaration of the state variable
+        type t_STATE is (READ_INIT, READ_WAIT, WRITE_INIT, WRITING);
+        variable r_state : t_STATE; -- declaration of the state variable
         -- number of steps left to complete the required copying (number of i_clk rising edges)
         variable r_steps_left : natural range 0 to (2 ** g_TAR_ADDR_WIDTH) + 1;
     begin
@@ -131,7 +131,7 @@ begin
                         r_state := WRITE_INIT;
                     when WRITE_INIT => -- perform the first write to the target memory
                         b_tar_we <= '1';
-                        r_state  := WRITE; -- unlock forcing b_tar_we signal to '1'
+                        r_state  := WRITING; -- unlock forcing b_tar_we signal to '1'
                     when others => null;
                 end case;
             end if;

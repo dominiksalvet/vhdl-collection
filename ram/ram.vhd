@@ -43,9 +43,9 @@ architecture rtl of ram is
     signal b_o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- definition of memory type
-    type t_mem is array((2 ** g_ADDR_WIDTH) - 1 downto 0) of
+    type t_MEM is array((2 ** g_ADDR_WIDTH) - 1 downto 0) of
         std_logic_vector(g_DATA_WIDTH - 1 downto 0);
-    signal r_mem : t_mem; -- accessible memory signal
+    signal r_mem : t_MEM; -- accessible memory signal
     
 begin
     
