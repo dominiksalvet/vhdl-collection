@@ -90,15 +90,15 @@ begin
     --     Memory read mechanism description.
     mem_read : process (i_clk) is
         -- accessible memory identifier
-        constant r_mem : t_MEM := create_mem_img; -- calling the memory initialization
+        constant c_MEM : t_MEM := create_mem_img; -- calling the memory initialization
         -- it is also possible to change to a direct initialization, as shown commented below:
-        -- constant r_mem : t_MEM := (
+        -- constant c_MEM : t_MEM := (
         --         others => (others => 'U')
         --     );
     begin
         if (rising_edge(i_clk)) then
             if (i_re = '1') then
-                o_data <= r_mem(to_integer(unsigned(i_addr)));
+                o_data <= c_MEM(to_integer(unsigned(i_addr)));
             end if;
         end if;
     end process mem_read;
