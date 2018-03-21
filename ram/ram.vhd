@@ -37,7 +37,7 @@ entity ram is
         g_DATA_WIDTH : positive := 8; -- bit width of RAM data bus
         
         -- relative path of memory image file
-        g_MEM_IMG_FILENAME : string := ""
+        g_MEM_IMG_FILENAME : string := "../mem_img/linear_4_8.txt"
     );
     port (
         i_clk : in std_logic; -- clock signal
@@ -87,7 +87,7 @@ architecture rtl of ram is
         return v_mem;
     end function create_mem_img;
     
-    signal r_mem : t_MEM; -- accessible memory signal
+    signal r_mem : t_MEM := create_mem_img; -- accessible memory signal
     
 begin
     
