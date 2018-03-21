@@ -3,7 +3,7 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     Generic implementation of single port synchronous ROM memory with
+--     Generic implementation of a single port synchronous ROM memory with
 --     initialization from a file or a linear initialization (address=data).
 --------------------------------------------------------------------------------
 -- Notes:
@@ -23,6 +23,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library std;
 use std.textio.all;
 
 use work.util.all; -- util.vhd
@@ -48,11 +49,9 @@ end entity rom;
 
 architecture rtl of rom is
     
-    -- number of unique addresses
-    constant c_ADDR_COUNT : positive := 2 ** g_ADDR_WIDTH;
-    
     -- definition of the used memory type
-    type t_MEM is array(0 to c_ADDR_COUNT - 1) of std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    type t_MEM is array(0 to (2 ** g_ADDR_WIDTH) - 1) of
+        std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- Description:
     --     Creates the memory image based on the module's generics.
