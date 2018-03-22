@@ -43,7 +43,7 @@ end entity seg7_driver;
 
 architecture rtl of seg7_driver is
     
-    -- i0_hex_to_seg7 ports
+    -- hex_to_seg7_0 ports
     signal hts_i_hex_data  : std_logic_vector(3 downto 0);
     signal hts_o_seg7_data : std_logic_vector(6 downto 0);
     
@@ -54,7 +54,7 @@ begin
     o_seg7_data <= hts_o_seg7_data xor (6 downto 0 => g_LED_ON_VALUE); -- LED on value switcher
     
     -- instantiation of hex_to_seg7 for conversion hexadecimal form to seven segment form
-    i0_hex_to_seg7 : entity work.hex_to_seg7(rtl)
+    hex_to_seg7_0 : entity work.hex_to_seg7(rtl)
         port map (
             i_hex_data  => hts_i_hex_data,
             o_seg7_data => hts_o_seg7_data
