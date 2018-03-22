@@ -86,7 +86,7 @@ begin
             g_ADDR_WIDTH => g_SRC_ADDR_WIDTH,
             g_DATA_WIDTH => g_DATA_WIDTH,
             
-            g_MEM_IMG_FILENAME => "" -- initialize the memory with the address=data pattern
+            g_MEM_IMG_FILENAME => "" -- initialize the memory with the [address]=address pattern
         )
         port map (
             i_clk => i_clk,
@@ -170,9 +170,9 @@ begin
         wait for 3 * c_CLK_PERIOD;
         
         for i in 1 to i_copy_addr_count loop -- one pass per one write/read
-            -- the address=data pattern matching
+            -- the [address]=address pattern matching
             assert (to_integer(unsigned(o_tar_addr)) = to_integer(unsigned(o_tar_data)))
-                report "Write to the target memory does not match the address=data pattern!"
+                report "Write to the target memory does not match the [address]=address pattern!"
                 severity error;
             wait for c_CLK_PERIOD;
         end loop;

@@ -4,7 +4,8 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     Generic implementation of a single port synchronous ROM memory with
---     initialization from a file or a linear initialization (address=data).
+--     initialization from a file or a linear initialization where memory
+--     content is [address]=address.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Since there is a read enable signal, o_data output will be implemented
@@ -65,7 +66,7 @@ architecture rtl of rom is
         
         if (g_MEM_IMG_FILENAME'length = 0) then -- linear initialization
             for i in t_MEM'range loop
-                v_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- address=data
+                v_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- [address]=address
             end loop;
         else -- initialization from a file
             file_open(v_file, g_MEM_IMG_FILENAME, read_mode);

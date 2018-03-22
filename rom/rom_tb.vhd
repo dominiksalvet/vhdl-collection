@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- Description:
 --     Initializes the ROM memory from the linear_vector.txt file, which matches
---     pattern address=data and simulation will verify it with standard
+--     pattern [address]=address and simulation will verify it with standard
 --     sequential reading memory addresses. The simulation uses nibbles as data
 --     width (4 bits).
 --------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ begin
             
             -- asserting to verify the ROM module function
             assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
-                report "The read data does not match pattern address=data!" severity error;
+                report "The read data does not match pattern [address]=address!" severity error;
         end loop;
         wait;
         
