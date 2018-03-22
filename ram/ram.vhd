@@ -37,7 +37,7 @@ entity ram is
         g_DATA_WIDTH : positive := 8; -- bit width of RAM data bus
         
         -- optional relative path of memory image file
-        g_MEM_IMG_FILENAME : string := "../mem_img/linear_4_8.txt"
+        g_MEM_IMG_FILENAME : string := "mem_img/linear_4_8.txt"
     );
     port (
         i_clk : in std_logic; -- clock signal
