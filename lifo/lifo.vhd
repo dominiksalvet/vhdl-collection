@@ -47,7 +47,7 @@ architecture rtl of lifo is
     signal b_empty : std_logic;
     
     -- definition of internal memory type
-    type t_MEM is array((2 ** g_INDEX_WIDTH) - 1 downto 0) of
+    type t_MEM is array(0 to (2 ** g_INDEX_WIDTH) - 1) of
         std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     signal r_mem : t_MEM; -- accessible internal memory signal
     
