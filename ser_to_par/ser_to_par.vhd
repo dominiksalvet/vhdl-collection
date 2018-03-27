@@ -10,7 +10,6 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 
 
 entity ser_to_par is
@@ -21,8 +20,10 @@ entity ser_to_par is
         i_clk : in std_logic;
         i_rst : in std_logic;
         
-        i_data     : in  std_logic;
-        o_data_ack : out std_logic;
+        i_data_start : in std_logic;
+        i_data       : in std_logic;
+        
+        o_data_rdy : out std_logic;
         o_data     : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
     );
 end entity ser_to_par;
@@ -30,30 +31,42 @@ end entity ser_to_par;
 
 architecture rtl of ser_to_par is
     -- output buffers
-    signal b_o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal b_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
-    o_data <= b_o_data;
+    o_data <= b_data;
     
-    shift_and_ack : process (i_clk) is
-        variable r_bits_count : natural range 0 to g_DATA_WIDTH - 1;
+    convert : process (i_clk) is
+        variable r_receiving   : boolean;
+        variable r_bit_counter : natural range 0 to g_DATA_WIDTH - 1;
     begin
         if (rising_edge(i_clk)) then
-            o_data_ack <= '0';
-            b_o_data   <= b_o_data(b_o_data'left - 1 downto 0) & i_data;
-            
             if (i_rst = '1') then
-                r_bits_count := 0;
+                o_data_rdy    <= '0';
+                r_receiving   := false;
+                r_bit_counter := 0;
             else
-                if (r_bits_count = g_DATA_WIDTH - 1) then
-                    o_data_ack   <= '1';
-                    r_bits_count := 0;
-                else
-                    r_bits_count := r_bits_count + 1;
+                
+                if (i_data_start = '1') then
+                    r_receiving := true;
                 end if;
+                
+                if (r_receiving) then
+                    o_data_rdy <= '0';
+                    b_data     <= b_data(b_data'left - 1 downto 0) & i_data;
+                    
+                    if (r_bit_counter = g_DATA_WIDTH - 1) then
+                        o_data_rdy    <= '1';
+                        r_receiving   := false;
+                        r_bit_counter := 0;
+                    else
+                        r_bit_counter := r_bit_counter + 1;
+                    end if;
+                end if;
+                
             end if;
         end if;
-    end process shift_and_ack;
+    end process convert;
     
 end architecture rtl;
 

@@ -24,9 +24,11 @@ architecture behavior of ser_to_par_tb is
     signal i_clk : std_logic := '0';
     signal i_rst : std_logic := '0';
     
-    signal i_data     : std_logic := '0';
-    signal o_data_ack : std_logic;
-    signal o_data     : std_logic_vector(g_DATA_WIDTH - 1 downto 0); 
+    signal i_data_start : std_logic := '0';
+    signal i_data       : std_logic := '0';
+    
+    signal o_data_rdy : std_logic;
+    signal o_data     : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -42,8 +44,10 @@ begin
             i_clk => i_clk,
             i_rst => i_rst,
             
-            i_data     => i_data,
-            o_data_ack => o_data_ack,
+            i_data_start => i_data_start,
+            i_data       => i_data,
+            
+            o_data_rdy => o_data_rdy,
             o_data     => o_data
         ); 
     
@@ -51,16 +55,25 @@ begin
     
     stimulus : process is
     begin
-
+        
         i_rst <= '1';
         wait for c_CLK_PERIOD;
-
-        i_rst <= '0';
-        i_data <= '1';
+        
+        i_rst        <= '0';
+        i_data_start <= '1';
+        i_data       <= '1';
         wait for c_CLK_PERIOD;
-
+        
+        i_data_start <= '0';
+        wait for 3 * c_CLK_PERIOD;
+        
+        i_data_start <= '1';
+        i_data       <= '0';
+        wait for c_CLK_PERIOD;
+        
+        i_data_start <= '0';
         wait;
-
+        
     end process stimulus;
     
     verification : process is
