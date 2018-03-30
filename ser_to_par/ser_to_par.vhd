@@ -14,7 +14,8 @@ use ieee.std_logic_1164.all;
 
 entity ser_to_par is
     generic (
-        g_DATA_WIDTH : positive range 2 to natural'high := 4
+        g_DATA_WIDTH : positive range 2 to natural'high := 4;
+        g_LSB_FIRST  : boolean                          := true
     );
     port (
         i_clk : in std_logic;
@@ -23,26 +24,25 @@ entity ser_to_par is
         i_data_start : in std_logic;
         i_data       : in std_logic;
         
-        o_data_rdy : out std_logic;
-        o_data     : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
+        o_data_valid : out std_logic;
+        o_data       : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
     );
 end entity ser_to_par;
 
 
 architecture rtl of ser_to_par is
-    -- output buffers
-    signal b_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
-    o_data <= b_data;
+    o_data <= r_shifter;
     
-    convert : process (i_clk) is
+    conversion_step : process (i_clk) is
         variable r_receiving   : boolean;
         variable r_bit_counter : natural range 0 to g_DATA_WIDTH - 1;
     begin
         if (rising_edge(i_clk)) then
             if (i_rst = '1') then
-                o_data_rdy    <= '0';
+                o_data_valid  <= '0';
                 r_receiving   := false;
                 r_bit_counter := 0;
             else
@@ -52,11 +52,16 @@ begin
                 end if;
                 
                 if (r_receiving) then
-                    o_data_rdy <= '0';
-                    b_data     <= b_data(b_data'left - 1 downto 0) & i_data;
+                    o_data_valid <= '0';
+                    
+                    if (g_LSB_FIRST) then
+                        r_shifter <= i_data & r_shifter(r_shifter'left downto 1);
+                    else
+                        r_shifter <= r_shifter(r_shifter'left - 1 downto 0) & i_data;
+                    end if;
                     
                     if (r_bit_counter = g_DATA_WIDTH - 1) then
-                        o_data_rdy    <= '1';
+                        o_data_valid  <= '1';
                         r_receiving   := false;
                         r_bit_counter := 0;
                     else
@@ -66,7 +71,7 @@ begin
                 
             end if;
         end if;
-    end process convert;
+    end process conversion_step;
     
 end architecture rtl;
 

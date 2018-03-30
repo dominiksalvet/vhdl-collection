@@ -19,6 +19,7 @@ architecture behavior of ser_to_par_tb is
     
     -- uut generics
     constant g_DATA_WIDTH : positive range 2 to natural'high := 4;
+    constant g_LSB_FIRST  : boolean                          := true; 
     
     -- uut ports
     signal i_clk : std_logic := '0';
@@ -27,8 +28,8 @@ architecture behavior of ser_to_par_tb is
     signal i_data_start : std_logic := '0';
     signal i_data       : std_logic := '0';
     
-    signal o_data_rdy : std_logic;
-    signal o_data     : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal o_data_valid : std_logic;
+    signal o_data       : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -38,7 +39,8 @@ begin
     -- instantiate the unit under test (uut)
     uut : entity work.ser_to_par(rtl)
         generic map (
-            g_DATA_WIDTH => g_DATA_WIDTH
+            g_DATA_WIDTH => g_DATA_WIDTH,
+            g_LSB_FIRST  => g_LSB_FIRST
         )
         port map (
             i_clk => i_clk,
@@ -47,8 +49,8 @@ begin
             i_data_start => i_data_start,
             i_data       => i_data,
             
-            o_data_rdy => o_data_rdy,
-            o_data     => o_data
+            o_data_valid => o_data_valid,
+            o_data       => o_data
         ); 
     
     i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
