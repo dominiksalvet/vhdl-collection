@@ -8,29 +8,28 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.par_to_ser; -- par_to_ser.vhd
+use work.sipo; -- sipo.vhd
 
 
-entity par_to_ser_tb is
-end entity par_to_ser_tb;
+entity sipo_tb is
+end entity sipo_tb;
 
 
-architecture behavior of par_to_ser_tb is
+architecture behavior of sipo_tb is
     
     -- uut generics
     constant g_DATA_WIDTH : positive range 2 to natural'high := 4;
-    constant g_LSB_FIRST  : boolean                          := true;
+    constant g_LSB_FIRST  : boolean                          := true; 
     
     -- uut ports
     signal i_clk : std_logic := '0';
     signal i_rst : std_logic := '0';
     
-    signal i_start : std_logic                                   := '0';
-    signal i_data  : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal o_rdy   : std_logic;
+    signal i_data_start : std_logic := '0';
+    signal i_data       : std_logic := '0';
     
-    signal o_data_start : std_logic;
-    signal o_data       : std_logic;
+    signal o_data_valid : std_logic;
+    signal o_data       : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -38,7 +37,7 @@ architecture behavior of par_to_ser_tb is
 begin
     
     -- instantiate the unit under test (uut)
-    uut : entity work.par_to_ser(rtl)
+    uut : entity work.sipo(rtl)
         generic map (
             g_DATA_WIDTH => g_DATA_WIDTH,
             g_LSB_FIRST  => g_LSB_FIRST
@@ -47,11 +46,10 @@ begin
             i_clk => i_clk,
             i_rst => i_rst,
             
-            i_start => i_start,
-            i_data  => i_data,
-            o_rdy   => o_rdy,
+            i_data_start => i_data_start,
+            i_data       => i_data,
             
-            o_data_start => o_data_start,
+            o_data_valid => o_data_valid,
             o_data       => o_data
         ); 
     
@@ -63,12 +61,19 @@ begin
         i_rst <= '1';
         wait for c_CLK_PERIOD;
         
-        i_rst   <= '0';
-        i_start <= '1';
-        i_data  <= (others => '1');
-        wait for 4 * c_CLK_PERIOD;
+        i_rst        <= '0';
+        i_data_start <= '1';
+        i_data       <= '1';
+        wait for c_CLK_PERIOD;
         
-        i_data <= (others => '0');
+        i_data_start <= '0';
+        wait for 3 * c_CLK_PERIOD;
+        
+        i_data_start <= '1';
+        i_data       <= '0';
+        wait for c_CLK_PERIOD;
+        
+        i_data_start <= '0';
         wait;
         
     end process stimulus;

@@ -12,7 +12,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 
-entity ser_to_par is
+entity sipo is
     generic (
         g_DATA_WIDTH : positive range 2 to natural'high := 4;
         g_LSB_FIRST  : boolean                          := true
@@ -27,10 +27,10 @@ entity ser_to_par is
         o_data_valid : out std_logic;
         o_data       : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
     );
-end entity ser_to_par;
+end entity sipo;
 
 
-architecture rtl of ser_to_par is
+architecture rtl of sipo is
     signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
