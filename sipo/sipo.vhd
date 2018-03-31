@@ -3,8 +3,15 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
+--     The file represents the description of a Serial-In, Parallel-Out module.
+--     It can be set up to operate in LSB-first mode or MSB-first mode.
 --------------------------------------------------------------------------------
 -- Notes:
+--     1. No buffer for parallel data output is used, so it has to be checked
+--        the o_data_valid indicator before read.
+--     2. For continuous reading the serial input data as a stream, assign '1'
+--        to i_data_start. Then the o_data_valid output will have '1' only for
+--        one i_clk period.
 --------------------------------------------------------------------------------
 
 
@@ -14,58 +21,60 @@ use ieee.std_logic_1164.all;
 
 entity sipo is
     generic (
-        g_DATA_WIDTH : positive range 2 to natural'high := 4;
-        g_LSB_FIRST  : boolean                          := true
+        g_DATA_WIDTH : positive range 2 to natural'high := 4; -- output parallelized data width
+        g_LSB_FIRST  : boolean                          := true -- least significant bit first
     );
     port (
-        i_clk : in std_logic;
-        i_rst : in std_logic;
+        i_clk : in std_logic; -- clock signal
+        i_rst : in std_logic; -- reset signal
         
-        i_data_start : in std_logic;
-        i_data       : in std_logic;
+        i_data_start : in std_logic; -- start of the serial input data
+        i_data       : in std_logic; -- current bit of the serial input data
         
-        o_data_valid : out std_logic;
-        o_data       : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
+        o_data_valid : out std_logic; -- output data validity
+        o_data       : out std_logic_vector(g_DATA_WIDTH - 1 downto 0) -- output parallelized data
     );
 end entity sipo;
 
 
 architecture rtl of sipo is
-    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- shifter register
 begin
     
-    o_data <= r_shifter;
+    o_data <= r_shifter; -- the shifter is directly assigned to the output, see 1. note
     
+    -- Description:
+    --     Perform one conversion step. Basically it fills the shifter register to parallelize.
     conversion_step : process (i_clk) is
-        variable r_receiving   : boolean;
-        variable r_bit_counter : natural range 0 to g_DATA_WIDTH - 1;
+        variable r_receiving      : boolean; -- receiving indicator
+        variable r_received_count : natural range 0 to g_DATA_WIDTH - 1; -- number of received bits
     begin
         if (rising_edge(i_clk)) then
-            if (i_rst = '1') then
-                o_data_valid  <= '0';
-                r_receiving   := false;
-                r_bit_counter := 0;
+            if (i_rst = '1') then -- initialize the module
+                o_data_valid     <= '0';
+                r_receiving      := false;
+                r_received_count := 0;
             else
                 
-                if (i_data_start = '1') then
+                if (i_data_start = '1') then -- begin the reading the serial input data
                     r_receiving := true;
                 end if;
                 
-                if (r_receiving) then
-                    o_data_valid <= '0';
+                if (r_receiving) then -- receive one bit
+                    o_data_valid <= '0'; -- data are valid as long as not receiving
                     
-                    if (g_LSB_FIRST) then
+                    if (g_LSB_FIRST) then -- first least significant bit
                         r_shifter <= i_data & r_shifter(r_shifter'left downto 1);
-                    else
+                    else -- first most significant bit
                         r_shifter <= r_shifter(r_shifter'left - 1 downto 0) & i_data;
                     end if;
                     
-                    if (r_bit_counter = g_DATA_WIDTH - 1) then
-                        o_data_valid  <= '1';
-                        r_receiving   := false;
-                        r_bit_counter := 0;
-                    else
-                        r_bit_counter := r_bit_counter + 1;
+                    if (r_received_count = g_DATA_WIDTH - 1) then -- last received bit
+                        o_data_valid     <= '1'; -- data are valid after the receive
+                        r_receiving      := false; -- stop receiving
+                        r_received_count := 0; -- reset the received bits counter
+                    else -- not last received bit
+                        r_received_count := r_received_count + 1; -- increment the received counter
                     end if;
                 end if;
                 
