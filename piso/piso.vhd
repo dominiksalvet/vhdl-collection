@@ -3,6 +3,8 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
+--     The file represents the description of a Parallel-In, Serial-Out module.
+--     It can be set up to operate in LSB-first mode or MSB-first mode.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -14,30 +16,33 @@ use ieee.std_logic_1164.all;
 
 entity piso is
     generic (
-        g_DATA_WIDTH : positive range 2 to natural'high := 4;
-        g_LSB_FIRST  : boolean                          := true
+        g_DATA_WIDTH : positive range 2 to natural'high := 4; -- input parallel data width
+        -- least significant bit first of the serialized output
+        g_LSB_FIRST : boolean := true
     );
     port (
-        i_clk : in std_logic;
-        i_rst : in std_logic;
+        i_clk : in std_logic; -- clock signal
+        i_rst : in std_logic; -- reset signal
         
-        i_start : in  std_logic;
-        i_data  : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0);
-        o_rdy   : out std_logic;
+        i_start : in  std_logic; -- accept the current input parallel data and serialize them
+        i_data  : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- the input parallel data
+        o_rdy   : out std_logic; -- the module is ready to accept next parallel data
         
-        o_data_start : out std_logic;
-        o_data       : out std_logic
+        o_data_start : out std_logic; -- start of the serial output data
+        o_data       : out std_logic -- current bit of the serial output data
     );
 end entity piso;
 
 
 architecture rtl of piso is
-    signal r_transmitting : std_logic;
-    signal r_shifter      : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal r_transmitting : std_logic; -- transmitting indicator
+    -- shifter register used for serializing the parallel input data
+    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
-    o_rdy <= not r_transmitting;
+    o_rdy <= not r_transmitting; -- the module is ready when not transmitting
     
+    -- least/most significant bit assign generating
     assign_lsb : if (g_LSB_FIRST) generate
         o_data <= r_shifter(r_shifter'right);
     end generate assign_lsb;
@@ -45,34 +50,38 @@ begin
         o_data <= r_shifter(r_shifter'left);
     end generate assign_msb;
     
+    -- Description:
+    --     Perform one conversion step. It works with the shifter register to serialize the input.
     conversion_step : process (i_clk) is
-        variable r_bit_counter : positive range 1 to g_DATA_WIDTH - 1;
+        -- number of transmitted bits
+        variable r_transmitted_count : positive range 1 to g_DATA_WIDTH - 1;
     begin
         if (rising_edge(i_clk)) then
             o_data_start <= '0';
             
-            if (i_rst = '1') then
+            if (i_rst = '1') then -- initialize the module
                 r_transmitting <= '0';
             else
                 
-                if (r_transmitting = '0') then
-                    if (i_start = '1') then
-                        o_data_start   <= '1';
-                        r_transmitting <= '1';
-                        r_shifter      <= i_data;
-                        r_bit_counter  := 1;
+                if (r_transmitting = '0') then -- if not transmitting
+                    if (i_start = '1') then -- if start required
+                        o_data_start        <= '1'; -- serial data start
+                        r_transmitting      <= '1'; -- set transmitting
+                        r_shifter           <= i_data; -- store converted data internally
+                        r_transmitted_count := 1; -- one bit is transmitted now
                     end if;
                 else
-                    if (g_LSB_FIRST) then
+                    if (g_LSB_FIRST) then -- first least significant bit
                         r_shifter <= '-' & r_shifter(r_shifter'left downto 1);
-                    else
+                    else -- first most significant bit
                         r_shifter <= r_shifter(r_shifter'left - 1 downto 0) & '-';
                     end if;
                     
-                    if (r_bit_counter = g_DATA_WIDTH - 1) then
-                        r_transmitting <= '0';
+                    if (r_transmitted_count = g_DATA_WIDTH - 1) then -- last transmitted bit
+                        r_transmitting <= '0'; -- stop transmitting
                     end if;
-                    r_bit_counter := r_bit_counter + 1;
+                    -- increment the transmitted count
+                    r_transmitted_count := r_transmitted_count + 1;
                 end if;
                 
             end if;
