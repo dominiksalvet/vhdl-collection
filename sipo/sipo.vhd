@@ -22,7 +22,8 @@ use ieee.std_logic_1164.all;
 entity sipo is
     generic (
         g_DATA_WIDTH : positive range 2 to natural'high := 4; -- output parallelized data width
-        g_LSB_FIRST  : boolean                          := true -- least significant bit first
+        -- least significant bit first of the serial input
+        g_LSB_FIRST : boolean := true
     );
     port (
         i_clk : in std_logic; -- clock signal
