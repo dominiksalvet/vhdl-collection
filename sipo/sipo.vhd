@@ -39,7 +39,8 @@ end entity sipo;
 
 
 architecture rtl of sipo is
-    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- shifter register
+    -- shifter register used for parallelize the serial input data
+    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
     o_data <= r_shifter; -- the shifter is directly assigned to the output, see 1. note
@@ -73,9 +74,9 @@ begin
                     if (r_received_count = g_DATA_WIDTH - 1) then -- last received bit
                         o_data_valid     <= '1'; -- data are valid after the receive
                         r_receiving      := false; -- stop receiving
-                        r_received_count := 0; -- reset the received bits counter
+                        r_received_count := 0; -- reset the received bits count
                     else -- not last received bit
-                        r_received_count := r_received_count + 1; -- increment the received counter
+                        r_received_count := r_received_count + 1; -- increment the received count
                     end if;
                 end if;
                 
