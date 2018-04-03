@@ -2,7 +2,7 @@
 
 Handy generic VHDL modules that can be used as part of a VHDL project. Every VHDL module has been simulated and works as intended. Test bench files of the simulation are also included in a module's appropriate directory. A project file is also published with set up all the VHDL modules using and so they can be tested before real use in this prepared sandbox.
 
-## List of available modules
+## Modules
 * [Clock Divider](clk_divider)
 * [First In, First Out](fifo)
 * [Last In, First Out](lifo)
