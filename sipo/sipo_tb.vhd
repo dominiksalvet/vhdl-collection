@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
---     The test bench sends every possible bit combination to the i_data input,
---     beginning from the 0 value in binary form. Then it test the parallelized
---     output on the o_data signal. It also tests values of the o_data_valid
---     indicator.
+--     The test bench sends every possible bit combination to the i_data input
+--     in serial representation, beginning from the 0 value in binary form. Then
+--     it test the parallelized output on the o_data signal. It also tests
+--     behavior of the o_data_valid indicator.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -71,23 +71,24 @@ begin
         wait for c_CLK_PERIOD;
         
         i_data_start <= '1';
-        for i in 0 to (2 ** o_data'length) - 1 loop
-            if (g_LSB_FIRST) then
-                for j in 0 to g_DATA_WIDTH - 1 loop
+        for i in 0 to (2 ** o_data'length) - 1 loop -- loop through all the combinations
+            if (g_LSB_FIRST) then -- least significant bit is the first one
+                for j in 0 to g_DATA_WIDTH - 1 loop -- serial data receiving
                     current_data := std_logic_vector(to_unsigned(i, current_data'length));
                     i_data       <= current_data(j);
                     wait for c_CLK_PERIOD;
                 end loop;
-            else
-                for j in g_DATA_WIDTH - 1 downto 0 loop
+            else -- most significant bit is the first one
+                for j in g_DATA_WIDTH - 1 downto 0 loop -- serial data receiving
                     current_data := std_logic_vector(to_unsigned(i, current_data'length));
                     i_data       <= current_data(j);
                     wait for c_CLK_PERIOD;
                 end loop;
             end if;
             
-            assert (o_data_valid = '1')
+            assert (o_data_valid = '1') -- the data must be valid after the previous sequence
                 report "The o_data_valid should have '1' value!" severity error;
+            -- the parallelized data must be equal to the input serial data
             assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
                 report "Parallelized output data are not equal to the previous serial input data!"
                 severity error;
