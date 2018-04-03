@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
+--     The test bench sends every possible bit combination to the i_data input,
+--     beginning from the 0 value in binary form. Then it test the parallelized
+--     output on the o_data signal. It also tests values of the o_data_valid
+--     indicator.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -7,6 +11,7 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 use work.sipo; -- sipo.vhd
 
@@ -56,32 +61,45 @@ begin
     i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
     stimulus : process is
+        variable current_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     begin
         
         i_rst <= '1';
         wait for c_CLK_PERIOD;
         
-        i_rst        <= '0';
-        i_data_start <= '1';
-        i_data       <= '1';
+        i_rst <= '0';
         wait for c_CLK_PERIOD;
         
-        i_data_start <= '0';
-        wait for 3 * c_CLK_PERIOD;
-        
         i_data_start <= '1';
-        i_data       <= '0';
+        for i in 0 to (2 ** o_data'length) - 1 loop
+            if (g_LSB_FIRST) then
+                for j in 0 to g_DATA_WIDTH - 1 loop
+                    current_data := std_logic_vector(to_unsigned(i, current_data'length));
+                    i_data       <= current_data(j);
+                    wait for c_CLK_PERIOD;
+                end loop;
+            else
+                for j in g_DATA_WIDTH - 1 downto 0 loop
+                    current_data := std_logic_vector(to_unsigned(i, current_data'length));
+                    i_data       <= current_data(j);
+                    wait for c_CLK_PERIOD;
+                end loop;
+            end if;
+            
+            assert (o_data_valid = '1')
+                report "The o_data_valid should have '1' value!" severity error;
+            assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
+                report "Parallelized output data are not equal to the previous serial input data!"
+                severity error;
+        end loop;
+        i_data_start <= '0';
         wait for c_CLK_PERIOD;
         
-        i_data_start <= '0';
+        assert (o_data_valid = '1')
+            report "The o_data_valid should have '1' value!" severity error;
         wait;
         
     end process stimulus;
-    
-    verification : process is
-    begin
-        wait;
-    end process verification;
     
 end architecture behavior;
 
