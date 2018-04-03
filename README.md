@@ -6,7 +6,7 @@ Handy generic VHDL modules that can be used as part of a VHDL project. Every VHD
 * [Clock Divider](clk_divider)
 * [First In, First Out](fifo)
 * [Last In, First Out](lifo)
-* [Memory copier](mem_copier)
+* [Memory Copier](mem_copier)
 * [Parallel In, Serial Out](piso)
 * [Pulse-Width Modulation](pwm)
 * [Random-Access Memory](ram)
