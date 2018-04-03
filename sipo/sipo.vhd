@@ -18,6 +18,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+use work.util.all; -- util.vhd
+
 
 entity sipo is
     generic (
@@ -39,6 +41,7 @@ end entity sipo;
 
 
 architecture rtl of sipo is
+    signal r_receiving : boolean; -- receiving indicator
     -- shifter register used for parallelize the serial input data
     signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
@@ -48,22 +51,18 @@ begin
     -- Description:
     --     Perform one conversion step. Basically it fills the shifter register to parallelize.
     conversion_step : process (i_clk) is
-        variable r_receiving      : boolean; -- receiving indicator
         variable r_received_count : natural range 0 to g_DATA_WIDTH - 1; -- number of received bits
     begin
         if (rising_edge(i_clk)) then
             if (i_rst = '1') then -- initialize the module
                 o_data_valid     <= '0';
-                r_receiving      := false;
+                r_receiving      <= false;
                 r_received_count := 0;
             else
                 
-                if (i_data_start = '1') then -- begin the reading the serial input data
-                    r_receiving := true;
-                end if;
-                
-                if (r_receiving) then -- receive one bit
+                if (i_data_start = '1' or r_receiving) then -- receive one bit
                     o_data_valid <= '0'; -- data are valid as long as not receiving
+                    r_receiving  <= true; -- begin the reading the serial input data
                     
                     if (g_LSB_FIRST) then -- first least significant bit
                         r_shifter <= i_data & r_shifter(r_shifter'left downto 1);
@@ -73,7 +72,7 @@ begin
                     
                     if (r_received_count = g_DATA_WIDTH - 1) then -- last received bit
                         o_data_valid     <= '1'; -- data are valid after the receive
-                        r_receiving      := false; -- stop receiving
+                        r_receiving      <= false; -- stop receiving
                         r_received_count := 0; -- reset the received bits count
                     else -- not last received bit
                         r_received_count := r_received_count + 1; -- increment the received count
@@ -83,6 +82,22 @@ begin
             end if;
         end if;
     end process conversion_step;
+    
+    -- rtl_synthesis off
+    input_prevention : process (i_clk) is
+    begin
+        if (rising_edge(i_clk)) then
+            
+            if (i_data_start = '1' or r_receiving) then -- accept new data to the conversion
+                if (not contains_only_01(i_data)) then
+                    report "SIPO - undefined input data bit, the input data bit is not '0' nor" &
+                    " '1' value!" severity failure;
+                end if;
+            end if;
+            
+        end if;
+    end process input_prevention;
+    -- rtl_synthesis on
     
 end architecture rtl;
 
