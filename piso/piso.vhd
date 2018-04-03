@@ -102,7 +102,7 @@ begin
         if (rising_edge(i_clk)) then
             
             if (i_start = '1' and r_transmitting = '0') then -- accept new data to the conversion
-                if (not contains_only_01(i_data)) then
+                if (not contains_01(i_data)) then
                     report "PISO - undefined input data, the input data are not exactly defined" &
                     " by '0' and '1' values only!" severity failure;
                 end if;
