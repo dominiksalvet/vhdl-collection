@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
+--     The test bench sends every possible bit combination to the i_data input,
+--     beginning from the 0 value in binary form. Then it test the serialized
+--     output on the o_data signal. It also tests values of o_rdy and
+--     o_data_start indicators.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -7,6 +11,7 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 use work.piso; -- piso.vhd
 
@@ -63,20 +68,52 @@ begin
         i_rst <= '1';
         wait for c_CLK_PERIOD;
         
-        i_rst   <= '0';
-        i_start <= '1';
-        i_data  <= (others => '1');
-        wait for 4 * c_CLK_PERIOD;
+        i_rst <= '0';
+        wait for c_CLK_PERIOD;
         
-        i_data <= (others => '0');
+        i_start <= '1';
+        for i in 0 to (2 ** i_data'length) - 1 loop
+            i_data <= std_logic_vector(to_unsigned(i, i_data'length));
+            if (g_LSB_FIRST) then -- least significant bit is the first one
+                for j in 0 to g_DATA_WIDTH - 1 loop
+                    wait for c_CLK_PERIOD;
+                    assert (o_data = i_data(j))
+                        report "Serialized output data bit is not equal to bit in the input" &
+                        " parallel data!" severity error;
+                    if (j = 0) then
+                        assert (o_data_start = '1')
+                            report "The o_data_start should have '1' value!" severity error;
+                    end if;
+                    if (j = g_DATA_WIDTH - 1) then
+                        assert (o_rdy = '1')
+                            report "The o_rdy should have '1' value!" severity error;
+                    end if;
+                end loop;
+            else -- most significant bit is the first one
+                for j in g_DATA_WIDTH - 1 downto 0 loop
+                    wait for c_CLK_PERIOD;
+                    assert (o_data = i_data(j))
+                        report "Serialized output data bit is not equal to bit in the input" &
+                        " parallel data!" severity error;
+                    if (j = g_DATA_WIDTH - 1) then
+                        assert (o_data_start = '1')
+                            report "The o_data_start should have '1' value!" severity error;
+                    end if;
+                    if (j = 0) then
+                        assert (o_rdy = '1')
+                            report "The o_rdy should have '1' value!" severity error;
+                    end if;
+                end loop;
+            end if;
+        end loop;
+        i_start <= '0';
+        wait for c_CLK_PERIOD;
+        
+        assert (o_rdy = '1')
+            report "The o_rdy should have '1' value!" severity error;
         wait;
         
     end process stimulus;
-    
-    verification : process is
-    begin
-        wait;
-    end process verification;
     
 end architecture behavior;
 
