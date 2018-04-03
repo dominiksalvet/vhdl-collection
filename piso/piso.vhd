@@ -7,6 +7,11 @@
 --     It can be set up to operate in LSB-first mode or MSB-first mode.
 --------------------------------------------------------------------------------
 -- Notes:
+--     1. The parallel input data are stored in the internal buffer and the
+--        conversion is performed on this data.
+--     2. For continuous reading the parallel input data, assign '1' to the
+--        i_start input. Then the data will be read after each '1' value on the
+--        o_rdy output.
 --------------------------------------------------------------------------------
 
 
