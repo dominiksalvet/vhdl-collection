@@ -21,4 +21,4 @@ The modules are documented inside it's VHDL source files using comment headers a
 
 ## License
 
-All VHDL modules of this repository are licensed under the MIT license, see the [`LICENSE.txt`](LICENSE.txt) file for details. The license for a specific module must be also found at the bottom of the file where is the module defined.
+All VHDL modules of this repository are licensed under the MIT license, see the [*LICENSE.txt*](LICENSE.txt) file for details. The license for a specific module must be also found at the bottom of the file where is the module defined.
