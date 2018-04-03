@@ -72,35 +72,35 @@ begin
         wait for c_CLK_PERIOD;
         
         i_start <= '1';
-        for i in 0 to (2 ** i_data'length) - 1 loop
+        for i in 0 to (2 ** i_data'length) - 1 loop -- loop through all the combinations
             i_data <= std_logic_vector(to_unsigned(i, i_data'length));
             if (g_LSB_FIRST) then -- least significant bit is the first one
                 for j in 0 to g_DATA_WIDTH - 1 loop
                     wait for c_CLK_PERIOD;
-                    assert (o_data = i_data(j))
+                    assert (o_data = i_data(j)) -- output data bit must be equal to the indexed one
                         report "Serialized output data bit is not equal to bit in the input" &
                         " parallel data!" severity error;
                     if (j = 0) then
-                        assert (o_data_start = '1')
+                        assert (o_data_start = '1') -- serial data start indicator check
                             report "The o_data_start should have '1' value!" severity error;
                     end if;
                     if (j = g_DATA_WIDTH - 1) then
-                        assert (o_rdy = '1')
+                        assert (o_rdy = '1') -- the data should be ready now
                             report "The o_rdy should have '1' value!" severity error;
                     end if;
                 end loop;
             else -- most significant bit is the first one
                 for j in g_DATA_WIDTH - 1 downto 0 loop
                     wait for c_CLK_PERIOD;
-                    assert (o_data = i_data(j))
+                    assert (o_data = i_data(j)) -- output data bit must be equal to the indexed one
                         report "Serialized output data bit is not equal to bit in the input" &
                         " parallel data!" severity error;
                     if (j = g_DATA_WIDTH - 1) then
-                        assert (o_data_start = '1')
+                        assert (o_data_start = '1') -- serial data start indicator check
                             report "The o_data_start should have '1' value!" severity error;
                     end if;
                     if (j = 0) then
-                        assert (o_rdy = '1')
+                        assert (o_rdy = '1') -- the data should be ready now
                             report "The o_rdy should have '1' value!" severity error;
                     end if;
                 end loop;
