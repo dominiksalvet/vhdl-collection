@@ -89,10 +89,9 @@ begin
         if (rising_edge(i_clk)) then
             
             if (i_data_start = '1' or r_receiving) then -- accept new data to the conversion
-                if (not contains_01(i_data)) then
+                assert (contains_01(i_data))
                     report "SIPO - undefined input data bit, the input data bit is not '0' nor" &
                     " '1' value!" severity failure;
-                end if;
             end if;
             
         end if;

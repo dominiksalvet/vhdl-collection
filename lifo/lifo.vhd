@@ -100,14 +100,12 @@ begin
     input_prevention : process (i_clk) is
     begin
         if (rising_edge(i_clk)) then
-            if (b_full = '1' and i_we = '1') then
+            assert (not (b_full = '1' and i_we = '1'))
                 report "LIFO - overflow, the LIFO is full and being written!" severity failure;
-            end if;
             
-            if (b_empty = '1' and i_re = '1' and i_we = '0') then
+            assert (not (b_empty = '1' and i_re = '1' and i_we = '0'))
                 report "LIFO - undefined output data, read when empty causes underflow!"
                 severity failure;
-            end if;
         end if;
     end process input_prevention;
     -- rtl_synthesis on

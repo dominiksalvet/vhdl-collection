@@ -113,14 +113,12 @@ begin
     input_prevention : process (i_clk) is
     begin
         if (rising_edge(i_clk)) then
-            if (b_full = '1' and i_we = '1' and i_re = '0') then
+            assert (not (b_full = '1' and i_we = '1' and i_re = '0'))
                 report "FIFO - overwrite, the FIFO is full and being written without read!"
                 severity failure;
-            end if;
             
-            if (b_empty = '1' and i_re = '1') then
+            assert (not (b_empty = '1' and i_re = '1'))
                 report "FIFO - undefined output data, read when empty!" severity failure;
-            end if;
         end if;
     end process input_prevention;
     -- rtl_synthesis on

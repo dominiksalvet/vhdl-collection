@@ -95,17 +95,16 @@ begin
             
         end if;
     end process conversion_step;
-
+    
     -- rtl_synthesis off
     input_prevention : process (i_clk) is
     begin
         if (rising_edge(i_clk)) then
             
             if (i_start = '1' and r_transmitting = '0') then -- accept new data to the conversion
-                if (not contains_01(i_data)) then
+                assert (contains_01(i_data))
                     report "PISO - undefined input data, the input data are not exactly defined" &
                     " by '0' and '1' values only!" severity failure;
-                end if;
             end if;
             
         end if;

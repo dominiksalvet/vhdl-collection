@@ -108,10 +108,9 @@ begin
     begin
         if (rising_edge(i_clk)) then
             if (i_re = '1') then -- read means that address must be defined
-                if (not contains_01(i_addr)) then
+                assert (contains_01(i_addr))
                     report "ROM - undefined address, the address is not exactly defined by '0'" &
                     " and '1' values only!" severity failure;
-                end if;
             end if;
         end if;
     end process input_prevention;

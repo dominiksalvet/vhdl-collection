@@ -116,17 +116,15 @@ begin
         if (rising_edge(i_clk)) then
             
             if (i_we = '1' or i_re = '1') then -- read or write means that address must be defined
-                if (not contains_01(i_addr)) then
+                assert (contains_01(i_addr))
                     report "RAM - undefined address, the address is not exactly defined by '0'" &
                     " and '1' values only!" severity failure;
-                end if;
             end if;
             
             if (i_we = '1') then -- write also means that input data must be defined
-                if (not contains_01(i_data)) then
+                assert (contains_01(i_data))
                     report "RAM - undefined input data, the input data are not exactly defined by" &
                     " '0' and '1' values only!" severity failure;
-                end if;
             end if;
             
         end if;
@@ -135,10 +133,9 @@ begin
     output_prevention : process (b_data) is
     begin
         if (now > 0 ps) then -- the prevention must start after the simulation initialization
-            if (not contains_01(b_data)) then
+            assert (contains_01(b_data))
                 report "RAM - undefined output data, the output data are not exactly defined by" &
                 " '0' and '1' values only!" severity error;
-            end if;
         end if;
     end process output_prevention;
     -- rtl_synthesis on
