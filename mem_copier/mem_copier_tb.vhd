@@ -38,9 +38,9 @@ architecture behavior of mem_copier_tb is
     signal i_copy_en   : std_logic := '0';
     signal o_copy_done : std_logic;
     
-    signal i_src_start_addr  : unsigned(g_SRC_ADDR_WIDTH - 1 downto 0)   := (others => '0');
-    signal i_tar_start_addr  : unsigned(g_TAR_ADDR_WIDTH - 1 downto 0)   := (others => '0');
-    signal i_copy_addr_count : positive range 1 to 2 ** g_TAR_ADDR_WIDTH := 1;
+    signal i_src_start_addr  : unsigned(g_SRC_ADDR_WIDTH - 1 downto 0)  := (others => '0');
+    signal i_tar_start_addr  : unsigned(g_TAR_ADDR_WIDTH - 1 downto 0)  := (others => '0');
+    signal i_copy_addr_count : integer range 1 to 2 ** g_TAR_ADDR_WIDTH := 1;
     
     signal i_src_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
     signal o_src_re   : std_logic;

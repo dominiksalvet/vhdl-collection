@@ -44,7 +44,7 @@ entity mem_copier is
         -- start address to write to the target memory
         i_tar_start_addr : in unsigned(g_TAR_ADDR_WIDTH - 1 downto 0);
         -- number of addresses to copy
-        i_copy_addr_count : in positive range 1 to 2 ** g_TAR_ADDR_WIDTH;
+        i_copy_addr_count : in integer range 1 to 2 ** g_TAR_ADDR_WIDTH;
         
         -- signals for the source memory (which will be read from)
         i_src_data : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0);
@@ -86,7 +86,7 @@ begin
         type t_STATE is (READ_INIT, READ_WAIT, WRITE_INIT, WRITING);
         variable r_state : t_STATE; -- declaration of the state variable
         -- number of steps left to complete the required copying (number of i_clk rising edges)
-        variable r_steps_left : natural range 0 to (2 ** g_TAR_ADDR_WIDTH) + 1;
+        variable r_steps_left : integer range 0 to (2 ** g_TAR_ADDR_WIDTH) + 1;
     begin
         if (rising_edge(i_clk)) then
             

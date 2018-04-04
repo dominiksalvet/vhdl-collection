@@ -23,8 +23,8 @@ end entity sipo_tb;
 architecture behavior of sipo_tb is
     
     -- uut generics
-    constant g_DATA_WIDTH : positive range 2 to natural'high := 4;
-    constant g_LSB_FIRST  : boolean                          := true; 
+    constant g_DATA_WIDTH : integer range 2 to integer'high := 4;
+    constant g_LSB_FIRST  : boolean                         := true; 
     
     -- uut ports
     signal i_clk : std_logic := '0';
@@ -61,7 +61,7 @@ begin
     i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
     stimulus : process is
-        variable current_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+        variable v_vector : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     begin
         
         i_rst <= '1';
@@ -74,14 +74,14 @@ begin
         for i in 0 to (2 ** o_data'length) - 1 loop -- loop through all the combinations
             if (g_LSB_FIRST) then -- least significant bit is the first one
                 for j in 0 to g_DATA_WIDTH - 1 loop -- serial data receiving
-                    current_data := std_logic_vector(to_unsigned(i, current_data'length));
-                    i_data       <= current_data(j);
+                    v_vector := std_logic_vector(to_unsigned(i, v_vector'length));
+                    i_data   <= v_vector(j);
                     wait for c_CLK_PERIOD;
                 end loop;
             else -- most significant bit is the first one
                 for j in g_DATA_WIDTH - 1 downto 0 loop -- serial data receiving
-                    current_data := std_logic_vector(to_unsigned(i, current_data'length));
-                    i_data       <= current_data(j);
+                    v_vector := std_logic_vector(to_unsigned(i, v_vector'length));
+                    i_data   <= v_vector(j);
                     wait for c_CLK_PERIOD;
                 end loop;
             end if;

@@ -21,7 +21,7 @@ end entity static_clk_divider_tb;
 architecture behavior of static_clk_divider_tb is
     
     -- uut generics
-    constant g_FREQ_DIV : positive range 2 to positive'high := 5; 
+    constant g_FREQ_DIV : integer range 2 to integer'high := 5; 
     
     -- uut ports
     signal i_clk : std_logic := '0';

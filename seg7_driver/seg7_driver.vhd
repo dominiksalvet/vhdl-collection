@@ -47,7 +47,7 @@ architecture rtl of seg7_driver is
     signal hts_i_hex_data  : std_logic_vector(3 downto 0);
     signal hts_o_seg7_data : std_logic_vector(6 downto 0);
     
-    signal r_seg7_sel_index : natural range 0 to g_DIGIT_COUNT - 1; -- index of displayed digit
+    signal r_seg7_sel_index : integer range 0 to g_DIGIT_COUNT - 1; -- index of displayed digit
     
 begin
     
@@ -61,7 +61,7 @@ begin
         );
     
     -- window with the converted hexadecimal number
-    hts_i_hex_data <= i_data((r_seg7_sel_index * 4) + 3 downto (r_seg7_sel_index * 4));
+    hts_i_hex_data <= i_data((r_seg7_sel_index * 4) + 3 downto r_seg7_sel_index * 4);
     
     -- Description:
     --     Compute next index of the seven segment digits.

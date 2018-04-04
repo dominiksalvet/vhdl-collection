@@ -31,7 +31,7 @@ architecture behavior of pwm_tb is
     signal i_clk : std_logic := '0';
     signal i_rst : std_logic := '0';
     
-    signal i_duty   : natural range 0 to g_PERIOD := 0;
+    signal i_duty   : integer range 0 to g_PERIOD := 0;
     signal o_signal : std_logic;
     
     -- clock period definition

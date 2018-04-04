@@ -23,8 +23,8 @@ end entity piso_tb;
 architecture behavior of piso_tb is
     
     -- uut generics
-    constant g_DATA_WIDTH : positive range 2 to natural'high := 4;
-    constant g_LSB_FIRST  : boolean                          := true;
+    constant g_DATA_WIDTH : integer range 2 to integer'high := 4;
+    constant g_LSB_FIRST  : boolean                         := true;
     
     -- uut ports
     signal i_clk : std_logic := '0';

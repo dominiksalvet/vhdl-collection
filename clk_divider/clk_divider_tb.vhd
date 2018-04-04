@@ -30,7 +30,7 @@ architecture behavior of clk_divider_tb is
     signal i_clk : std_logic := '0';
     signal i_rst : std_logic := '0';
     
-    signal i_freq_div : positive := 1;
+    signal i_freq_div : integer range 1 to g_FREQ_DIV_MAX_VALUE := 1;
     signal o_clk      : std_logic;
     
     -- clock period definition

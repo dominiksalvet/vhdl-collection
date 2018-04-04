@@ -33,7 +33,7 @@ entity clk_divider is
         i_rst : in std_logic; -- reset signal
         
         -- i_clk frequency is divided by value of this number, <o_clk_freq>=<i_clk_freq>/i_freq_div
-        i_freq_div : in  positive range 1 to g_FREQ_DIV_MAX_VALUE;
+        i_freq_div : in  integer range 1 to g_FREQ_DIV_MAX_VALUE;
         o_clk      : out std_logic -- final output clock
     );
 end entity clk_divider;
@@ -53,9 +53,9 @@ begin
     --     Performs i_clk frequency division, outputs need to be composed to get the final clock.
     divide_i_clk_freq : process (i_clk) is
         -- register to store internally i_freq_div value in a time
-        variable r_freq_div : positive range 1 to g_FREQ_DIV_MAX_VALUE;
+        variable r_freq_div : integer range 1 to g_FREQ_DIV_MAX_VALUE;
         -- internal i_clk counter
-        variable r_i_clk_counter : positive range 1 to g_FREQ_DIV_MAX_VALUE;
+        variable r_i_clk_counter : integer range 1 to g_FREQ_DIV_MAX_VALUE;
     begin
         if (rising_edge(i_clk)) then
             -- need to reset the r_i_clk_counter and begin the new o_clk period

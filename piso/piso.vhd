@@ -23,7 +23,7 @@ use work.util.all; -- util.vhd
 
 entity piso is
     generic (
-        g_DATA_WIDTH : positive range 2 to natural'high := 4; -- input parallel data width
+        g_DATA_WIDTH : integer range 2 to integer'high := 4; -- input parallel data width
         -- least significant bit first of the serialized output
         g_LSB_FIRST : boolean := true
     );
@@ -61,7 +61,7 @@ begin
     --     Perform one conversion step. It works with the shifter register to serialize the input.
     conversion_step : process (i_clk) is
         -- number of transmitted bits
-        variable r_transmitted_count : positive range 1 to g_DATA_WIDTH - 1;
+        variable r_transmitted_count : integer range 1 to g_DATA_WIDTH - 1;
     begin
         if (rising_edge(i_clk)) then
             o_data_start <= '0';

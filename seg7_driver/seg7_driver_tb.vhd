@@ -1,10 +1,10 @@
 --------------------------------------------------------------------------------
 -- Description:
---     Simulation represents an example where the message "cafe" will be
+--     Simulation represents an example where the message "CAFE" will be
 --     displayed. The seven segment display, which shows "E", has the lowest
 --     index and so it is selected by "0001" value on o_seg7_sel output signal
 --     (eventually "1110"). After 8*c_CLK_PERIOD, the message will be changed to
---     the "face".
+--     the "FACE".
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Do not change g_DIGIT_COUNT unless you know the impact on the
@@ -66,13 +66,13 @@ begin
     begin
         
         i_rst  <= '1'; -- initialize the module
-        i_data <= x"cafe";
+        i_data <= x"CAFE";
         wait for c_CLK_PERIOD;
         
         i_rst <= '0';
         wait for 7 * c_CLK_PERIOD;
         
-        i_data <= x"face";
+        i_data <= x"FACE";
         wait;
         
     end process stimulus;
@@ -82,7 +82,7 @@ begin
         
         wait for c_CLK_PERIOD;
         
-        -- "cafe" message
+        -- the "CAFE" message
         assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
             report "Invalid data sent to the o_seg7_data output!" severity error;
         wait for c_CLK_PERIOD;
@@ -97,9 +97,9 @@ begin
         
         assert (o_seg7_data = (c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)))
             report "Invalid data sent to the o_seg7_data output!" severity error;
-        wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "face" message starts
+        wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "FACE" message starts
         
-        -- "face" message
+        -- the "FACE" message
         assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
             report "Invalid data sent to the o_seg7_data output!" severity error;
         wait for c_CLK_PERIOD;

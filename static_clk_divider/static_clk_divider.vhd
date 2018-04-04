@@ -20,7 +20,7 @@ use ieee.std_logic_1164.all;
 entity static_clk_divider is
     generic (
         -- frequency divisor, <o_clk_freq>=<i_clk_freq>/g_FREQ_DIV
-        g_FREQ_DIV : positive range 2 to positive'high := 5
+        g_FREQ_DIV : integer range 2 to integer'high := 5
     );
     port (
         i_clk : in  std_logic; -- input clock signal
@@ -36,7 +36,7 @@ begin
     -- Description:
     --     Perform i_clk frequency division by counting and create the final o_clk signal.
     divide_i_clk_freq : process (i_clk) is
-        variable r_i_clk_counter : positive range 1 to g_FREQ_DIV; -- internal i_clk counter
+        variable r_i_clk_counter : integer range 1 to g_FREQ_DIV; -- internal i_clk counter
     begin
         if (rising_edge(i_clk)) then
             -- need to reset the r_i_clk_counter and begin the new o_clk period

@@ -23,7 +23,7 @@ use work.util.all; -- util.vhd
 
 entity sipo is
     generic (
-        g_DATA_WIDTH : positive range 2 to natural'high := 4; -- output parallelized data width
+        g_DATA_WIDTH : integer range 2 to integer'high := 4; -- output parallelized data width
         -- least significant bit first of the serial input
         g_LSB_FIRST : boolean := true
     );
@@ -51,7 +51,7 @@ begin
     -- Description:
     --     Perform one conversion step. Basically it fills the shifter register to parallelize.
     conversion_step : process (i_clk) is
-        variable r_received_count : natural range 0 to g_DATA_WIDTH - 1; -- number of received bits
+        variable r_received_count : integer range 0 to g_DATA_WIDTH - 1; -- number of received bits
     begin
         if (rising_edge(i_clk)) then
             if (i_rst = '1') then -- initialize the module

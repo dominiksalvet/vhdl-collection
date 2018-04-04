@@ -28,7 +28,7 @@ entity pwm is
         i_rst : in std_logic; -- reset signal
         
         -- describes how values '1' and '0' are divided in the o_signal period
-        i_duty   : in  natural range 0 to g_PERIOD;
+        i_duty   : in  integer range 0 to g_PERIOD;
         o_signal : out std_logic -- final PWM signal
     );
 end entity pwm;
@@ -40,8 +40,8 @@ begin
     -- Description:
     --     Create final PWM signal.
     pwm_sampling : process (i_clk) is
-        variable r_duty    : natural range 0 to g_PERIOD; -- internal register of the i_duty input
-        variable r_counter : positive range 1 to g_PERIOD; -- o_signal period counter
+        variable r_duty    : integer range 0 to g_PERIOD; -- internal register of the i_duty input
+        variable r_counter : integer range 1 to g_PERIOD; -- o_signal period counter
     begin
         if (rising_edge(i_clk)) then
             if (i_rst = '1') then -- initialization
