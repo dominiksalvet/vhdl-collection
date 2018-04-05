@@ -135,7 +135,7 @@ begin
         if (now > 0 ps) then -- the prevention must start after the simulation initialization
             assert (contains_01(b_data))
                 report "RAM - undefined output data, the output data are not exactly defined by" &
-                " '0' and '1' values only!" severity error;
+                " '0' and '1' values only!" severity warning;
         end if;
     end process output_prevention;
     -- rtl_synthesis on
