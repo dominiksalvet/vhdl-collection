@@ -18,7 +18,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.util.all; -- util.vhd
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
 
 
 entity piso is

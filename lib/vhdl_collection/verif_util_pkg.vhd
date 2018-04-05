@@ -3,7 +3,7 @@
 -- Platform: independent
 --------------------------------------------------------------------------------
 -- Description:
---     This package contains utility functions.
+--     This package contains basic verification utility functions.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -13,7 +13,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 
-package util is
+package verif_util_pkg is
     
     -- Description:
     --     The function returns true only when the input signal p_SIGNAL has '0' or '1' value, false
@@ -30,10 +30,10 @@ package util is
             p_VECTOR : std_logic_vector -- input standard logic vector
         ) return boolean;
     
-end package util;
+end package verif_util_pkg;
 
 
-package body util is
+package body verif_util_pkg is
     
     function contains_01 (
             p_SIGNAL : std_logic
@@ -54,7 +54,7 @@ package body util is
         return true;
     end function contains_01;
     
-end package body util;
+end package body verif_util_pkg;
 
 
 --------------------------------------------------------------------------------

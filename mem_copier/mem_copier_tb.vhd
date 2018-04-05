@@ -14,10 +14,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.mem_copier; -- mem_copier.vhd
 
 use work.rom; -- rom.vhd
-use work.util.all; -- util.vhd
 
 use work.ram; -- ram.vhd
 
