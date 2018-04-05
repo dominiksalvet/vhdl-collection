@@ -9,6 +9,8 @@
 -- Notes:
 --     1. To verify the module by its current implementation, it is required
 --        2^(n+1) steps where n=g_ADDR_WIDTH.
+--     2. The file path defined by g_MEM_IMG_FILENAME is relative to the file
+--        where the ram module is defined in.
 --------------------------------------------------------------------------------
 
 

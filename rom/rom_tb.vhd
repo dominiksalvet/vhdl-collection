@@ -6,6 +6,8 @@
 --     width (4 bits).
 --------------------------------------------------------------------------------
 -- Notes:
+--     1. The file path defined by g_MEM_IMG_FILENAME is relative to the file
+--        where the rom module is defined in.
 --------------------------------------------------------------------------------
 
 
