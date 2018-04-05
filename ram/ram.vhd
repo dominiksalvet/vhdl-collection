@@ -70,9 +70,11 @@ architecture rtl of ram is
         variable v_bit_vector : bit_vector(g_DATA_WIDTH - 1 downto 0); -- auxiliary vector for read
     begin
         if (g_MEM_IMG_FILENAME'length = 0) then
+            report "RAM - left uninitialized." severity note;
             return v_mem;
         end if;
         
+        report "RAM - initializing from a file ..." severity note;
         file_open(v_file, g_MEM_IMG_FILENAME, read_mode);
         
         for i in t_MEM'range loop
@@ -83,6 +85,7 @@ architecture rtl of ram is
         end loop;
         
         file_close(v_file);
+        report "RAM - the initialization has been successfully finished." severity note; 
         
         return v_mem;
     end function create_mem_img;

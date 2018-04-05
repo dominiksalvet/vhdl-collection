@@ -68,7 +68,9 @@ architecture rtl of rom is
             for i in t_MEM'range loop
                 v_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- [address]=address
             end loop;
+            report "ROM - the linear initialization has been successfully finished." severity note;
         else -- initialization from a file
+            report "ROM - initializing from a file ..." severity note;
             file_open(v_file, g_MEM_IMG_FILENAME, read_mode);
             
             for i in t_MEM'range loop
@@ -79,6 +81,7 @@ architecture rtl of rom is
             end loop;
             
             file_close(v_file);
+            report "ROM - the initialization has been successfully finished." severity note;
         end if;
         
         return v_mem;
