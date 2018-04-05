@@ -43,24 +43,6 @@ end package verif_util_pkg;
 
 package body verif_util_pkg is
     
-    function to_string (
-            p_VECTOR : std_logic_vector
-        ) return string is
-        variable v_string : string(p_VECTOR'low + 1 to p_VECTOR'high + 1);
-    begin
-        if (p_VECTOR'ascending) then
-            for i in v_string'range loop
-                v_string(i) := to_character(p_VECTOR(i - 1));
-            end loop;
-        else
-            for i in v_string'range loop
-                v_string(i) := to_character(p_VECTOR(p_VECTOR'high - i + 1));
-            end loop;
-        end if;
-        
-        return v_string;
-    end function to_string;
-    
     function contains_01 (
             p_SIGNAL : std_logic
         ) return boolean is
@@ -107,6 +89,24 @@ package body verif_util_pkg is
         end case;
         return v_character;
     end function to_character;
+    
+    function to_string (
+            p_VECTOR : std_logic_vector
+        ) return string is
+        variable v_string : string(p_VECTOR'low + 1 to p_VECTOR'high + 1);
+    begin
+        if (p_VECTOR'ascending) then
+            for i in v_string'range loop
+                v_string(i) := to_character(p_VECTOR(i - 1));
+            end loop;
+        else
+            for i in v_string'range loop
+                v_string(i) := to_character(p_VECTOR(p_VECTOR'high - i + 1));
+            end loop;
+        end if;
+        
+        return v_string;
+    end function to_string;
     
 end package body verif_util_pkg;
 
