@@ -13,6 +13,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.piso; -- piso.vhd
 
 
@@ -78,30 +81,38 @@ begin
                 for j in 0 to g_DATA_WIDTH - 1 loop
                     wait for c_CLK_PERIOD;
                     assert (o_data = i_data(j)) -- output data bit must be equal to the indexed one
-                        report "Serialized output data bit is not equal to bit in the input" &
-                        " parallel data!" severity error;
+                        report "Expected o_data='" & to_character(i_data(j)) & "', this bit of " &
+                        "the serialized data should be equal to the according bit of the " &
+                        "parallel input data!"
+                        severity error;
                     if (j = 0) then
                         assert (o_data_start = '1') -- serial data start indicator check
-                            report "The o_data_start should have '1' value!" severity error;
+                            report "Expected o_data_start='1'!"
+                            severity error;
                     end if;
                     if (j = g_DATA_WIDTH - 1) then
                         assert (o_rdy = '1') -- the data should be ready now
-                            report "The o_rdy should have '1' value!" severity error;
+                            report "Expected o_rdy='1'!"
+                            severity error;
                     end if;
                 end loop;
             else -- most significant bit is the first one
                 for j in g_DATA_WIDTH - 1 downto 0 loop
                     wait for c_CLK_PERIOD;
                     assert (o_data = i_data(j)) -- output data bit must be equal to the indexed one
-                        report "Serialized output data bit is not equal to bit in the input" &
-                        " parallel data!" severity error;
+                        report "Expected o_data='" & to_character(i_data(j)) & "', this bit of " &
+                        "the serialized data should be equal to the according bit of the " &
+                        "parallel input data!"
+                        severity error;
                     if (j = g_DATA_WIDTH - 1) then
                         assert (o_data_start = '1') -- serial data start indicator check
-                            report "The o_data_start should have '1' value!" severity error;
+                            report "Expected o_data_start='1'!"
+                            severity error;
                     end if;
                     if (j = 0) then
                         assert (o_rdy = '1') -- the data should be ready now
-                            report "The o_rdy should have '1' value!" severity error;
+                            report "Expected o_rdy='1'!"
+                            severity error;
                     end if;
                 end loop;
             end if;
@@ -110,7 +121,8 @@ begin
         wait for c_CLK_PERIOD;
         
         assert (o_rdy = '1')
-            report "The o_rdy should have '1' value!" severity error;
+            report "Expected o_rdy='1'!"
+            severity error;
         wait;
         
     end process stimulus;

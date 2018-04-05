@@ -91,8 +91,8 @@ begin
             
             if (i_data_start = '1' or r_receiving) then -- accept new data to the conversion
                 assert (contains_01(i_data))
-                    report "SIPO - undefined input data bit, the input data bit is not '0' nor" &
-                    " '1' value!" severity failure;
+                    report "Undefined i_data when receiving the serial input bits!"
+                    severity failure;
             end if;
             
         end if;

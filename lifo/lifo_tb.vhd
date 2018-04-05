@@ -13,6 +13,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.lifo; -- lifo.vhd
 
 
@@ -80,7 +83,8 @@ begin
         end loop;
         
         assert (o_full = '1')
-            report "The o_full indicator should have '1' value!" severity error;
+            report "Expected o_full='1'!"
+            severity error;
         
         i_we <= '0';
         i_re <= '1';
@@ -88,21 +92,25 @@ begin
         
         for i in 3 downto 0 loop -- LIFO structure needs downto loop to verify data
             assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
-                report "Invalid value has been read from the LIFO!" severity error;
+                report "Expected o_data=""" &
+                to_string(std_logic_vector(to_unsigned(i, o_data'length))) & """!"
+                severity error;
             if (i /= 0) then
                 wait for c_CLK_PERIOD;
             end if;
         end loop;
         
         assert (o_empty = '1')
-            report "The o_empty indicator should have '1' value!" severity error;
+            report "Expected o_empty='1'!"
+            severity error;
         
         i_we <= '1';
         wait for c_CLK_PERIOD;
         
         assert (o_empty = '0')
-            report "The o_empty indicator should have '0' value, because write and read at the" &
-            " same time must lead to write!" severity error;
+            report "Expected o_empty='0', writing and reading at the same time must lead to " &
+            "perform writing!"
+            severity error;
         
         i_we <= '0';
         i_re <= '0';

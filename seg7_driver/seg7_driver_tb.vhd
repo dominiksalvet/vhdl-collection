@@ -15,6 +15,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.seg7_driver; -- seg7_driver.vhd
 
 use work.hex_to_seg7_public.all; -- hex_to_seg7_public.vhd
@@ -82,38 +85,56 @@ begin
         
         wait for c_CLK_PERIOD;
         
-        -- the "CAFE" message
+        -- THE "CAFE" MESSAGE
+
         assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_seg7_data = (c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_seg7_data = (c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_seg7_data = (c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "FACE" message starts
         
-        -- the "FACE" message
+        -- THE "FACE" MESSAGE
+
         assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_seg7_data = (c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_seg7_data = (c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_seg7_data = (c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)))
-            report "Invalid data sent to the o_seg7_data output!" severity error;
+            report "Expected o_seg7_data=""" &
+            to_string(c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            severity error;
         wait;
         
     end process verification;

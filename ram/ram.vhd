@@ -71,11 +71,11 @@ architecture rtl of ram is
         variable v_bit_vector : bit_vector(g_DATA_WIDTH - 1 downto 0); -- auxiliary vector for read
     begin
         if (g_MEM_IMG_FILENAME'length = 0) then
-            report "RAM - left uninitialized." severity note;
+            report "The memory has been left uninitialized.";
             return v_mem;
         end if;
         
-        report "RAM - initializing from a file ..." severity note;
+        report "The memory is about being initialized from a file.";
         file_open(v_file, g_MEM_IMG_FILENAME, read_mode);
         
         for i in t_MEM'range loop
@@ -86,7 +86,7 @@ architecture rtl of ram is
         end loop;
         
         file_close(v_file);
-        report "RAM - the initialization has been successfully finished." severity note; 
+        report "The initialization from a file has been successful."; 
         
         return v_mem;
     end function create_mem_img;
@@ -121,14 +121,14 @@ begin
             
             if (i_we = '1' or i_re = '1') then -- read or write means that address must be defined
                 assert (contains_01(i_addr))
-                    report "RAM - undefined address, the address is not exactly defined by '0'" &
-                    " and '1' values only!" severity failure;
+                    report "Undefined i_addr when reading from or writing to the memory!"
+                    severity failure;
             end if;
             
             if (i_we = '1') then -- write also means that input data must be defined
                 assert (contains_01(i_data))
-                    report "RAM - undefined input data, the input data are not exactly defined by" &
-                    " '0' and '1' values only!" severity failure;
+                    report "Undefined i_data when writing to the memory!"
+                    severity failure;
             end if;
             
         end if;
@@ -138,8 +138,8 @@ begin
     begin
         if (now > 0 ps) then -- the prevention must start after the simulation initialization
             assert (contains_01(b_data))
-                report "RAM - undefined output data, the output data are not exactly defined by" &
-                " '0' and '1' values only!" severity warning;
+                report "Undefined o_data when reading from the memory."
+                severity warning;
         end if;
     end process output_prevention;
     -- rtl_synthesis on

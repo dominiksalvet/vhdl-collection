@@ -69,9 +69,9 @@ architecture rtl of rom is
             for i in t_MEM'range loop
                 v_mem(i) := std_logic_vector(to_unsigned(i, g_DATA_WIDTH)); -- [address]=address
             end loop;
-            report "ROM - the linear initialization has been successfully finished." severity note;
+            report "The memory has been linearly initialized.";
         else -- initialization from a file
-            report "ROM - initializing from a file ..." severity note;
+            report "The memory is about being initialized from a file.";
             file_open(v_file, g_MEM_IMG_FILENAME, read_mode);
             
             for i in t_MEM'range loop
@@ -82,7 +82,7 @@ architecture rtl of rom is
             end loop;
             
             file_close(v_file);
-            report "ROM - the initialization has been successfully finished." severity note;
+            report "The initialization from a file has been successful."; 
         end if;
         
         return v_mem;
@@ -113,8 +113,8 @@ begin
         if (rising_edge(i_clk)) then
             if (i_re = '1') then -- read means that address must be defined
                 assert (contains_01(i_addr))
-                    report "ROM - undefined address, the address is not exactly defined by '0'" &
-                    " and '1' values only!" severity failure;
+                    report "Undefined i_addr when reading from the memory!"
+                    severity failure;
             end if;
         end if;
     end process input_prevention;

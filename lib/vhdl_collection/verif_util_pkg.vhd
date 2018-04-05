@@ -30,10 +30,36 @@ package verif_util_pkg is
             p_VECTOR : std_logic_vector -- input standard logic vector
         ) return boolean;
     
+    function to_character (
+            p_SIGNAL : std_logic
+        ) return character;
+    
+    function to_string (
+            p_VECTOR : std_logic_vector
+        ) return string;
+    
 end package verif_util_pkg;
 
 
 package body verif_util_pkg is
+    
+    function to_string (
+            p_VECTOR : std_logic_vector
+        ) return string is
+        variable v_string : string(p_VECTOR'low + 1 to p_VECTOR'high + 1);
+    begin
+        if (p_VECTOR'ascending) then
+            for i in v_string'range loop
+                v_string(i) := to_character(p_VECTOR(i - 1));
+            end loop;
+        else
+            for i in v_string'range loop
+                v_string(i) := to_character(p_VECTOR(p_VECTOR'high - i + 1));
+            end loop;
+        end if;
+        
+        return v_string;
+    end function to_string;
     
     function contains_01 (
             p_SIGNAL : std_logic
@@ -53,6 +79,34 @@ package body verif_util_pkg is
         end loop;
         return true;
     end function contains_01;
+    
+    function to_character (
+            p_SIGNAL : std_logic
+        ) return character is
+        variable v_character : character;
+    begin
+        case (p_SIGNAL) is
+            when 'U' => 
+                v_character := 'U';
+            when 'X' => 
+                v_character := 'X';
+            when '0' => 
+                v_character := '0';
+            when '1' => 
+                v_character := '1';
+            when 'Z' => 
+                v_character := 'Z';
+            when 'W' => 
+                v_character := 'W';
+            when 'L' => 
+                v_character := 'L';
+            when 'H' => 
+                v_character := 'H';
+            when '-' => 
+                v_character := '-';
+        end case;
+        return v_character;
+    end function to_character;
     
 end package body verif_util_pkg;
 

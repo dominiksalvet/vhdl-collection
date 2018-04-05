@@ -15,6 +15,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.rom; -- rom.vhd
 
 
@@ -71,7 +74,11 @@ begin
             
             -- asserting to verify the ROM module function
             assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
-                report "The read data does not match pattern [address]=address!" severity error;
+                report "Expected the data from the " &
+                integer'image(to_integer(unsigned(i_addr))) & " address to be equal to """ &
+                to_string(std_logic_vector(to_unsigned(i, o_data'length))) & """, what matches " &
+                "the [address]=address pattern!"
+                severity error;
         end loop;
         wait;
         

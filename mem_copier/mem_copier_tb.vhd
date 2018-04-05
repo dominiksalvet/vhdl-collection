@@ -123,6 +123,8 @@ begin
         
         wait for c_CLK_PERIOD; -- delay to initialize the uut
         
+        -- COPY THE FIRST 4 BYTES
+        
         i_copy_en <= '1';
         -- the last 4 addresses of the target memory
         i_tar_start_addr  <= to_unsigned((2 ** g_TAR_ADDR_WIDTH) - 4, i_tar_start_addr'length);
@@ -130,41 +132,50 @@ begin
         wait for c_CLK_PERIOD;
         
         assert (o_src_re = '1')
-            report "Read should have been already started!" severity error;
+            report "Expected o_src_re='1', read should have been already started!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '0')
-            report "Data to be written to the target memory are not defined, write must not be" &
-            " enabled." severity error;
+            report "Expected o_tar_we='0', data being written to the target memory are not " &
+            "defined, write must not be enabled!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '1')
-            report "Write should been already started!" severity error;
+            report "Expected o_tar_we='1'!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_src_re = '1')
-            report "It is required to read another data!" severity error;
+            report "Expected o_src_re='1', it is required to read another data!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_src_re = '0')
-            report "All required data are now read, read signal should be '0'!" severity error;
+            report "Expected o_src_re='0', all required data are now read!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '1')
-            report "It is required to write one more byte of data!" severity error;
+            report "Expected o_tar_we='1', it is required to write one more byte of data!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_tar_we = '0' and o_copy_done = '1')
-            report "Write now must be done, o_tar_we signal should '0' and o_copy_done should be" &
-            " '1' to indicate the finished copying!" severity error;
+            report "Expected o_tar_we='0' and o_copy_done='1', now the write must be done!"
+            severity error;
         i_copy_en <= '0'; -- copying has been done
         wait for c_CLK_PERIOD;
         
         assert (o_copy_done = '0')
-            report "The o_copy_done signal must have '0' now!" severity error;
+            report "Expected o_copy_done='0'!"
+            severity error;
         wait for c_CLK_PERIOD;
         
-        -- copying to all the target's addresses
+        -- COPY THE ENTIRE SOURCE MEMORY
+        
+        -- copying to all the target's addresses, it begins from the half address
         i_src_start_addr  <= to_unsigned((2 ** g_SRC_ADDR_WIDTH) / 2, i_src_start_addr'length);
         i_tar_start_addr  <= to_unsigned((2 ** g_TAR_ADDR_WIDTH) / 2, i_tar_start_addr'length);
         i_copy_addr_count <= 2 ** g_TAR_ADDR_WIDTH;
@@ -173,25 +184,30 @@ begin
         
         for i in 1 to i_copy_addr_count loop -- one pass per one write/read
             -- the [address]=address pattern matching
-            assert (to_integer(unsigned(o_tar_addr)) = to_integer(unsigned(o_tar_data)))
-                report "Write to the target memory does not match the [address]=address pattern!"
+            assert (to_integer(o_tar_addr) = to_integer(unsigned(o_tar_data)))
+                report "Expected the data being written to the " &
+                integer'image(to_integer(o_tar_addr)) & " address to be equal to """ &
+                to_string(o_tar_data) & """, what matches the [address]=address pattern!"
                 severity error;
             wait for c_CLK_PERIOD;
         end loop;
         
         assert (o_tar_we = '0' and o_copy_done = '1')
-            report "Write now must be done, o_tar_we signal should '0' and o_copy_done should be" &
-            " '1' to indicate the finished copying!" severity error;
+            report "Expected o_tar_we='0' and o_copy_done='1', now the write must be done!"
+            severity error;
         i_copy_en <= '0'; -- copying has been done
         wait for c_CLK_PERIOD;
         
         -- check status after copying has been done and the module now must be in idle
         assert (o_copy_done = '0')
-            report "The o_copy_done signal must have '0' now!" severity error;
+            report "Expected o_copy_done='0'!"
+            severity error;
         assert (o_src_addr = (o_src_addr'range => '0'))
-            report "The source memory address must be initialized to vector of '0'!" severity error;
+            report "Expected o_src_addr=""" & to_string((o_src_addr'range => '0')) & """!"
+            severity error;
         assert (o_tar_addr = (o_tar_addr'range => '0'))
-            report "The target memory address must be initialized to vector of '0'!" severity error;
+            report "Expected o_tar_addr=""" & to_string((o_tar_addr'range => '0')) & """!"
+            severity error;
         wait;
         
     end process stimulus;

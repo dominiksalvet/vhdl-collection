@@ -12,13 +12,13 @@
 --        is not possible to choose another capacity.
 --     2. The FIFO module is implemented as memory with separated indexes for
 --        write and read operations.
---     3. If the FIFO is empty, read operation can't be performed, it is also
---        not possible to do it at the same time even with write. Otherwise the
---        output data will be undefined and input data will be lost.
---        Nevertheless, it is still possible to use the FIFO next time like it
---        should be used, but the simulation will be interrupted if the
---        situation will occur.
---     4. If the FIFO is full, write and read operation can be performed at the
+--     3. If the FIFO is empty, read operation without write can't be performed
+--        at all as it leads to an undefined behavior for the FIFO.
+--     4. If the FIFO is empty, read and write at the same time will cause the
+--        o_data to be undefined, however it is still possible to use the FIFO
+--        next time like it should have been used before. The simulation will
+--        report an error in this situation, though.
+--     5. If the FIFO is full, write and read operations can be performed at the
 --        same time.
 --------------------------------------------------------------------------------
 
@@ -114,11 +114,18 @@ begin
     begin
         if (rising_edge(i_clk)) then
             assert (not (b_full = '1' and i_we = '1' and i_re = '0'))
-                report "FIFO - overwrite, the FIFO is full and being written without read!"
+                report "Writing without reading when full has caused overflow and get the module " &
+                "into undefined state!"
                 severity failure;
             
-            assert (not (b_empty = '1' and i_re = '1'))
-                report "FIFO - undefined output data, read when empty!" severity failure;
+            assert (not (b_empty = '1' and i_re = '1' and i_we = '0'))
+                report "Reading without writing when empty has caused underflow and get the " &
+                "module into undefined state!"
+                severity failure;
+            
+            assert (not (b_empty = '1' and i_re = '1' and i_we = '1'))
+                report "Reading and writing when empty have caused the o_data to be undefined!"
+                severity error;
         end if;
     end process input_prevention;
     -- rtl_synthesis on

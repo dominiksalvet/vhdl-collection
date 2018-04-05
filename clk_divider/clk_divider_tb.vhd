@@ -14,6 +14,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.clk_divider; -- clk_divider.vhd
 
 
@@ -90,39 +93,48 @@ begin
         wait for 4.25 * c_CLK_PERIOD;
         
         assert (o_clk = i_clk)
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='" & to_character(i_clk) & "'!"
+            severity error;
         wait for 0.5 * c_CLK_PERIOD;
         
         assert (o_clk = i_clk)
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='" & to_character(i_clk) & "'!"
+            severity error;
         wait for 8.5 * c_CLK_PERIOD;
         
         assert (o_clk = '0')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='0'!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_clk = '1')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='1'!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_clk = '0')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='0'!"
+            severity error;
         wait for 11 * c_CLK_PERIOD;
         
         assert (o_clk = '0')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='0'!"
+            severity error;
         wait for c_CLK_PERIOD;
         
         assert (o_clk = '1')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='1'!"
+            severity error;
         wait for 26 * c_CLK_PERIOD;
         
         assert (o_clk = '1')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='1'!"
+            severity error;
         wait for 3.5 * c_CLK_PERIOD;
         
         assert (o_clk = '0')
-            report "Expected inverse o_clk value!" severity error;
+            report "Expected o_clk='0'!"
+            severity error;
         wait;
         
     end process verification;

@@ -101,10 +101,13 @@ begin
     begin
         if (rising_edge(i_clk)) then
             assert (not (b_full = '1' and i_we = '1'))
-                report "LIFO - overflow, the LIFO is full and being written!" severity failure;
+                report "Writing when full has caused overflow and get the module into undefined " &
+                "state!"
+                severity failure;
             
             assert (not (b_empty = '1' and i_re = '1' and i_we = '0'))
-                report "LIFO - undefined output data, read when empty causes underflow!"
+                report "Reading without writing when empty has caused underflow and get the " &
+                "module into undefined state!"
                 severity failure;
         end if;
     end process input_prevention;

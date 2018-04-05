@@ -13,6 +13,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.sipo; -- sipo.vhd
 
 
@@ -87,17 +90,21 @@ begin
             end if;
             
             assert (o_data_valid = '1') -- the data must be valid after the previous sequence
-                report "The o_data_valid should have '1' value!" severity error;
+                report "Expected o_data_valid='1'!"
+                severity error;
             -- the parallelized data must be equal to the input serial data
             assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
-                report "Parallelized output data are not equal to the previous serial input data!"
+                report "Expected o_data=""" &
+                to_string(std_logic_vector(to_unsigned(i, o_data'length))) & """, parallelized " &
+                "output data are not equal to the previous serial data!"
                 severity error;
         end loop;
         i_data_start <= '0';
         wait for c_CLK_PERIOD;
         
         assert (o_data_valid = '1')
-            report "The o_data_valid should have '1' value!" severity error;
+            report "Expected o_data_valid='1'!"
+            severity error;
         wait;
         
     end process stimulus;

@@ -65,7 +65,8 @@ begin
         
         -- checks correct value of the first part of the o_signal signal for i_duty=0
         assert (o_signal = '0')
-            report "Inverse o_signal value expected!" severity error;
+            report "Expected o_signal='0'!"
+            severity error;
         wait for (g_PERIOD - 1) * c_CLK_PERIOD; -- pass the section with i_duty=0
         
         -- incrementing i_duty value, one i_duty per o_signal period (as the loop parameters define)
@@ -79,13 +80,15 @@ begin
             -- half i_clk period before falling edge of the o_signal signal
             if (i mod g_PERIOD = (i_duty - 1) mod (g_PERIOD + 1)) then
                 assert (o_signal = '1')
-                    report "Inverse o_signal value expected!" severity error;
+                    report "Expected o_signal='1'!"
+                    severity error;
             end if;
             
             -- half i_clk period after falling edge of the o_signal signal
             if (i mod g_PERIOD = i_duty mod (g_PERIOD + 1)) then
                 assert (o_signal = '0')
-                    report "Inverse o_signal value expected!" severity error;
+                    report "Expected o_signal='0'!"
+                    severity error;
             end if;
             
         end loop;
@@ -96,17 +99,20 @@ begin
         wait for c_CLK_PERIOD; -- wait one i_clk to verify the behavior described above
         
         assert (o_signal = '1') -- o_signal must be '1', i_duty to 0 has been changed too late
-            report "Inverse o_signal value expected!" severity error;
+            report "Expected o_signal='1'!"
+            severity error;
         -- get to the time half period before clk_pwm falling edge
         wait for (g_PERIOD - 2) * c_CLK_PERIOD;
         
         assert (o_signal = '1')
-            report "Inverse o_signal value expected!" severity error;
+            report "Expected o_signal='1'!"
+            severity error;
         -- get to the time half period after clk_pwm falling edge
         wait for c_CLK_PERIOD;
         
         assert (o_signal = '0')
-            report "Inverse o_signal value expected!" severity error;
+            report "Expected o_signal='0'!"
+            severity error;
         wait;
         
     end process stimulus;

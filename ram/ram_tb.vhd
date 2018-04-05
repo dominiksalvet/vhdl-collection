@@ -18,6 +18,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library vhdl_collection;
+use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+
 use work.ram; -- ram.vhd
 
 
@@ -70,17 +73,21 @@ begin
     stimulus : process is
     begin
         
-        -- write to every address it's value
+        -- read the initialized data and write to every address it's new value
         i_we <= '1';
         i_re <= '1';
         for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
             i_addr <= std_logic_vector(to_unsigned(i, i_addr'length));
             i_data <= std_logic_vector(to_unsigned(16 * i, i_data'length)); -- [address]=16*address
             wait for c_CLK_PERIOD;
-
+            
             -- asserting to verify the initialization function of the module
             assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
-                report "The read data does not match pattern [address]=address!" severity error;
+                report "Expected the data from the " &
+                integer'image(to_integer(unsigned(i_addr))) & " address to be equal to """ &
+                to_string(std_logic_vector(to_unsigned(i, o_data'length))) & """, what matches " &
+                "the [address]=address pattern!"
+                severity error;
         end loop;
         
         i_we <= '0';
@@ -91,7 +98,11 @@ begin
             
             -- asserting to verify the RAM module function
             assert (o_data = std_logic_vector(to_unsigned(16 * i, o_data'length)))
-                report "The read data does not match pattern [address]=16*address!" severity error;
+                report "Expected the data from the " &
+                integer'image(to_integer(unsigned(i_addr))) & " address to be equal to """ &
+                to_string(std_logic_vector(to_unsigned(16 * i, o_data'length))) & """, what " &
+                "matches the [address]=16*address pattern!"
+                severity error;
         end loop;
         wait;
         

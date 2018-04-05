@@ -104,8 +104,8 @@ begin
             
             if (i_start = '1' and r_transmitting = '0') then -- accept new data to the conversion
                 assert (contains_01(i_data))
-                    report "PISO - undefined input data, the input data are not exactly defined" &
-                    " by '0' and '1' values only!" severity failure;
+                    report "Undefined i_data when starting the conversion!"
+                    severity failure;
             end if;
             
         end if;
