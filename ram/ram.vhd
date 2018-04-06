@@ -29,7 +29,7 @@ library std;
 use std.textio.all;
 
 library vhdl_collection;
-use vhdl_collection.verif_util_pkg.all; -- verif_util_pkg.vhd
+use vhdl_collection.util_pkg.all; -- util_pkg.vhd
 
 
 entity ram is

@@ -13,7 +13,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 
-package verif_util_pkg is
+package util_pkg is
     
     -- Description:
     --     The function returns true only when the input signal p_SIGNAL has '0' or '1' value, false
@@ -38,10 +38,10 @@ package verif_util_pkg is
             p_VECTOR : std_logic_vector
         ) return string;
     
-end package verif_util_pkg;
+end package util_pkg;
 
 
-package body verif_util_pkg is
+package body util_pkg is
     
     function contains_01 (
             p_SIGNAL : std_logic
@@ -108,7 +108,7 @@ package body verif_util_pkg is
         return v_string;
     end function to_string;
     
-end package body verif_util_pkg;
+end package body util_pkg;
 
 
 --------------------------------------------------------------------------------
