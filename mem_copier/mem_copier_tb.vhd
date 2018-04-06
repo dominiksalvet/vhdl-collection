@@ -40,16 +40,16 @@ architecture behavior of mem_copier_tb is
     signal i_copy_en   : std_logic := '0';
     signal o_copy_done : std_logic;
     
-    signal i_src_start_addr  : unsigned(g_SRC_ADDR_WIDTH - 1 downto 0)  := (others => '0');
-    signal i_tar_start_addr  : unsigned(g_TAR_ADDR_WIDTH - 1 downto 0)  := (others => '0');
-    signal i_copy_addr_count : integer range 1 to 2 ** g_TAR_ADDR_WIDTH := 1;
+    signal i_src_start_addr  : std_logic_vector(g_SRC_ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal i_tar_start_addr  : std_logic_vector(g_TAR_ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal i_copy_addr_count : integer range 1 to 2 ** g_TAR_ADDR_WIDTH        := 1;
     
     signal i_src_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
     signal o_src_re   : std_logic;
-    signal o_src_addr : unsigned(g_SRC_ADDR_WIDTH - 1 downto 0);
+    signal o_src_addr : std_logic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
     
     signal o_tar_we   : std_logic;
-    signal o_tar_addr : unsigned(g_TAR_ADDR_WIDTH - 1 downto 0);
+    signal o_tar_addr : std_logic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
     signal o_tar_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
@@ -127,7 +127,8 @@ begin
         
         i_copy_en <= '1';
         -- the last 4 addresses of the target memory
-        i_tar_start_addr  <= to_unsigned((2 ** g_TAR_ADDR_WIDTH) - 4, i_tar_start_addr'length);
+        i_tar_start_addr <= 
+            std_logic_vector(to_unsigned((2 ** g_TAR_ADDR_WIDTH) - 4, i_tar_start_addr'length));
         i_copy_addr_count <= 4;
         wait for c_CLK_PERIOD;
         
@@ -176,17 +177,19 @@ begin
         -- COPY THE ENTIRE SOURCE MEMORY
         
         -- copying to all the target's addresses, it begins from the half address
-        i_src_start_addr  <= to_unsigned((2 ** g_SRC_ADDR_WIDTH) / 2, i_src_start_addr'length);
-        i_tar_start_addr  <= to_unsigned((2 ** g_TAR_ADDR_WIDTH) / 2, i_tar_start_addr'length);
+        i_src_start_addr <= 
+            std_logic_vector(to_unsigned((2 ** g_SRC_ADDR_WIDTH) / 2, i_src_start_addr'length));
+        i_tar_start_addr <= 
+            std_logic_vector(to_unsigned((2 ** g_TAR_ADDR_WIDTH) / 2, i_tar_start_addr'length));
         i_copy_addr_count <= 2 ** g_TAR_ADDR_WIDTH;
         i_copy_en         <= '1';
         wait for 3 * c_CLK_PERIOD;
         
         for i in 1 to i_copy_addr_count loop -- one pass per one write/read
             -- the [address]=address pattern matching
-            assert (to_integer(o_tar_addr) = to_integer(unsigned(o_tar_data)))
+            assert (to_integer(unsigned(o_tar_addr)) = to_integer(unsigned(o_tar_data)))
                 report "Expected the data being written to the " &
-                integer'image(to_integer(o_tar_addr)) & " address to be equal to """ &
+                integer'image(to_integer(unsigned(o_tar_addr))) & " address to be equal to """ &
                 to_string(o_tar_data) & """, what matches the [address]=address pattern!"
                 severity error;
             wait for c_CLK_PERIOD;

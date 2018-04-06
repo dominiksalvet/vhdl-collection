@@ -40,20 +40,20 @@ entity mem_copier is
         o_copy_done : out std_logic;
         
         -- start address to read from the source memory
-        i_src_start_addr : in unsigned(g_SRC_ADDR_WIDTH - 1 downto 0);
+        i_src_start_addr : in std_logic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
         -- start address to write to the target memory
-        i_tar_start_addr : in unsigned(g_TAR_ADDR_WIDTH - 1 downto 0);
+        i_tar_start_addr : in std_logic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
         -- number of addresses to copy
         i_copy_addr_count : in integer range 1 to 2 ** g_TAR_ADDR_WIDTH;
         
         -- signals for the source memory (which will be read from)
         i_src_data : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0);
         o_src_re   : out std_logic;
-        o_src_addr : out unsigned(g_SRC_ADDR_WIDTH - 1 downto 0);
+        o_src_addr : out std_logic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
         
         -- signals for the target memory (which will be written to)
         o_tar_we   : out std_logic;
-        o_tar_addr : out unsigned(g_TAR_ADDR_WIDTH - 1 downto 0);
+        o_tar_addr : out std_logic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
         o_tar_data : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
     );
 end entity mem_copier;
@@ -73,11 +73,11 @@ begin
     
     o_src_re <= b_src_re;
     
-    o_src_addr <= b_src_addr;
+    o_src_addr <= std_logic_vector(b_src_addr);
     
     o_tar_we <= b_tar_we;
     
-    o_tar_addr <= b_tar_addr;
+    o_tar_addr <= std_logic_vector(b_tar_addr);
     
     -- Description:
     --     Performs memory copying by using internal buffer to speed up the process.
@@ -122,8 +122,8 @@ begin
                     when READ_INIT => -- initialize the read process, store parameters
                         b_src_re <= '1';
                         -- store memory start address to be independent of the inputs
-                        b_src_addr <= i_src_start_addr;
-                        b_tar_addr <= i_tar_start_addr;
+                        b_src_addr <= unsigned(i_src_start_addr);
+                        b_tar_addr <= unsigned(i_tar_start_addr);
                         -- total steps must assume the first memory read delay
                         r_steps_left := i_copy_addr_count + 1;
                         r_state      := READ_WAIT;
