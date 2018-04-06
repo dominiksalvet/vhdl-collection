@@ -21,27 +21,27 @@ package util_pkg is
     --     The function returns true only when the input signal p_SIGNAL has '0' or '1' value, false
     --     is returned otherwise.
     function contains_01 (
-            p_SIGNAL : std_logic -- input standard logic signal
+            p_SIGNAL : std_ulogic -- input standard logic signal
         ) return boolean;
     
     -- Description:
     --     The function returns true only when all the scalar components of the input vector
     --     p_VECTOR have '0' or '1' value, false is returned otherwise.
     function contains_01 (
-            p_VECTOR : std_logic_vector -- input standard logic vector
+            p_VECTOR : std_ulogic_vector -- input standard logic vector
         ) return boolean;
     
     -- Description:
-    --     Returns the std_logic parameter's character representation.
+    --     Returns the std_ulogic parameter's character representation.
     function to_character (
-            p_SIGNAL : std_logic -- input standard logic signal
+            p_SIGNAL : std_ulogic -- input standard logic signal
         ) return character; -- final character
     
     -- Description:
-    --     Returns the std_logic_vector parameter's string representation. It always respects the
+    --     Returns the std_ulogic_vector parameter's string representation. It always respects the
     --     vector's range definition.
     function to_string (
-            p_VECTOR : std_logic_vector -- input standard logic vector
+            p_VECTOR : std_ulogic_vector -- input standard logic vector
         ) return string; -- final string
     
 end package util_pkg;
@@ -50,14 +50,14 @@ end package util_pkg;
 package body util_pkg is
     
     function contains_01 (
-            p_SIGNAL : std_logic
+            p_SIGNAL : std_ulogic
         ) return boolean is
     begin
         return p_SIGNAL = '0' or p_SIGNAL = '1';
     end function contains_01;
     
     function contains_01 (
-            p_VECTOR : std_logic_vector
+            p_VECTOR : std_ulogic_vector
         ) return boolean is
     begin
         for i in p_VECTOR'range loop -- check every scalar component of the vector
@@ -70,11 +70,11 @@ package body util_pkg is
     end function contains_01;
     
     function to_character (
-            p_SIGNAL : std_logic
+            p_SIGNAL : std_ulogic
         ) return character is
         variable v_character : character; -- final character
     begin
-        case (p_SIGNAL) is -- convert the std_logic to the character
+        case (p_SIGNAL) is -- convert the std_ulogic to the character
             when 'U' => 
                 v_character := 'U';
             when 'X' => 
@@ -99,7 +99,7 @@ package body util_pkg is
     end function to_character;
     
     function to_string (
-            p_VECTOR : std_logic_vector
+            p_VECTOR : std_ulogic_vector
         ) return string is
         -- as a range it can't be used p_VECTOR'range as it allows one of the boundaries to be 0
         variable v_string : string(p_VECTOR'low + 1 to p_VECTOR'high + 1); -- final string

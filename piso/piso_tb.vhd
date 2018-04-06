@@ -30,15 +30,15 @@ architecture behavior of piso_tb is
     constant g_LSB_FIRST  : boolean                         := true;
     
     -- uut ports
-    signal i_clk : std_logic := '0';
-    signal i_rst : std_logic := '0';
+    signal i_clk : std_ulogic := '0';
+    signal i_rst : std_ulogic := '0';
     
-    signal i_start : std_logic                                   := '0';
-    signal i_data  : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal o_rdy   : std_logic;
+    signal i_start : std_ulogic                                   := '0';
+    signal i_data  : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal o_rdy   : std_ulogic;
     
-    signal o_data_start : std_logic;
-    signal o_data       : std_logic;
+    signal o_data_start : std_ulogic;
+    signal o_data       : std_ulogic;
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -76,7 +76,7 @@ begin
         
         i_start <= '1';
         for i in 0 to (2 ** i_data'length) - 1 loop -- loop through all the combinations
-            i_data <= std_logic_vector(to_unsigned(i, i_data'length));
+            i_data <= std_ulogic_vector(to_unsigned(i, i_data'length));
             if (g_LSB_FIRST) then -- least significant bit is the first one
                 for j in 0 to g_DATA_WIDTH - 1 loop
                     wait for c_CLK_PERIOD;

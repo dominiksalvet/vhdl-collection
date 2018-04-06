@@ -30,16 +30,16 @@ architecture behavior of lifo_tb is
     constant g_DATA_WIDTH  : positive := 8;
     
     -- uut ports
-    signal i_clk : std_logic := '0';
-    signal i_rst : std_logic := '0';
+    signal i_clk : std_ulogic := '0';
+    signal i_rst : std_ulogic := '0';
     
-    signal i_we   : std_logic                                   := '0';
-    signal i_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal o_full : std_logic;
+    signal i_we   : std_ulogic                                   := '0';
+    signal i_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal o_full : std_ulogic;
     
-    signal i_re    : std_logic := '0';
-    signal o_data  : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
-    signal o_empty : std_logic;
+    signal i_re    : std_ulogic := '0';
+    signal o_data  : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal o_empty : std_ulogic;
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -78,7 +78,7 @@ begin
         wait for c_CLK_PERIOD;
         
         for i in 1 to 3 loop
-            i_data <= std_logic_vector(to_unsigned(i, i_data'length));
+            i_data <= std_ulogic_vector(to_unsigned(i, i_data'length));
             wait for c_CLK_PERIOD;
         end loop;
         
@@ -91,9 +91,9 @@ begin
         wait for c_CLK_PERIOD;
         
         for i in 3 downto 0 loop -- LIFO structure needs downto loop to verify data
-            assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
+            assert (o_data = std_ulogic_vector(to_unsigned(i, o_data'length)))
                 report "Expected o_data=""" &
-                to_string(std_logic_vector(to_unsigned(i, o_data'length))) & """!"
+                to_string(std_ulogic_vector(to_unsigned(i, o_data'length))) & """!"
                 severity error;
             if (i /= 0) then
                 wait for c_CLK_PERIOD;

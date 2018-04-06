@@ -37,13 +37,13 @@ architecture behavior of ram_tb is
     constant g_MEM_IMG_FILENAME : string := "mem_img/linear_4_8.txt";
     
     -- uut ports
-    signal i_clk : std_logic := '0';
+    signal i_clk : std_ulogic := '0';
     
-    signal i_we   : std_logic                                   := '0';
-    signal i_re   : std_logic                                   := '0';
-    signal i_addr : std_logic_vector(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
-    signal i_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal o_data : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal i_we   : std_ulogic                                   := '0';
+    signal i_re   : std_ulogic                                   := '0';
+    signal i_addr : std_ulogic_vector(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
+    signal i_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
+    signal o_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -77,15 +77,15 @@ begin
         i_we <= '1';
         i_re <= '1';
         for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
-            i_addr <= std_logic_vector(to_unsigned(i, i_addr'length));
-            i_data <= std_logic_vector(to_unsigned(16 * i, i_data'length)); -- [address]=16*address
+            i_addr <= std_ulogic_vector(to_unsigned(i, i_addr'length));
+            i_data <= std_ulogic_vector(to_unsigned(16 * i, i_data'length)); -- [address]=16*address
             wait for c_CLK_PERIOD;
             
             -- asserting to verify the initialization function of the module
-            assert (o_data = std_logic_vector(to_unsigned(i, o_data'length)))
+            assert (o_data = std_ulogic_vector(to_unsigned(i, o_data'length)))
                 report "Expected the data from the " &
                 integer'image(to_integer(unsigned(i_addr))) & " address to be equal to """ &
-                to_string(std_logic_vector(to_unsigned(i, o_data'length))) & """, what matches " &
+                to_string(std_ulogic_vector(to_unsigned(i, o_data'length))) & """, what matches " &
                 "the [address]=address pattern!"
                 severity error;
         end loop;
@@ -93,14 +93,14 @@ begin
         i_we <= '0';
         -- read each address and verify it's data correctness
         for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
-            i_addr <= std_logic_vector(to_unsigned(i, i_addr'length));
+            i_addr <= std_ulogic_vector(to_unsigned(i, i_addr'length));
             wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             
             -- asserting to verify the RAM module function
-            assert (o_data = std_logic_vector(to_unsigned(16 * i, o_data'length)))
+            assert (o_data = std_ulogic_vector(to_unsigned(16 * i, o_data'length)))
                 report "Expected the data from the " &
                 integer'image(to_integer(unsigned(i_addr))) & " address to be equal to """ &
-                to_string(std_logic_vector(to_unsigned(16 * i, o_data'length))) & """, what " &
+                to_string(std_ulogic_vector(to_unsigned(16 * i, o_data'length))) & """, what " &
                 "matches the [address]=16*address pattern!"
                 severity error;
         end loop;

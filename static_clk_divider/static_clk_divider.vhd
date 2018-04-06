@@ -23,9 +23,9 @@ entity static_clk_divider is
         g_FREQ_DIV : integer range 2 to integer'high := 5
     );
     port (
-        i_clk : in  std_logic; -- input clock signal
-        i_rst : in  std_logic; -- reset signal
-        o_clk : out std_logic -- final output clock
+        i_clk : in  std_ulogic; -- input clock signal
+        i_rst : in  std_ulogic; -- reset signal
+        o_clk : out std_ulogic -- final output clock
     );
 end entity static_clk_divider;
 

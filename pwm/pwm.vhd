@@ -24,12 +24,12 @@ entity pwm is
         g_PERIOD : positive := 8 -- o_signal period, it is equal to <i_clk_period>*g_PERIOD
     );
     port (
-        i_clk : in std_logic; -- clock signal
-        i_rst : in std_logic; -- reset signal
+        i_clk : in std_ulogic; -- clock signal
+        i_rst : in std_ulogic; -- reset signal
         
         -- describes how values '1' and '0' are divided in the o_signal period
         i_duty   : in  integer range 0 to g_PERIOD;
-        o_signal : out std_logic -- final PWM signal
+        o_signal : out std_ulogic -- final PWM signal
     );
 end entity pwm;
 

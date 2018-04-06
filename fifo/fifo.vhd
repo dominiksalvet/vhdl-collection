@@ -34,16 +34,16 @@ entity fifo is
         g_DATA_WIDTH  : positive := 8 -- bit width of stored data
     );
     port (
-        i_clk : in std_logic; -- clock signal
-        i_rst : in std_logic; -- reset signal
+        i_clk : in std_ulogic; -- clock signal
+        i_rst : in std_ulogic; -- reset signal
         
-        i_we   : in  std_logic; -- write enable (enqueue)
-        i_data : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- written data
-        o_full : out std_logic; -- full FIFO indicator
+        i_we   : in  std_ulogic; -- write enable (enqueue)
+        i_data : in  std_ulogic_vector(g_DATA_WIDTH - 1 downto 0); -- written data
+        o_full : out std_ulogic; -- full FIFO indicator
         
-        i_re    : in  std_logic; -- read enable (dequeue)
-        o_data  : out std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- read data
-        o_empty : out std_logic -- empty FIFO indicator
+        i_re    : in  std_ulogic; -- read enable (dequeue)
+        o_data  : out std_ulogic_vector(g_DATA_WIDTH - 1 downto 0); -- read data
+        o_empty : out std_ulogic -- empty FIFO indicator
     );
 end entity fifo;
 
@@ -51,12 +51,12 @@ end entity fifo;
 architecture rtl of fifo is
     
     -- output buffers
-    signal b_full  : std_logic;
-    signal b_empty : std_logic;
+    signal b_full  : std_ulogic;
+    signal b_empty : std_ulogic;
     
     -- definition of internal memory type
     type t_MEM is array(0 to (2 ** g_INDEX_WIDTH) - 1) of
-        std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+        std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     signal r_mem : t_MEM; -- accessible internal memory signal
     
 begin

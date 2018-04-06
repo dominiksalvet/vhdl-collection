@@ -33,28 +33,28 @@ entity mem_copier is
         g_DATA_WIDTH     : positive := 8 -- bit width of data of both memories
     );
     port (
-        i_clk : in std_logic; -- clock signal
+        i_clk : in std_ulogic; -- clock signal
         -- use '1' to start the copying, the '0' value behaves like synchronous reset
-        i_copy_en : in std_logic;
+        i_copy_en : in std_ulogic;
         -- when copying is done, '1' is hold on this signal until reset is performed
-        o_copy_done : out std_logic;
+        o_copy_done : out std_ulogic;
         
         -- start address to read from the source memory
-        i_src_start_addr : in std_logic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
+        i_src_start_addr : in std_ulogic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
         -- start address to write to the target memory
-        i_tar_start_addr : in std_logic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
+        i_tar_start_addr : in std_ulogic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
         -- number of addresses to copy
         i_copy_addr_count : in integer range 1 to 2 ** g_TAR_ADDR_WIDTH;
         
         -- signals for the source memory (which will be read from)
-        i_src_data : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0);
-        o_src_re   : out std_logic;
-        o_src_addr : out std_logic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
+        i_src_data : in  std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
+        o_src_re   : out std_ulogic;
+        o_src_addr : out std_ulogic_vector(g_SRC_ADDR_WIDTH - 1 downto 0);
         
         -- signals for the target memory (which will be written to)
-        o_tar_we   : out std_logic;
-        o_tar_addr : out std_logic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
-        o_tar_data : out std_logic_vector(g_DATA_WIDTH - 1 downto 0)
+        o_tar_we   : out std_ulogic;
+        o_tar_addr : out std_ulogic_vector(g_TAR_ADDR_WIDTH - 1 downto 0);
+        o_tar_data : out std_ulogic_vector(g_DATA_WIDTH - 1 downto 0)
     );
 end entity mem_copier;
 
@@ -62,22 +62,22 @@ end entity mem_copier;
 architecture rtl of mem_copier is
     
     -- buffers for the source memory signals
-    signal b_src_re   : std_logic;
+    signal b_src_re   : std_ulogic;
     signal b_src_addr : unsigned(g_SRC_ADDR_WIDTH - 1 downto 0);
     
     -- buffers for the target memory signals
-    signal b_tar_we   : std_logic;
+    signal b_tar_we   : std_ulogic;
     signal b_tar_addr : unsigned(g_TAR_ADDR_WIDTH - 1 downto 0);
     
 begin
     
     o_src_re <= b_src_re;
     
-    o_src_addr <= std_logic_vector(b_src_addr);
+    o_src_addr <= std_ulogic_vector(b_src_addr);
     
     o_tar_we <= b_tar_we;
     
-    o_tar_addr <= std_logic_vector(b_tar_addr);
+    o_tar_addr <= std_ulogic_vector(b_tar_addr);
     
     -- Description:
     --     Performs memory copying by using internal buffer to speed up the process.

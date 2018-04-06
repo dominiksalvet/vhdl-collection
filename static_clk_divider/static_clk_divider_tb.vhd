@@ -2,10 +2,10 @@
 -- Description:
 --     Uses g_FREQ_DIV with value 5 to see that o_clk period is 5 times longer
 --     than the original one of i_clk. Also value '1' is assigned for 2 i_clk
---     period while value '0' is assigned for 3 i_clk period. The simulation
---     tests only c_PERIOD_COUNT_TO_TEST o_clk period.
+--     period while value '0' is assigned for 3 i_clk period.
 --------------------------------------------------------------------------------
 -- Notes:
+--     1. The simulation tests only c_PERIOD_COUNT_TO_TEST o_clk periods.
 --------------------------------------------------------------------------------
 
 
@@ -25,9 +25,9 @@ architecture behavior of static_clk_divider_tb is
     constant g_FREQ_DIV : integer range 2 to integer'high := 5; 
     
     -- uut ports
-    signal i_clk : std_logic := '0';
-    signal i_rst : std_logic := '0';
-    signal o_clk : std_logic;
+    signal i_clk : std_ulogic := '0';
+    signal i_rst : std_ulogic := '0';
+    signal o_clk : std_ulogic;
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;

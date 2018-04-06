@@ -28,11 +28,11 @@ architecture behavior of pwm_tb is
     constant g_PERIOD : positive := 8; 
     
     -- uut ports
-    signal i_clk : std_logic := '0';
-    signal i_rst : std_logic := '0';
+    signal i_clk : std_ulogic := '0';
+    signal i_rst : std_ulogic := '0';
     
     signal i_duty   : integer range 0 to g_PERIOD := 0;
-    signal o_signal : std_logic;
+    signal o_signal : std_ulogic;
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;

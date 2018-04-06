@@ -29,14 +29,14 @@ entity sipo is
         g_LSB_FIRST : boolean := true
     );
     port (
-        i_clk : in std_logic; -- clock signal
-        i_rst : in std_logic; -- reset signal
+        i_clk : in std_ulogic; -- clock signal
+        i_rst : in std_ulogic; -- reset signal
         
-        i_data_start : in std_logic; -- start of the serial input data
-        i_data       : in std_logic; -- current bit of the serial input data
+        i_data_start : in std_ulogic; -- start of the serial input data
+        i_data       : in std_ulogic; -- current bit of the serial input data
         
-        o_data_valid : out std_logic; -- output data validity
-        o_data       : out std_logic_vector(g_DATA_WIDTH - 1 downto 0) -- output parallelized data
+        o_data_valid : out std_ulogic; -- output data validity
+        o_data       : out std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) -- output parallelized data
     );
 end entity sipo;
 
@@ -44,7 +44,7 @@ end entity sipo;
 architecture rtl of sipo is
     signal r_receiving : boolean; -- receiving indicator
     -- shifter register used for parallelize the serial input data
-    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal r_shifter : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
     o_data <= r_shifter; -- the shifter is directly assigned to the output, see 1. note

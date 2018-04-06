@@ -29,23 +29,23 @@ entity piso is
         g_LSB_FIRST : boolean := true
     );
     port (
-        i_clk : in std_logic; -- clock signal
-        i_rst : in std_logic; -- reset signal
+        i_clk : in std_ulogic; -- clock signal
+        i_rst : in std_ulogic; -- reset signal
         
-        i_start : in  std_logic; -- accept the current input parallel data and serialize them
-        i_data  : in  std_logic_vector(g_DATA_WIDTH - 1 downto 0); -- the input parallel data
-        o_rdy   : out std_logic; -- the module is ready to accept next parallel data
+        i_start : in  std_ulogic; -- accept the current input parallel data and serialize them
+        i_data  : in  std_ulogic_vector(g_DATA_WIDTH - 1 downto 0); -- the input parallel data
+        o_rdy   : out std_ulogic; -- the module is ready to accept next parallel data
         
-        o_data_start : out std_logic; -- start of the serial output data
-        o_data       : out std_logic -- current bit of the serial output data
+        o_data_start : out std_ulogic; -- start of the serial output data
+        o_data       : out std_ulogic -- current bit of the serial output data
     );
 end entity piso;
 
 
 architecture rtl of piso is
-    signal r_transmitting : std_logic; -- transmitting indicator
+    signal r_transmitting : std_ulogic; -- transmitting indicator
     -- shifter register used for serializing the parallel input data
-    signal r_shifter : std_logic_vector(g_DATA_WIDTH - 1 downto 0);
+    signal r_shifter : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
 begin
     
     o_rdy <= not r_transmitting; -- the module is ready when not transmitting
