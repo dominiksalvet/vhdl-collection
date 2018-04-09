@@ -43,6 +43,9 @@ architecture behavior of rom_tb is
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
     
+    -- simulation finished flag to stop the clk_gen process
+    shared variable v_sim_finished : boolean := false;
+    
 begin
     
     -- instantiate the unit under test (uut)
@@ -59,9 +62,19 @@ begin
             i_re   => i_re,
             i_addr => i_addr,
             o_data => o_data
-        ); 
+        );
     
-    i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
+    clk_gen : process is
+    begin
+        i_clk <= '0';
+        wait for c_CLK_PERIOD / 2;
+        i_clk <= '1';
+        wait for c_CLK_PERIOD / 2;
+        
+        if (v_sim_finished) then
+            wait;
+        end if;
+    end process clk_gen;
     
     stimulus : process is
     begin
@@ -80,6 +93,8 @@ begin
                 "the [address]=address pattern!"
                 severity error;
         end loop;
+        
+        v_sim_finished := true;
         wait;
         
     end process stimulus;
