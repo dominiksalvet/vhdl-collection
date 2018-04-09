@@ -15,13 +15,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library vhdl_collection;
-use vhdl_collection.util_pkg.all; -- util_pkg.vhd
+use vhdl_collection.util_pkg.all;
 
-use work.mem_copier; -- mem_copier.vhd
+use work.mem_copier;
 
-use work.rom; -- rom.vhd
+use work.rom;
 
-use work.ram; -- ram.vhd
+use work.ram;
 
 
 entity mem_copier_tb is

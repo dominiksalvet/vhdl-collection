@@ -16,7 +16,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.hex_to_seg7_public.all; -- hex_to_seg7_public.vhd
+use work.hex_to_seg7_public.all;
 
 
 entity hex_to_seg7 is

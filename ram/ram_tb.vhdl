@@ -19,9 +19,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library vhdl_collection;
-use vhdl_collection.util_pkg.all; -- util_pkg.vhd
+use vhdl_collection.util_pkg.all;
 
-use work.ram; -- ram.vhd
+use work.ram;
 
 
 entity ram_tb is

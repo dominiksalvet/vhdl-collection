@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
 -- Description:
---     The test bench first fills up all the LIFO internal memory defined by
---     g_INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then
---     it will test the o_full indicator and read all the items. Then it will
---     verify all the read data and the o_empty indicator at the end.
+--     The test bench sends every possible bit combination to the i_data input
+--     in serial representation, beginning from the 0 value in binary form. Then
+--     it test the parallelized output on the o_data signal. It also tests
+--     behavior of the o_data_valid indicator.
 --------------------------------------------------------------------------------
 -- Notes:
 --------------------------------------------------------------------------------
@@ -14,32 +14,30 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library vhdl_collection;
-use vhdl_collection.util_pkg.all; -- util_pkg.vhd
+use vhdl_collection.util_pkg.all;
 
-use work.lifo; -- lifo.vhd
-
-
-entity lifo_tb is
-end entity lifo_tb;
+use work.sipo;
 
 
-architecture behavior of lifo_tb is
+entity sipo_tb is
+end entity sipo_tb;
+
+
+architecture behavior of sipo_tb is
     
     -- uut generics
-    constant g_INDEX_WIDTH : positive := 2;
-    constant g_DATA_WIDTH  : positive := 8;
+    constant g_DATA_WIDTH : integer range 2 to integer'high := 4;
+    constant g_LSB_FIRST  : boolean                         := true; 
     
     -- uut ports
     signal i_clk : std_ulogic := '0';
     signal i_rst : std_ulogic := '0';
     
-    signal i_we   : std_ulogic                                   := '0';
-    signal i_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
-    signal o_full : std_ulogic;
+    signal i_data_start : std_ulogic := '0';
+    signal i_data       : std_ulogic := '0';
     
-    signal i_re    : std_ulogic := '0';
-    signal o_data  : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
-    signal o_empty : std_ulogic;
+    signal o_data_valid : std_ulogic;
+    signal o_data       : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -47,73 +45,66 @@ architecture behavior of lifo_tb is
 begin
     
     -- instantiate the unit under test (uut)
-    uut : entity work.lifo(rtl)
+    uut : entity work.sipo(rtl)
         generic map (
-            g_INDEX_WIDTH => g_INDEX_WIDTH,
-            g_DATA_WIDTH  => g_DATA_WIDTH
+            g_DATA_WIDTH => g_DATA_WIDTH,
+            g_LSB_FIRST  => g_LSB_FIRST
         )
         port map (
             i_clk => i_clk,
             i_rst => i_rst,
             
-            i_we   => i_we,
-            i_data => i_data,
-            o_full => o_full,
+            i_data_start => i_data_start,
+            i_data       => i_data,
             
-            i_re    => i_re,
-            o_data  => o_data,
-            o_empty => o_empty
+            o_data_valid => o_data_valid,
+            o_data       => o_data
         ); 
     
     i_clk <= not i_clk after c_CLK_PERIOD / 2; -- setup i_clk as periodic signal
     
     stimulus : process is
+        variable v_vector : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     begin
         
         i_rst <= '1';
-        wait for c_CLK_PERIOD; -- initialize the uut
+        wait for c_CLK_PERIOD;
         
         i_rst <= '0';
-        i_we  <= '1'; -- write process start
         wait for c_CLK_PERIOD;
         
-        for i in 1 to 3 loop
-            i_data <= std_ulogic_vector(to_unsigned(i, i_data'length));
-            wait for c_CLK_PERIOD;
-        end loop;
-        
-        assert (o_full = '1')
-            report "Expected o_full='1'!"
-            severity error;
-        
-        i_we <= '0';
-        i_re <= '1';
-        wait for c_CLK_PERIOD;
-        
-        for i in 3 downto 0 loop -- LIFO structure needs downto loop to verify data
+        i_data_start <= '1';
+        for i in 0 to (2 ** o_data'length) - 1 loop -- loop through all the combinations
+            if (g_LSB_FIRST) then -- least significant bit is the first one
+                for j in 0 to g_DATA_WIDTH - 1 loop -- serial data receiving
+                    v_vector := std_ulogic_vector(to_unsigned(i, v_vector'length));
+                    i_data   <= v_vector(j);
+                    wait for c_CLK_PERIOD;
+                end loop;
+            else -- most significant bit is the first one
+                for j in g_DATA_WIDTH - 1 downto 0 loop -- serial data receiving
+                    v_vector := std_ulogic_vector(to_unsigned(i, v_vector'length));
+                    i_data   <= v_vector(j);
+                    wait for c_CLK_PERIOD;
+                end loop;
+            end if;
+            
+            assert (o_data_valid = '1') -- the data must be valid after the previous sequence
+                report "Expected o_data_valid='1'!"
+                severity error;
+            -- the parallelized data must be equal to the input serial data
             assert (o_data = std_ulogic_vector(to_unsigned(i, o_data'length)))
                 report "Expected o_data=""" &
-                to_string(std_ulogic_vector(to_unsigned(i, o_data'length))) & """!"
+                to_string(std_ulogic_vector(to_unsigned(i, o_data'length))) & """, parallelized " &
+                "output data are not equal to the previous serial data!"
                 severity error;
-            if (i /= 0) then
-                wait for c_CLK_PERIOD;
-            end if;
         end loop;
-        
-        assert (o_empty = '1')
-            report "Expected o_empty='1'!"
-            severity error;
-        
-        i_we <= '1';
+        i_data_start <= '0';
         wait for c_CLK_PERIOD;
         
-        assert (o_empty = '0')
-            report "Expected o_empty='0', writing and reading at the same time must lead to " &
-            "perform writing!"
+        assert (o_data_valid = '1')
+            report "Expected o_data_valid='1'!"
             severity error;
-        
-        i_we <= '0';
-        i_re <= '0';
         wait;
         
     end process stimulus;

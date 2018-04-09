@@ -15,9 +15,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 library vhdl_collection;
-use vhdl_collection.util_pkg.all; -- util_pkg.vhd
+use vhdl_collection.util_pkg.all;
 
-use work.clk_divider; -- clk_divider.vhd
+use work.clk_divider;
 
 
 entity clk_divider_tb is

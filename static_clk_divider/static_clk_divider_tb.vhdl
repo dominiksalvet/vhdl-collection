@@ -12,7 +12,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.static_clk_divider; -- static_clk_divider.vhd
+use work.static_clk_divider;
 
 
 entity static_clk_divider_tb is
