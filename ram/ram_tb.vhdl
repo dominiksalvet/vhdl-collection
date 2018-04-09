@@ -11,6 +11,7 @@
 --        2^(n+1) steps where n=g_ADDR_WIDTH.
 --     2. The file path defined by g_MEM_IMG_FILENAME is relative to the file
 --        where the ram module is defined in.
+--     3. The c_CLK_PERIOD constant is defined in the ram_tb_public package.
 --------------------------------------------------------------------------------
 
 
@@ -21,6 +22,7 @@ use ieee.numeric_std.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
+use work.ram_tb_public.all;
 use work.ram;
 
 
@@ -44,9 +46,6 @@ architecture behavior of ram_tb is
     signal i_addr : std_ulogic_vector(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
     signal i_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
     signal o_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
-    
-    -- clock period definition
-    constant c_CLK_PERIOD : time := 10 ns;
     
     -- simulation finished flag to stop the clk_gen process
     shared variable v_sim_finished : boolean := false;

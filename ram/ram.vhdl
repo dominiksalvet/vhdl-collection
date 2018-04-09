@@ -31,6 +31,8 @@ use std.textio.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
+use work.ram_tb_public.all;
+
 
 entity ram is
     generic (
@@ -136,7 +138,7 @@ begin
     
     output_prevention : process (b_data) is
     begin
-        if (now > 0 ps) then -- the prevention must start after the simulation initialization
+        if (now > c_CLK_PERIOD / 10) then -- the prevention must start after the simulation initialization
             assert (contains_01(b_data))
                 report "Undefined o_data when reading from the memory."
                 severity warning;
