@@ -1,2 +1,4 @@
 project/xise/cache
 project/xise/iseconfig
+
+clk_divider/build/*
