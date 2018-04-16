@@ -328,7 +328,7 @@
     <property xil_pn:name="Preferred Language" xil_pn:value="VHDL" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Priority Encoder Extraction" xil_pn:value="Yes" xil_pn:valueState="default"/>
     <property xil_pn:name="Produce Verbose Report" xil_pn:value="false" xil_pn:valueState="default"/>
-    <property xil_pn:name="Project Description" xil_pn:value="A handy collection of generally applicable generic VHDL modules that can find wide way of use. Test bench files are included, so the modules can be tested on the playground." xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Project Description" xil_pn:value="A handy collection of generally applicable generic VHDL modules that can find wide way of use. A project file and test bench files are included, so the modules can be tested on the playground." xil_pn:valueState="non-default"/>
     <property xil_pn:name="Property Specification in Project File" xil_pn:value="Store all values" xil_pn:valueState="default"/>
     <property xil_pn:name="RAM Extraction" xil_pn:value="true" xil_pn:valueState="default"/>
     <property xil_pn:name="RAM Style" xil_pn:value="Auto" xil_pn:valueState="default"/>
