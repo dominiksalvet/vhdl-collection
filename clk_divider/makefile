@@ -1,49 +1,54 @@
 ################################################################################
 #  Notes:
 #      1. This makefile is intended to be used with GHDL compiler using LLVM
-#         code generator.
-#      2. The mcode generator is not generally supported, but it is likely to
-#         work. In that case, however, it will always rebuild everything from
-#         scratch.
+#         code generator, the mcode generator is not generally supported, but it
+#         is likely to work. In that case, however, it will always rebuild
+#         everything from scratch.
 ################################################################################
 
-# system configuration
-MKDIR_P = mkdir -p
+# PROJECT CONFIGURATION
 
 # directory definitions
-SRC_DIR = ./src
-SIM_DIR = ./sim
-BUILD_DIR = ./build
+SRC_DIR = src
+LIB_SRC_DIR = ../lib
+SIM_DIR = sim
+BUILD_DIR = build
 
-# VHDL compiler configuration
+# VHDL file extension
+VHDL_EXT = .vhdl
+
+# GENERAL CONFIGURATION
+
+# VHDL compiler
 VHDLC = ghdl
-VHDLC_FLAGS = --ieee=standard --std=93 --workdir=$(BUILD_DIR) -P$(BUILD_DIR)
+VHDLC_FLAGS_GENERAL = --std=93 --ieee=standard --warn-library --warn-reserved
+VHDLC_FLAGS = --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_GENERAL)
+VHDLC_SIM_FLAGS = --assert-level=failure
 
-# waveform viewer configuration
+# VCD file viewer
 VCD_VIEWER = gtkwave
 
-# VHDL files configuration
-VHDL_EXT = .vhdl
-VHDL_LIB_DIR = ../lib
+# environment configuration
+CREATE_BUILD_DIR = mkdir -p $(BUILD_DIR)
 
 # TARGET
 
 $(BUILD_DIR)/clk_divider_tb: $(BUILD_DIR)/clk_divider_tb.o
-	@$(MKDIR_P) $(BUILD_DIR)
+	@$(CREATE_BUILD_DIR)
 	$(VHDLC) -e $(VHDLC_FLAGS) -o $@ clk_divider_tb
 
 $(BUILD_DIR)/clk_divider_tb.o: $(SIM_DIR)/clk_divider_tb$(VHDL_EXT) $(BUILD_DIR)/util_pkg.o $(BUILD_DIR)/clk_divider.o
-	@$(MKDIR_P) $(BUILD_DIR)
+	@$(CREATE_BUILD_DIR)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 # DEPENDENCIES
 
-$(BUILD_DIR)/util_pkg.o: $(VHDL_LIB_DIR)/vhdl_collection/util_pkg$(VHDL_EXT)
-	@$(MKDIR_P) $(BUILD_DIR)
-	$(VHDLC) -a $(VHDLC_FLAGS) --work=vhdl_collection $<
+$(BUILD_DIR)/util_pkg.o: $(LIB_SRC_DIR)/vhdl_collection/util_pkg$(VHDL_EXT)
+	@$(CREATE_BUILD_DIR)
+	$(VHDLC) -a --work=vhdl_collection $(VHDLC_FLAGS) $<
 
 $(BUILD_DIR)/clk_divider.o: $(SRC_DIR)/clk_divider$(VHDL_EXT)
-	@$(MKDIR_P) $(BUILD_DIR)
+	@$(CREATE_BUILD_DIR)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 # CUSTOM TARGETS
@@ -51,14 +56,14 @@ $(BUILD_DIR)/clk_divider.o: $(SRC_DIR)/clk_divider$(VHDL_EXT)
 .PHONY: run view clean
 
 run: $(BUILD_DIR)/clk_divider_tb
-	cd $(BUILD_DIR); $(VHDLC) -r --ieee=standard --std=93 clk_divider_tb
+	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(VHDLC_SIM_FLAGS)
 
 view: $(BUILD_DIR)/clk_divider_tb
-	cd $(BUILD_DIR); $(VHDLC) -r --ieee=standard --std=93 clk_divider_tb --vcd=clk_divider_tb.vcd
+	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(VHDLC_SIM_FLAGS) --vcd=clk_divider_tb.vcd
 	$(VCD_VIEWER) $(BUILD_DIR)/clk_divider_tb.vcd
 
 clean:
-	rm -r $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
 
 ################################################################################
 #  MIT License
