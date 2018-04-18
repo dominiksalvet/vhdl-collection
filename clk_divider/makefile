@@ -8,6 +8,9 @@
 
 # PROJECT CONFIGURATION
 
+# default entity architectures
+SIM_ARCH = behavior
+
 # directory definitions
 SRC_DIR = src
 LIB_SRC_DIR = ../lib
@@ -19,6 +22,10 @@ VHDL_EXT = .vhdl
 
 # GENERAL CONFIGURATION
 
+# environment
+SHELL = /bin/sh
+CREATE_BUILD_DIR = mkdir -p $(BUILD_DIR)
+
 # VHDL compiler
 VHDLC = ghdl
 VHDLC_FLAGS_GENERAL = --std=93 --ieee=standard --warn-library --warn-reserved
@@ -28,14 +35,11 @@ VHDLC_SIM_FLAGS = --assert-level=failure
 # VCD file viewer
 VCD_VIEWER = gtkwave
 
-# environment configuration
-CREATE_BUILD_DIR = mkdir -p $(BUILD_DIR)
-
 # TARGET
 
-$(BUILD_DIR)/clk_divider_tb: $(BUILD_DIR)/clk_divider_tb.o
+$(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH): $(BUILD_DIR)/clk_divider_tb.o
 	@$(CREATE_BUILD_DIR)
-	$(VHDLC) -e $(VHDLC_FLAGS) -o $@ clk_divider_tb
+	$(VHDLC) -e $(VHDLC_FLAGS) -o $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH) clk_divider_tb $(SIM_ARCH)
 
 $(BUILD_DIR)/clk_divider_tb.o: $(SIM_DIR)/clk_divider_tb$(VHDL_EXT) $(BUILD_DIR)/util_pkg.o $(BUILD_DIR)/clk_divider.o
 	@$(CREATE_BUILD_DIR)
@@ -55,11 +59,11 @@ $(BUILD_DIR)/clk_divider.o: $(SRC_DIR)/clk_divider$(VHDL_EXT)
 
 .PHONY: run view clean
 
-run: $(BUILD_DIR)/clk_divider_tb
-	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(VHDLC_SIM_FLAGS)
+run: $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH)
+	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS)
 
-view: $(BUILD_DIR)/clk_divider_tb
-	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(VHDLC_SIM_FLAGS) --vcd=clk_divider_tb.vcd
+view: $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH)
+	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS) --vcd=clk_divider_tb.vcd
 	$(VCD_VIEWER) $(BUILD_DIR)/clk_divider_tb.vcd
 
 clean:
