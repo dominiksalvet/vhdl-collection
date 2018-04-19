@@ -3,4 +3,5 @@ project/xise/iseconfig
 
 clk_divider/build/*
 fifo/build/*
+lifo/build/*
 ram/build/*
