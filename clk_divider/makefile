@@ -30,11 +30,11 @@ VHDL_EXT = .vhdl
 # VHDL compiler
 VHDLC = ghdl
 
-VHDLC_FLAGS_SHARED = --std=93 --ieee=standard --warn-library --warn-reserved
-VHDLC_FLAGS = --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_SHARED)
-VHDLC_FLAGS_LOCAL = --workdir=. -P. $(VHDLC_FLAGS_SHARED)
+VHDLC_FLAGS_GENERAL = --std=93 --ieee=standard --warn-library --warn-reserved --warn-parenthesis
+VHDLC_FLAGS = --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_GENERAL)
+VHDLC_FLAGS_LOCAL = --workdir=. -P. $(VHDLC_FLAGS_GENERAL)
 
-VHDLC_SIM_FLAGS = --assert-level=failure
+VHDLC_SIM_FLAGS = --assert-level=failure --ieee-asserts=enable
 
 # VCD file viewer
 VCD_VIEWER = gtkwave
