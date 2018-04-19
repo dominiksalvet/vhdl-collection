@@ -6,7 +6,12 @@
 #         everything from scratch.
 ################################################################################
 
-# PROJECT CONFIGURATION
+## ENVIRONMENT CONFIGURATION
+
+SHELL = /bin/sh
+MKDIR_P = mkdir -p
+
+## PROJECT CONFIGURATION
 
 # default entity architectures
 SIM_ARCH = behavior
@@ -20,50 +25,49 @@ BUILD_DIR = build
 # VHDL file extension
 VHDL_EXT = .vhdl
 
-# GENERAL CONFIGURATION
-
-# environment
-SHELL = /bin/sh
-CREATE_BUILD_DIR = mkdir -p $(BUILD_DIR)
+## GENERAL CONFIGURATION
 
 # VHDL compiler
 VHDLC = ghdl
-VHDLC_FLAGS_GENERAL = --std=93 --ieee=standard --warn-library --warn-reserved
-VHDLC_FLAGS = --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_GENERAL)
+
+VHDLC_FLAGS_SHARED = --std=93 --ieee=standard --warn-library --warn-reserved
+VHDLC_FLAGS = --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_SHARED)
+VHDLC_FLAGS_LOCAL = --workdir=. -P. $(VHDLC_FLAGS_SHARED)
+
 VHDLC_SIM_FLAGS = --assert-level=failure
 
 # VCD file viewer
 VCD_VIEWER = gtkwave
 
-# TARGET
+## TARGET
 
 $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH): $(BUILD_DIR)/clk_divider_tb.o
-	@$(CREATE_BUILD_DIR)
-	$(VHDLC) -e $(VHDLC_FLAGS) -o $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH) clk_divider_tb $(SIM_ARCH)
+	@$(MKDIR_P) $(dir $@)
+	$(VHDLC) -e $(VHDLC_FLAGS) -o $@ clk_divider_tb $(SIM_ARCH)
 
 $(BUILD_DIR)/clk_divider_tb.o: $(SIM_DIR)/clk_divider_tb$(VHDL_EXT) $(BUILD_DIR)/util_pkg.o $(BUILD_DIR)/clk_divider.o
-	@$(CREATE_BUILD_DIR)
+	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
-# DEPENDENCIES
+## DEPENDENCIES
 
 $(BUILD_DIR)/util_pkg.o: $(LIB_SRC_DIR)/vhdl_collection/util_pkg$(VHDL_EXT)
-	@$(CREATE_BUILD_DIR)
+	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a --work=vhdl_collection $(VHDLC_FLAGS) $<
 
 $(BUILD_DIR)/clk_divider.o: $(SRC_DIR)/clk_divider$(VHDL_EXT)
-	@$(CREATE_BUILD_DIR)
+	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
-# CUSTOM TARGETS
+## CUSTOM TARGETS
 
 .PHONY: run view clean
 
 run: $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH)
-	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS)
+	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_LOCAL) clk_divider_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS)
 
 view: $(BUILD_DIR)/clk_divider_tb-$(SIM_ARCH)
-	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_GENERAL) clk_divider_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS) --vcd=clk_divider_tb.vcd
+	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_LOCAL) clk_divider_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS) --vcd=clk_divider_tb.vcd
 	$(VCD_VIEWER) $(BUILD_DIR)/clk_divider_tb.vcd
 
 clean:
