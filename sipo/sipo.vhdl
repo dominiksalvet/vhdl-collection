@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard: VHDL-1993
--- Platform: independent
+-- Compliant: IEEE Std 1076-1993
+-- Platform:  independent
 --------------------------------------------------------------------------------
 -- Description:
 --     The file represents the description of a Serial-In, Parallel-Out module.

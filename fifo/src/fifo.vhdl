@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
--- Standard: VHDL-1993
--- Platform: independent
+-- Compliant: IEEE Std 1076-1993
+-- Platform:  independent
 --------------------------------------------------------------------------------
 -- Description:
 --     This file represents a generic FIFO structure (also known as queue). It
