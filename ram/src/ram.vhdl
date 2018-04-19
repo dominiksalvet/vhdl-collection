@@ -31,8 +31,6 @@ use std.textio.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
-use work.ram_tb_public.all;
-
 
 entity ram is
     generic (
@@ -40,7 +38,7 @@ entity ram is
         g_DATA_WIDTH : positive := 8; -- bit width of RAM data bus
         
         -- optional relative path of memory image file
-        g_MEM_IMG_FILENAME : string := "mem_img/linear_4_8.txt"
+        g_MEM_IMG_FILENAME : string := "../sim/mem_img/linear_4_8.txt"
     );
     port (
         i_clk : in std_ulogic; -- clock signal
@@ -56,11 +54,13 @@ end entity ram;
 
 architecture rtl of ram is
     
+    constant c_SIM_START_TIME : time := 0 ns;
+    
     -- output buffers
     signal b_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- definition of memory type
-    type t_MEM is array(0 to (2 ** g_ADDR_WIDTH) - 1) of
+    type t_MEM is array(0 to integer((2 ** g_ADDR_WIDTH) - 1)) of
         std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- Description:
@@ -138,7 +138,8 @@ begin
     
     output_prevention : process (b_data) is
     begin
-        if (now > c_CLK_PERIOD / 10) then -- the prevention must start after the simulation initialization
+        -- the prevention must start after the simulation initialization
+        if (now > c_SIM_START_TIME) then
             assert (contains_01(b_data))
                 report "Undefined o_data when reading from the memory."
                 severity warning;

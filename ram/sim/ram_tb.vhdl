@@ -22,7 +22,6 @@ use ieee.numeric_std.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
-use work.ram_tb_public.all;
 use work.ram;
 
 
@@ -36,7 +35,7 @@ architecture behavior of ram_tb is
     constant g_ADDR_WIDTH : positive := 4;
     constant g_DATA_WIDTH : positive := 8;
     
-    constant g_MEM_IMG_FILENAME : string := "mem_img/linear_4_8.txt";
+    constant g_MEM_IMG_FILENAME : string := "../sim/mem_img/linear_4_8.txt";
     
     -- uut ports
     signal i_clk : std_ulogic := '0';
@@ -46,6 +45,9 @@ architecture behavior of ram_tb is
     signal i_addr : std_ulogic_vector(g_ADDR_WIDTH - 1 downto 0) := (others => '0');
     signal i_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0) := (others => '0');
     signal o_data : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
+
+    -- clock period definition
+    constant c_CLK_PERIOD : time := 10 ns;
     
     -- simulation finished flag to stop the clk_gen process
     shared variable v_sim_finished : boolean := false;
@@ -88,7 +90,7 @@ begin
         -- read the initialized data and write to every address it's new value
         i_we <= '1';
         i_re <= '1';
-        for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
+        for i in 0 to integer((2 ** g_ADDR_WIDTH) - 1) loop
             i_addr <= std_ulogic_vector(to_unsigned(i, i_addr'length));
             i_data <= std_ulogic_vector(to_unsigned(16 * i, i_data'length)); -- [address]=16*address
             wait for c_CLK_PERIOD;
@@ -104,7 +106,7 @@ begin
         
         i_we <= '0';
         -- read each address and verify it's data correctness
-        for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
+        for i in 0 to integer((2 ** g_ADDR_WIDTH) - 1) loop
             i_addr <= std_ulogic_vector(to_unsigned(i, i_addr'length));
             wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             
