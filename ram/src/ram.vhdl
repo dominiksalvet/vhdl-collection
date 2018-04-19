@@ -54,6 +54,7 @@ end entity ram;
 
 architecture rtl of ram is
     
+    -- simulation start time used in output prevention
     constant c_SIM_START_TIME : time := 0 ns;
     
     -- output buffers
