@@ -98,7 +98,7 @@ begin
         
         wait for c_CLK_PERIOD;
         
-        -- THE "CAFE" MESSAGE
+        ---- THE "CAFE" MESSAGE
         
         assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
             report "Expected o_seg7_data=""" &
@@ -124,7 +124,7 @@ begin
             severity error;
         wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "FACE" message starts
         
-        -- THE "FACE" MESSAGE
+        ---- THE "FACE" MESSAGE
         
         assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
             report "Expected o_seg7_data=""" &

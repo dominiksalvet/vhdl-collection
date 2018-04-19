@@ -86,7 +86,7 @@ begin
         i_rst <= '1';
         wait for c_CLK_PERIOD; -- initialize the uut
         
-        -- FIRST FIFO FILL UP FROM 0 TO 3
+        ---- FIRST FIFO FILL UP FROM 0 TO 3
         
         i_rst <= '0';
         i_we  <= '1'; -- write process start
@@ -101,7 +101,7 @@ begin
             report "Expected o_full='1'!"
             severity error;
         
-        -- READ AND WRITE AT THE SAME TIME, FROM 3 DOWNTO 0
+        ---- READ AND WRITE AT THE SAME TIME, FROM 3 DOWNTO 0
         
         i_re <= '1';
         for i in 3 downto 0 loop
@@ -117,7 +117,7 @@ begin
         i_we <= '0';
         wait for c_CLK_PERIOD;
         
-        -- ONLY READING AND VERIFYING DATA BACK, EXPECT 3 DOWNTO 0
+        ---- ONLY READING AND VERIFYING DATA BACK, EXPECT 3 DOWNTO 0
         
         for i in 3 downto 0 loop
             assert (o_data = std_ulogic_vector(to_unsigned(i, o_data'length)))

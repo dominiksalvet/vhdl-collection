@@ -136,7 +136,7 @@ begin
         
         wait for c_CLK_PERIOD; -- delay to initialize the uut
         
-        -- COPY THE FIRST 4 BYTES
+        ---- COPY THE FIRST 4 BYTES
         
         i_copy_en <= '1';
         -- the last 4 addresses of the target memory
@@ -187,7 +187,7 @@ begin
             severity error;
         wait for c_CLK_PERIOD;
         
-        -- COPY THE ENTIRE SOURCE MEMORY
+        ---- COPY THE ENTIRE SOURCE MEMORY
         
         -- copying to all the target's addresses, it begins from the half address
         i_src_start_addr <= 
