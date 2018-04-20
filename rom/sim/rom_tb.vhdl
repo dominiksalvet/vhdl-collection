@@ -31,7 +31,7 @@ architecture behavior of rom_tb is
     constant g_ADDR_WIDTH : positive := 4;
     constant g_DATA_WIDTH : positive := 4;
     
-    constant g_MEM_IMG_FILENAME : string := "mem_img/linear_4_4.txt";
+    constant g_MEM_IMG_FILENAME : string := "../sim/mem_img/linear_4_4.txt";
     
     -- uut ports
     signal i_clk : std_ulogic := '0';
@@ -81,7 +81,7 @@ begin
         
         i_re <= '1';
         -- read every unique address value, one value per each c_CLK_PERIOD from 0 address
-        for i in 0 to (2 ** g_ADDR_WIDTH) - 1 loop
+        for i in 0 to integer((2 ** g_ADDR_WIDTH) - 1) loop
             i_addr <= std_ulogic_vector(to_unsigned(i, i_addr'length)); -- read memory
             wait for c_CLK_PERIOD; -- wait for i_clk rising edge to read the desired data
             

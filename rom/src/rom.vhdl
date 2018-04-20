@@ -37,7 +37,7 @@ entity rom is
         g_DATA_WIDTH : positive := 4; -- bit width of ROM data bus
         
         -- relative path of memory image file
-        g_MEM_IMG_FILENAME : string := "mem_img/linear_4_4.txt"
+        g_MEM_IMG_FILENAME : string := "../sim/mem_img/linear_4_4.txt"
     );
     port (
         i_clk : in std_ulogic; -- clock signal
@@ -52,7 +52,7 @@ end entity rom;
 architecture rtl of rom is
     
     -- definition of the used memory type
-    type t_MEM is array(0 to (2 ** g_ADDR_WIDTH) - 1) of
+    type t_MEM is array(0 to integer((2 ** g_ADDR_WIDTH) - 1)) of
         std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     
     -- Description:
