@@ -5,6 +5,7 @@ Handy generic VHDL modules that can be used as part of a VHDL project. Every VHD
 ## To do list
 * remake current makefiles to have the updated structure like [clk_divider makefile](clk_divider/makefile)
 * use [GHDL](https://github.com/ghdl/ghdl) to build together with makefile
+* change this description to reflect the new building system
 * *cache.vhd* + *cache_tb.vhd*
 
 ## Modules
