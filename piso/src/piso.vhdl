@@ -43,12 +43,13 @@ end entity piso;
 
 
 architecture rtl of piso is
-    signal r_transmitting : std_ulogic; -- transmitting indicator
     -- shifter register used for serializing the parallel input data
     signal r_shifter : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
+    -- number of transmitted bits (0 value stands for not transmitting state)
+    signal r_transmitted_count : integer range 0 to g_DATA_WIDTH - 1;
 begin
     
-    o_rdy <= not r_transmitting; -- the module is ready when not transmitting
+    o_rdy <= '1' when r_transmitted_count = 0 else '0'; -- the module is ready when not transmitting
     
     -- least/most significant bit assign generating
     assign_lsb : if (g_LSB_FIRST) generate
@@ -61,24 +62,21 @@ begin
     -- Description:
     --     Perform one conversion step. It works with the shifter register to serialize the input.
     conversion_step : process (i_clk) is
-        -- number of transmitted bits
-        variable r_transmitted_count : integer range 1 to g_DATA_WIDTH - 1;
     begin
         if (rising_edge(i_clk)) then
             o_data_start <= '0';
             
             if (i_rst = '1') then -- initialize the module
-                r_transmitting <= '0';
+                r_transmitted_count <= 0;
             else
                 
-                if (r_transmitting = '0') then -- if not transmitting
+                if (r_transmitted_count = 0) then -- if not transmitting
                     if (i_start = '1') then -- if start required
                         o_data_start        <= '1'; -- serial data start
-                        r_transmitting      <= '1'; -- set transmitting
                         r_shifter           <= i_data; -- store converted data internally
-                        r_transmitted_count := 1; -- one bit is transmitted now
+                        r_transmitted_count <= r_transmitted_count + 1; -- start the transmitting
                     end if;
-                else
+                else -- if transmitting
                     if (g_LSB_FIRST) then -- first least significant bit
                         r_shifter <= '-' & r_shifter(r_shifter'left downto 1);
                     else -- first most significant bit
@@ -86,10 +84,11 @@ begin
                     end if;
                     
                     if (r_transmitted_count = g_DATA_WIDTH - 1) then -- last transmitted bit
-                        r_transmitting <= '0'; -- stop transmitting
+                        r_transmitted_count <= 0; -- stop transmitting
+                    else
+                        -- increment the transmitted count
+                        r_transmitted_count <= r_transmitted_count + 1;
                     end if;
-                    -- increment the transmitted count
-                    r_transmitted_count := r_transmitted_count + 1;
                 end if;
                 
             end if;
@@ -102,7 +101,7 @@ begin
     begin
         if (rising_edge(i_clk)) then
             
-            if (i_start = '1' and r_transmitting = '0') then -- accept new data to the conversion
+            if (i_start = '1' and r_transmitted_count = 0) then -- accept new data to the conversion
                 assert (contains_01(i_data))
                     report "Undefined i_data when starting the conversion!"
                     severity failure;
