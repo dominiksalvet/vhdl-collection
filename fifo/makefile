@@ -18,7 +18,7 @@ SIM_ARCH := behavior
 
 # directory definitions
 SRC_DIR ?= src
-LIB_SRC_DIR ?= ../lib
+LIB_DIR ?= ../lib
 SIM_DIR ?= sim
 BUILD_DIR ?= build
 
@@ -48,7 +48,7 @@ $(BUILD_DIR)/fifo_tb.o: $(SIM_DIR)/fifo_tb.vhdl $(BUILD_DIR)/util_pkg.o $(BUILD_
 	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
-$(BUILD_DIR)/util_pkg.o: $(LIB_SRC_DIR)/vhdl_collection/util_pkg.vhdl
+$(BUILD_DIR)/util_pkg.o: $(LIB_DIR)/vhdl_collection/util_pkg.vhdl
 	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a --work=vhdl_collection $(VHDLC_FLAGS) $<
 
