@@ -8,36 +8,33 @@
 
 ## ENVIRONMENT CONFIGURATION
 
-SHELL = /bin/sh
-MKDIR_P = mkdir -p
+SHELL := /bin/sh
+MKDIR_P := mkdir -p
 
 ## PROJECT CONFIGURATION
 
 # default entity architectures
-SIM_ARCH = behavior
+SIM_ARCH := behavior
 
 # directory definitions
-SRC_DIR = src
-LIB_SRC_DIR = ../lib
-SIM_DIR = sim
-BUILD_DIR = build
-
-# VHDL file extension
-VHDL_EXT = .vhdl
+SRC_DIR ?= src
+LIB_DIR ?=
+SIM_DIR ?= sim
+BUILD_DIR ?= build
 
 ## GENERAL CONFIGURATION
 
 # VHDL compiler
-VHDLC = ghdl
+VHDLC := ghdl
 
-VHDLC_FLAGS_GENERAL = --std=93 --ieee=standard --warn-library --warn-reserved --warn-parenthesis
-VHDLC_FLAGS = --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_GENERAL)
-VHDLC_FLAGS_LOCAL = --workdir=. -P. $(VHDLC_FLAGS_GENERAL)
+VHDLC_FLAGS_GENERAL := --std=93 --ieee=standard --warn-library --warn-reserved --warn-parenthesis
+VHDLC_FLAGS := --workdir=$(BUILD_DIR) -P$(BUILD_DIR) $(VHDLC_FLAGS_GENERAL)
+VHDLC_FLAGS_LOCAL := --workdir=. -P. $(VHDLC_FLAGS_GENERAL)
 
-VHDLC_SIM_FLAGS = --assert-level=failure --ieee-asserts=enable
+VHDLC_SIM_FLAGS := --assert-level=failure --ieee-asserts=enable
 
 # VCD file viewer
-VCD_VIEWER = gtkwave
+VCD_VIEWER ?= gtkwave
 
 ## TARGET
 
@@ -45,19 +42,21 @@ $(BUILD_DIR)/pwm_tb-$(SIM_ARCH): $(BUILD_DIR)/pwm_tb.o
 	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -e $(VHDLC_FLAGS) -o $@ pwm_tb $(SIM_ARCH)
 
-$(BUILD_DIR)/pwm_tb.o: $(SIM_DIR)/pwm_tb$(VHDL_EXT) $(BUILD_DIR)/pwm.o
+## DEPENDENCIES
+
+$(BUILD_DIR)/pwm_tb.o: $(SIM_DIR)/pwm_tb.vhdl $(BUILD_DIR)/pwm.o
 	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
-## DEPENDENCIES
-
-$(BUILD_DIR)/pwm.o: $(SRC_DIR)/pwm$(VHDL_EXT)
+$(BUILD_DIR)/pwm.o: $(SRC_DIR)/pwm.vhdl
 	@$(MKDIR_P) $(dir $@)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 ## CUSTOM TARGETS
 
-.PHONY: run view clean
+.PHONY: module run view clean
+
+module: $(BUILD_DIR)/pwm.o
 
 run: $(BUILD_DIR)/pwm_tb-$(SIM_ARCH)
 	cd $(BUILD_DIR) && $(VHDLC) -r $(VHDLC_FLAGS_LOCAL) pwm_tb $(SIM_ARCH) $(VHDLC_SIM_FLAGS)
