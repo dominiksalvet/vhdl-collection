@@ -23,7 +23,7 @@ entity sipo_tb is
 end entity sipo_tb;
 
 
-architecture behavior of sipo_tb is
+architecture behavioral of sipo_tb is
     
     -- uut generics
     constant g_DATA_WIDTH : integer range 2 to integer'high := 4;
@@ -124,7 +124,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

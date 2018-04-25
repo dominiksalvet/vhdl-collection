@@ -24,7 +24,7 @@ entity clk_divider_tb is
 end entity clk_divider_tb;
 
 
-architecture behavior of clk_divider_tb is
+architecture behavioral of clk_divider_tb is
     
     -- uut generics
     constant g_FREQ_DIV_MAX_VALUE : positive := 7;
@@ -154,7 +154,7 @@ begin
         
     end process verification;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

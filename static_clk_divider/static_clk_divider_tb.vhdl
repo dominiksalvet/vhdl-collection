@@ -19,7 +19,7 @@ entity static_clk_divider_tb is
 end entity static_clk_divider_tb;
 
 
-architecture behavior of static_clk_divider_tb is
+architecture behavioral of static_clk_divider_tb is
     
     -- uut generics
     constant g_FREQ_DIV : integer range 2 to integer'high := 5; 
@@ -95,7 +95,7 @@ begin
         
     end process verification;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

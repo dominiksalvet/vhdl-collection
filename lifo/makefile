@@ -14,7 +14,7 @@ MKDIR_P = mkdir -p
 ## PROJECT CONFIGURATION
 
 # default entity architectures
-SIM_ARCH = behavior
+SIM_ARCH = behavioral
 
 # directory definitions
 SRC_DIR = src

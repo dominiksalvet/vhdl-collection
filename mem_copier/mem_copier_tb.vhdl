@@ -28,7 +28,7 @@ entity mem_copier_tb is
 end entity mem_copier_tb;
 
 
-architecture behavior of mem_copier_tb is
+architecture behavioral of mem_copier_tb is
     
     -- uut generics
     constant g_SRC_ADDR_WIDTH : positive := 4;
@@ -230,7 +230,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

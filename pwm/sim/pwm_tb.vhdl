@@ -22,7 +22,7 @@ entity pwm_tb is
 end entity pwm_tb;
 
 
-architecture behavior of pwm_tb is
+architecture behavioral of pwm_tb is
     
     -- uut generics
     constant g_PERIOD : positive := 8; 
@@ -132,7 +132,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

@@ -29,7 +29,7 @@ entity ram_tb is
 end entity ram_tb;
 
 
-architecture behavior of ram_tb is
+architecture behavioral of ram_tb is
     
     -- uut generics
     constant g_ADDR_WIDTH : positive := 4;
@@ -124,7 +124,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

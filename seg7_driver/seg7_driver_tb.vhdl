@@ -27,7 +27,7 @@ entity seg7_driver_tb is
 end entity seg7_driver_tb;
 
 
-architecture behavior of seg7_driver_tb is
+architecture behavioral of seg7_driver_tb is
     
     -- uut generics
     constant g_LED_ON_VALUE    : std_ulogic := '1';
@@ -154,7 +154,7 @@ begin
         
     end process verification;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

@@ -23,7 +23,7 @@ entity lifo_tb is
 end entity lifo_tb;
 
 
-architecture behavior of lifo_tb is
+architecture behavioral of lifo_tb is
     
     -- uut generics
     constant g_INDEX_WIDTH : positive := 2;
@@ -133,7 +133,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

@@ -25,7 +25,7 @@ entity rom_tb is
 end entity rom_tb;
 
 
-architecture behavior of rom_tb is
+architecture behavioral of rom_tb is
     
     -- uut generics
     constant g_ADDR_WIDTH : positive := 4;
@@ -99,7 +99,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------

@@ -23,7 +23,7 @@ entity fifo_tb is
 end entity fifo_tb;
 
 
-architecture behavior of fifo_tb is
+architecture behavioral of fifo_tb is
     
     -- uut generics
     constant g_INDEX_WIDTH : positive := 2;
@@ -140,7 +140,7 @@ begin
         
     end process stimulus;
     
-end architecture behavior;
+end architecture behavioral;
 
 
 --------------------------------------------------------------------------------
