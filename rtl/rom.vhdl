@@ -37,7 +37,7 @@ entity rom is
         g_DATA_WIDTH : positive := 4; -- bit width of ROM data bus
         
         -- relative path of memory image file
-        g_MEM_IMG_FILENAME : string := "../sim/mem_img/linear_4_4.txt"
+        g_MEM_IMG_FILENAME : string := "../data/mem_img/linear_4_4.txt"
     );
     port (
         i_clk : in std_ulogic; -- clock signal

@@ -1,14 +1,4 @@
-project/xise/cache
-project/xise/iseconfig
+project/ise/build/
+project/ise/iseconfig/
 
-clk_divider/build/*
-fifo/build/*
-lifo/build/*
-mem_copier/build/*
-piso/build/*
-pwm/build/*
-ram/build/*
-rom/build/*
-seg7_driver/build/*
-sipo/build/*
-static_clk_divider/build/*
+project/ghdl/build/
