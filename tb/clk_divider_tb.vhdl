@@ -25,7 +25,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.clk_divider;
 
-
 entity clk_divider_tb is
 end entity clk_divider_tb;
 

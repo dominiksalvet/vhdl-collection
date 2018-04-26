@@ -21,7 +21,6 @@ use ieee.std_logic_1164.all;
 
 use work.pwm;
 
-
 entity pwm_tb is
 end entity pwm_tb;
 

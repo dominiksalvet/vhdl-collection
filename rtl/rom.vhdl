@@ -33,7 +33,6 @@ use std.textio.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
-
 entity rom is
     generic (
         g_ADDR_WIDTH : positive := 4; -- bit width of ROM address bus

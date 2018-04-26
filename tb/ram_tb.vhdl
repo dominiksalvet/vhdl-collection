@@ -30,7 +30,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.ram;
 
-
 entity ram_tb is
 end entity ram_tb;
 

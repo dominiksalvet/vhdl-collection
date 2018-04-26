@@ -22,7 +22,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.piso;
 
-
 entity piso_tb is
 end entity piso_tb;
 

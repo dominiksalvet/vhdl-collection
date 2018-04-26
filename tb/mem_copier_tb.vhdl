@@ -22,11 +22,8 @@ library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
 use work.mem_copier;
-
 use work.rom;
-
 use work.ram;
-
 
 entity mem_copier_tb is
 end entity mem_copier_tb;

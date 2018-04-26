@@ -26,7 +26,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-
 entity clk_divider is
     generic (
         g_FREQ_DIV_MAX_VALUE : positive := 7 -- maximum available frequency divisor value

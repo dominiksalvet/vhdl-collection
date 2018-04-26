@@ -26,7 +26,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.rom;
 
-
 entity rom_tb is
 end entity rom_tb;
 

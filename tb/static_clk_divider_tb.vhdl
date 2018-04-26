@@ -20,7 +20,6 @@ use ieee.std_logic_1164.all;
 
 use work.static_clk_divider;
 
-
 entity static_clk_divider_tb is
 end entity static_clk_divider_tb;
 

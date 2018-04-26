@@ -21,7 +21,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-
 entity pwm is
     generic (
         g_PERIOD : positive := 8 -- o_signal period, it is equal to <i_clk_period>*g_PERIOD

@@ -29,7 +29,6 @@ use math.seg7_pkg.all;
 
 use work.seg7_driver;
 
-
 entity seg7_driver_tb is
 end entity seg7_driver_tb;
 

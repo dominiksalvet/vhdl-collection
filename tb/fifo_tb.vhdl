@@ -22,7 +22,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.fifo;
 
-
 entity fifo_tb is
 end entity fifo_tb;
 

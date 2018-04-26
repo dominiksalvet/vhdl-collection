@@ -22,7 +22,6 @@ use math.seg7_pkg.all;
 
 use work.hex_to_seg7;
 
-
 entity hex_to_seg7_tb is
 end entity hex_to_seg7_tb;
 

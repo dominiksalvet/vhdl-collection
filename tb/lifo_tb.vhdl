@@ -22,7 +22,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.lifo;
 
-
 entity lifo_tb is
 end entity lifo_tb;
 

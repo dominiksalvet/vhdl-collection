@@ -19,7 +19,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-
 entity static_clk_divider is
     generic (
         -- frequency divisor, <o_clk_freq>=<i_clk_freq>/g_FREQ_DIV

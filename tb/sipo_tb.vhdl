@@ -22,7 +22,6 @@ use vhdl_collection.util_pkg.all;
 
 use work.sipo;
 
-
 entity sipo_tb is
 end entity sipo_tb;
 

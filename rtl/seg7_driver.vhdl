@@ -25,7 +25,6 @@ use ieee.std_logic_1164.all;
 
 use work.hex_to_seg7;
 
-
 entity seg7_driver is
     generic (
         g_SEG_ACTIVE_VALUE : std_ulogic := '1'; -- this value will be used for active segments

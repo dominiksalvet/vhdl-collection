@@ -28,7 +28,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-
 entity mem_copier is
     generic (
         g_SRC_ADDR_WIDTH : positive := 4; -- bit width of source memory address bus

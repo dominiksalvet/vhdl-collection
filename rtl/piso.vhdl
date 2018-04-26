@@ -24,7 +24,6 @@ use ieee.std_logic_1164.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
-
 entity piso is
     generic (
         g_DATA_WIDTH : integer range 2 to integer'high := 4; -- input parallel data width
