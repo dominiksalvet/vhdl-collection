@@ -24,9 +24,10 @@ use ieee.std_logic_1164.all;
 library vhdl_collection;
 use vhdl_collection.util_pkg.all;
 
-use work.seg7_driver;
+library math;
+use math.seg7_pkg.all;
 
-use work.hex_to_seg7_public.all;
+use work.seg7_driver;
 
 
 entity seg7_driver_tb is
@@ -36,9 +37,9 @@ end entity seg7_driver_tb;
 architecture behavioral of seg7_driver_tb is
     
     -- uut generics
-    constant g_LED_ON_VALUE    : std_ulogic := '1';
-    constant g_DIGIT_SEL_VALUE : std_ulogic := '1';
-    constant g_DIGIT_COUNT     : positive   := 4;
+    constant g_SEG_ACTIVE_VALUE : std_ulogic := '1';
+    constant g_DIGIT_SEL_VALUE  : std_ulogic := '1';
+    constant g_DIGIT_COUNT      : positive   := 4;
     
     -- uut ports
     signal i_clk : std_ulogic := '0';
@@ -59,9 +60,9 @@ begin
     -- instantiate the unit under test (uut)
     uut : entity work.seg7_driver(rtl)
         generic map (
-            g_LED_ON_VALUE    => g_LED_ON_VALUE,
-            g_DIGIT_SEL_VALUE => g_DIGIT_SEL_VALUE,
-            g_DIGIT_COUNT     => g_DIGIT_COUNT
+            g_SEG_ACTIVE_VALUE => g_SEG_ACTIVE_VALUE,
+            g_DIGIT_SEL_VALUE  => g_DIGIT_SEL_VALUE,
+            g_DIGIT_COUNT      => g_DIGIT_COUNT
         )
         port map (
             i_clk => i_clk,
@@ -106,53 +107,53 @@ begin
         
         ---- THE "CAFE" MESSAGE
         
-        assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "FACE" message starts
         
         ---- THE "FACE" MESSAGE
         
-        assert (o_seg7_data = (c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_E xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_C xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_A xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)))
+        assert (o_seg7_data = (c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_F xor (6 downto 0 => g_LED_ON_VALUE)) & """!"
+            to_string(c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         
         v_sim_finished := true;

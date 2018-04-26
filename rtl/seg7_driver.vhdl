@@ -13,7 +13,7 @@
 --        and so it is meant to perform fast switching between the digits. Then
 --        the final refresh frequency of all the display is equal to i_clk
 --        frequency divided by number of unique digits.
---     2. The least significant bit of o_seg7_sel output accordinates the least
+--     2. The least significant bit of o_seg7_sel output meets the least
 --        significant four bits of i_data input.
 --     3. The input i_data is not stored anywhere internally to quickly react to
 --        the changes on this input.
@@ -28,9 +28,9 @@ use work.hex_to_seg7;
 
 entity seg7_driver is
     generic (
-        g_LED_ON_VALUE    : std_ulogic := '1'; -- LED on state represents this value
-        g_DIGIT_SEL_VALUE : std_ulogic := '1'; -- digit select represents this value
-        g_DIGIT_COUNT     : positive   := 4 -- number of controlled digits
+        g_SEG_ACTIVE_VALUE : std_ulogic := '1'; -- this value will be used for active segments
+        g_DIGIT_SEL_VALUE  : std_ulogic := '1'; -- this value will be used for active digits select
+        g_DIGIT_COUNT      : positive   := 4 -- total number of controlled digits
     );
     port (
         i_clk : in std_ulogic; -- clock signal
@@ -49,19 +49,19 @@ architecture rtl of seg7_driver is
     
     -- hex_to_seg7_0 ports
     signal hts_i_hex_data  : std_ulogic_vector(3 downto 0);
-    signal hts_o_seg7_data : std_ulogic_vector(6 downto 0);
     
     signal r_seg7_sel_index : integer range 0 to g_DIGIT_COUNT - 1; -- index of displayed digit
     
 begin
     
-    o_seg7_data <= hts_o_seg7_data xor (6 downto 0 => g_LED_ON_VALUE); -- LED on value switcher
-    
     -- instantiation of hex_to_seg7 for conversion hexadecimal form to seven segment form
     hex_to_seg7_0 : entity work.hex_to_seg7(rtl)
+        generic map (
+            g_SEG_ACTIVE_VALUE => g_SEG_ACTIVE_VALUE
+        )
         port map (
             i_hex_data  => hts_i_hex_data,
-            o_seg7_data => hts_o_seg7_data
+            o_seg7_data => o_seg7_data
         );
     
     -- window with the converted hexadecimal number

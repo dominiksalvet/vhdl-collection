@@ -43,10 +43,8 @@ end entity clk_divider;
 
 
 architecture rtl of clk_divider is
-    
     signal r_use_direct_i_clk : std_ulogic; -- force to use direct i_clk input as output clock
     signal r_divided_i_clk    : std_ulogic; -- value of i_clk based on counter method
-    
 begin
     
     -- switch between direct i_clk and r_divided_i_clk
