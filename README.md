@@ -8,17 +8,17 @@ Handy generic VHDL modules that can be used as part of a VHDL project. Every VHD
 * *cache.vhd* + *cache_tb.vhd*
 
 ## Modules
-* [Clock Divider](clk_divider)
-* [First In, First Out](fifo)
-* [Last In, First Out](lifo)
-* [Memory Copier](mem_copier)
-* [Parallel In, Serial Out](piso)
-* [Pulse-Width Modulation](pwm)
-* [Random-Access Memory](ram)
-* [Read-Only Memory](rom)
-* [Seven-Segment Display Driver](seg7_driver)
-* [Serial In, Parallel Out](sipo)
-* [Static Clock Divider](static_clk_divider)
+* [Clock Divider](rtl/clk_divider.vhdl)
+* [First In, First Out](rtl/fifo.vhdl)
+* [Last In, First Out](rtl/lifo.vhdl)
+* [Memory Copier](rtl/mem_copier.vhdl)
+* [Parallel In, Serial Out](rtl/piso.vhdl)
+* [Pulse-Width Modulation](rtl/pwm.vhdl)
+* [Random-Access Memory](rtl/ram.vhdl)
+* [Read-Only Memory](rtl/rom.vhdl)
+* [Seven-Segment Display Driver](rtl/seg7_driver.vhdl)
+* [Serial In, Parallel Out](rtl/sipo.vhdl)
+* [Static Clock Divider](rtl/static_clk_divider.vhdl)
 
 ## Documentation
 
