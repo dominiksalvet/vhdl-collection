@@ -2,6 +2,9 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 
 
 library ieee;

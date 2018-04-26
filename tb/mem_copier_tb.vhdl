@@ -2,14 +2,15 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     The test bench simulates to copy first 4 bytes from the source memory to
 --     the last 4 bytes of the target memory. After verifying that control
 --     signals were correct, the whole source memory image is copied to the
 --     target memory from it's half addresses to test the modulo function. The
 --     data transferring itself now will be verifying.
---------------------------------------------------------------------------------
--- Notes:
 --------------------------------------------------------------------------------
 
 

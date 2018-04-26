@@ -2,6 +2,9 @@
 -- Copyright (C) 2017-2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     The simulations increments the i_duty value per each PWM period. It also
 --     checks o_signal value at critical points - half i_clk period before
@@ -10,8 +13,6 @@
 --     period after the o_signal period begins. This demonstrates the function
 --     of internal register and so i_duty is stored and will not change until
 --     new beginning of the o_signal period.
---------------------------------------------------------------------------------
--- Notes:
 --------------------------------------------------------------------------------
 
 

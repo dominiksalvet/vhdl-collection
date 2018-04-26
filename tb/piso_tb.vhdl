@@ -2,13 +2,14 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     The test bench sends every possible bit combination to the i_data input,
 --     beginning from the 0 value in binary form. Then it test the serialized
 --     output on the o_data signal. It also tests values of o_rdy and
 --     o_data_start indicators.
---------------------------------------------------------------------------------
--- Notes:
 --------------------------------------------------------------------------------
 
 

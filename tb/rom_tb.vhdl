@@ -2,6 +2,9 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     Initializes the ROM memory from the linear_vector.txt file, which matches
 --     pattern [address]=address and simulation will verify it with standard

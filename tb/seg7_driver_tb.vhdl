@@ -2,6 +2,9 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     Simulation represents an example where the message "CAFE" will be
 --     displayed. The seven segment display, which shows "E", has the lowest

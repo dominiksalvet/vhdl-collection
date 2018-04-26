@@ -2,13 +2,14 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     The test bench first fills up all the LIFO internal memory defined by
 --     g_INDEX_WIDTH, which is set to 2, so internal capacity is 4 items. Then
 --     it will test the o_full indicator and read all the items. Then it will
 --     verify all the read data and the o_empty indicator at the end.
---------------------------------------------------------------------------------
--- Notes:
 --------------------------------------------------------------------------------
 
 

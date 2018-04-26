@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
 -- Compliant: IEEE Std 1076-1993
--- Platform:  independent
+-- Target:    independent
 --------------------------------------------------------------------------------
 -- Description:
 --     This package contains basic utility functions.

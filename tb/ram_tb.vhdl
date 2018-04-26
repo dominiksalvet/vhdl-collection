@@ -2,6 +2,9 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     The simulated RAM is first initialized with a linear data from a file,
 --     then the pattern [address]=address is verified for the initialized data

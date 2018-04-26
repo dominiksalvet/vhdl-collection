@@ -2,6 +2,9 @@
 -- Copyright (C) 2018 Dominik Salvet
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
+-- Compliant: IEEE Std 1076-1993
+-- Target:    independent
+--------------------------------------------------------------------------------
 -- Description:
 --     Uses g_FREQ_DIV with value 5 to see that o_clk period is 5 times longer
 --     than the original one of i_clk. Also value '1' is assigned for 2 i_clk

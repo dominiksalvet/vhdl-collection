@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
 -- Compliant: IEEE Std 1076-1993
--- Platform:  independent
+-- Target:    independent
 --------------------------------------------------------------------------------
 -- Description:
 --     The file represents the description of a Parallel-In, Serial-Out module.
