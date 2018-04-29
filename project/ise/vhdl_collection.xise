@@ -25,7 +25,7 @@
     </file>
     <file xil_pn:name="../../rtl/hex_to_seg7.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="2"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
     <file xil_pn:name="../../rtl/lifo.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
@@ -33,7 +33,7 @@
     </file>
     <file xil_pn:name="../../rtl/mem_copier.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="4"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="1"/>
     </file>
     <file xil_pn:name="../../rtl/piso.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
@@ -53,7 +53,7 @@
     </file>
     <file xil_pn:name="../../rtl/seg7_driver.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="3"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
     <file xil_pn:name="../../rtl/sipo.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
@@ -82,7 +82,7 @@
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="16"/>
     </file>
     <file xil_pn:name="../../tb/mem_copier_tb.vhdl" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="5"/>
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="6"/>
       <association xil_pn:name="PostMapSimulation" xil_pn:seqID="17"/>
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="17"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="17"/>
@@ -129,21 +129,23 @@
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="24"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="24"/>
     </file>
-    <file xil_pn:name="../../lib/vhdl_collection/util_pkg.vhdl" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="1"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
-      <library xil_pn:name="vhdl_collection"/>
-    </file>
-    <file xil_pn:name="../../lib/math/seg7_pkg.vhdl" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="1"/>
-      <library xil_pn:name="math"/>
-    </file>
     <file xil_pn:name="../../tb/hex_to_seg7_tb.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
       <association xil_pn:name="PostMapSimulation" xil_pn:seqID="26"/>
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="26"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="26"/>
+    </file>
+    <file xil_pn:name="../../lib/work/conv_pkg.vhdl" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="5"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../../lib/work/seg7_pkg.vhdl" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../../lib/work/verif_pkg.vhdl" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="1"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
   </files>
 
@@ -452,10 +454,7 @@
 
   <bindings/>
 
-  <libraries>
-    <library xil_pn:name="math"/>
-    <library xil_pn:name="vhdl_collection"/>
-  </libraries>
+  <libraries/>
 
   <autoManagedFiles>
     <!-- The following files are identified by `include statements in verilog -->

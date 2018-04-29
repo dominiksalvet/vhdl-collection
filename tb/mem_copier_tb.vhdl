@@ -18,9 +18,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library vhdl_collection;
-use vhdl_collection.util_pkg.all;
-
+use work.conv_pkg.all;
 use work.mem_copier;
 use work.rom;
 use work.ram;

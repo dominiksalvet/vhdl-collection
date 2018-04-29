@@ -6,32 +6,14 @@
 -- Target:    independent
 --------------------------------------------------------------------------------
 -- Description:
---     This package contains basic utility functions.
---------------------------------------------------------------------------------
--- Notes:
---     1. Unless stated otherwise, the functions are not intended to be
---        synthesized.
+--     This package contains basic conversion functions.
 --------------------------------------------------------------------------------
 
 
 library ieee;
 use ieee.std_logic_1164.all;
 
-package util_pkg is
-    
-    -- Description:
-    --     The function returns true only when the input signal p_SIGNAL has '0' or '1' value, false
-    --     is returned otherwise.
-    function contains_01 (
-            p_SIGNAL : std_ulogic -- input standard logic signal
-        ) return boolean;
-    
-    -- Description:
-    --     The function returns true only when all the scalar components of the input vector
-    --     p_VECTOR have '0' or '1' value, false is returned otherwise.
-    function contains_01 (
-            p_VECTOR : std_ulogic_vector -- input standard logic vector
-        ) return boolean;
+package conv_pkg is
     
     -- Description:
     --     Returns the std_ulogic parameter's character representation.
@@ -46,30 +28,10 @@ package util_pkg is
             p_VECTOR : std_ulogic_vector -- input standard logic vector
         ) return string; -- final string
     
-end package util_pkg;
+end package conv_pkg;
 
 
-package body util_pkg is
-    
-    function contains_01 (
-            p_SIGNAL : std_ulogic
-        ) return boolean is
-    begin
-        return p_SIGNAL = '0' or p_SIGNAL = '1';
-    end function contains_01;
-    
-    function contains_01 (
-            p_VECTOR : std_ulogic_vector
-        ) return boolean is
-    begin
-        for i in p_VECTOR'range loop -- check every scalar component of the vector
-            if (not contains_01(p_VECTOR(i))) then
-                return false;
-            end if;
-        end loop;
-
-        return true;
-    end function contains_01;
+package body conv_pkg is
     
     function to_character (
             p_SIGNAL : std_ulogic
@@ -108,11 +70,11 @@ package body util_pkg is
     begin
         if (p_VECTOR'ascending) then -- range of p_VECTOR is defined with "to"
             for i in v_string'range loop
-                v_string(i) := to_character(p_VECTOR(i - 1)); -- calling to_character on every bit
+                v_string(i) := to_character(p_VECTOR(i - 1)); -- calling to_character for every bit
             end loop;
         else -- range of p_VECTOR is defined with "downto"
             for i in v_string'range loop
-                -- calling to_character on every bit
+                -- calling to_character for every bit
                 v_string(i) := to_character(p_VECTOR(p_VECTOR'high - i + 1));
             end loop;
         end if;
@@ -120,4 +82,4 @@ package body util_pkg is
         return v_string;
     end function to_string;
     
-end package body util_pkg;
+end package body conv_pkg;

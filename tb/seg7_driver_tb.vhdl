@@ -21,12 +21,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-library vhdl_collection;
-use vhdl_collection.util_pkg.all;
-
-library math;
-use math.seg7_pkg.all;
-
+use work.conv_pkg.all;
+use work.seg7_pkg.all;
 use work.seg7_driver;
 
 entity seg7_driver_tb is

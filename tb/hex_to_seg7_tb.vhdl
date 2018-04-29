@@ -14,12 +14,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-library vhdl_collection;
-use vhdl_collection.util_pkg.all;
-
-library math;
-use math.seg7_pkg.all;
-
+use work.seg7_pkg.all;
 use work.hex_to_seg7;
 
 entity hex_to_seg7_tb is
