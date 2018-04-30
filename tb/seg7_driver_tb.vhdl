@@ -13,7 +13,7 @@
 --     the "FACE".
 --------------------------------------------------------------------------------
 -- Notes:
---     1. Do not change g_DIGIT_COUNT unless you know the impact on the
+--     1. Do not change g_DIGIT_COUNT unless you know about fatal impact on the
 --        simulation progress.
 --------------------------------------------------------------------------------
 
@@ -102,53 +102,53 @@ begin
         
         ---- THE "CAFE" MESSAGE
         
-        assert (o_seg7_data = (c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "FACE" message starts
         
         ---- THE "FACE" MESSAGE
         
-        assert (o_seg7_data = (c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_E xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_C xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_A xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+        assert (o_seg7_data = (c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
             report "Expected o_seg7_data=""" &
-            to_string(c_SEG7_F xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
+            to_string(c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         
         v_sim_finished := true;

@@ -22,8 +22,9 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
-use work.hex_to_seg7;
+use work.seg7_pkg.all;
 
 entity seg7_driver is
     generic (
@@ -45,26 +46,8 @@ end entity seg7_driver;
 
 
 architecture rtl of seg7_driver is
-    
-    -- hex_to_seg7_0 ports
-    signal hts_i_hex_data  : std_ulogic_vector(3 downto 0);
-    
     signal r_seg7_sel_index : integer range 0 to g_DIGIT_COUNT - 1; -- index of displayed digit
-    
 begin
-    
-    -- instantiation of hex_to_seg7 for conversion hexadecimal form to seven segment form
-    hex_to_seg7_0 : entity work.hex_to_seg7(rtl)
-        generic map (
-            g_SEG_ACTIVE_VALUE => g_SEG_ACTIVE_VALUE
-        )
-        port map (
-            i_hex_data  => hts_i_hex_data,
-            o_seg7_data => o_seg7_data
-        );
-    
-    -- window with the converted hexadecimal number
-    hts_i_hex_data <= i_data((r_seg7_sel_index * 4) + 3 downto r_seg7_sel_index * 4);
     
     -- Description:
     --     Compute next index of the seven segment digits.
@@ -92,5 +75,17 @@ begin
         o_seg7_sel                   <= (others => not g_DIGIT_SEL_VALUE);
         o_seg7_sel(r_seg7_sel_index) <= g_DIGIT_SEL_VALUE;
     end process seg7_sel_switch;
+    
+    -- Description:
+    --     Propagate changes of digit index and i_data to the o_seg7_data output.
+    seg7_data_conversion : process (i_data, r_seg7_sel_index) is
+        variable w_sel_hex_data : std_ulogic_vector(3 downto 0);
+    begin
+        -- window with the converted hexadecimal number
+        w_sel_hex_data := i_data((r_seg7_sel_index * 4) + 3 downto r_seg7_sel_index * 4);
+        -- conversion to the seven segment form with eventual negation of active segment value
+        o_seg7_data <= 
+            c_SEG7(to_integer(unsigned(w_sel_hex_data))) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE);
+    end process seg7_data_conversion;
     
 end architecture rtl;

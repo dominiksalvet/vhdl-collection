@@ -5,31 +5,39 @@
 -- Compliant: IEEE Std 1076-1993
 -- Target:    independent
 --------------------------------------------------------------------------------
-
+-- Description:
+--     This package contains basic seven segment display utilities.
+--------------------------------------------------------------------------------
+-- Notes:
+--     1. The package assumes hexadecimal radix for conversions.
+--------------------------------------------------------------------------------
 
 library ieee;
 use ieee.std_logic_1164.all;
 
 package seg7_pkg is
     
-    -- images of all seven segment representing a hexadecimal number
-    -- the vectors are mapped to the segments in the following order: ABCDEFG
-    -- '1' stands for an active segment, '0' for an inactive segment
-    constant c_SEG7_0 : std_ulogic_vector(6 downto 0) := "1111110";
-    constant c_SEG7_1 : std_ulogic_vector(6 downto 0) := "0110000";
-    constant c_SEG7_2 : std_ulogic_vector(6 downto 0) := "1101101";
-    constant c_SEG7_3 : std_ulogic_vector(6 downto 0) := "1111001";
-    constant c_SEG7_4 : std_ulogic_vector(6 downto 0) := "0110011";
-    constant c_SEG7_5 : std_ulogic_vector(6 downto 0) := "1011011";
-    constant c_SEG7_6 : std_ulogic_vector(6 downto 0) := "1011111";
-    constant c_SEG7_7 : std_ulogic_vector(6 downto 0) := "1110000";
-    constant c_SEG7_8 : std_ulogic_vector(6 downto 0) := "1111111";
-    constant c_SEG7_9 : std_ulogic_vector(6 downto 0) := "1111011";
-    constant c_SEG7_A : std_ulogic_vector(6 downto 0) := "1110111";
-    constant c_SEG7_B : std_ulogic_vector(6 downto 0) := "0011111";
-    constant c_SEG7_C : std_ulogic_vector(6 downto 0) := "1001110";
-    constant c_SEG7_D : std_ulogic_vector(6 downto 0) := "0111101";
-    constant c_SEG7_E : std_ulogic_vector(6 downto 0) := "1001111";
-    constant c_SEG7_F : std_ulogic_vector(6 downto 0) := "1000111";
+    type t_MEM is array(0 to 15) of std_ulogic_vector(6 downto 0);
+    -- images of all seven segment values representing a hexadecimal number
+    -- '1' values stands for an active segment, '0' for an inactive segment
+    constant c_SEG7 : t_MEM := (
+            --     ABCDEFG (segment mapping)
+            0  => "1111110", -- 0
+            1  => "0110000", -- 1
+            2  => "1101101", -- 2
+            3  => "1111001", -- 3
+            4  => "0110011", -- 4
+            5  => "1011011", -- 5
+            6  => "1011111", -- 6
+            7  => "1110000", -- 7
+            8  => "1111111", -- 8
+            9  => "1111011", -- 9
+            10 => "1110111", -- A
+            11 => "0011111", -- B
+            12 => "1001110", -- C
+            13 => "0111101", -- D
+            14 => "1001111", -- E
+            15 => "1000111" -- F
+        );
     
 end package seg7_pkg;
