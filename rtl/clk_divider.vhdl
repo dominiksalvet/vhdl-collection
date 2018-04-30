@@ -18,7 +18,7 @@
 --     3. When it is not possible to perform clock frequency division without
 --        a remainder, the o_clk will have '1' value one i_clk period shorter
 --        than '0' value per o_clk period.
---     4. To get the most effective optimization, choose g_FREQ_DIV_MAX_VALUE
+--     4. To get the most effective resource optimization, choose g_FREQ_DIV_MAX
 --        equal to (2^n)-1.
 --------------------------------------------------------------------------------
 
@@ -28,14 +28,14 @@ use ieee.std_logic_1164.all;
 
 entity clk_divider is
     generic (
-        g_FREQ_DIV_MAX_VALUE : positive := 7 -- maximum available frequency divisor value
+        g_FREQ_DIV_MAX : positive := 7 -- maximum available frequency divisor value
     );
     port (
         i_clk : in std_ulogic; -- input clock signal
         i_rst : in std_ulogic; -- reset signal
         
         -- i_clk frequency is divided by value of this number, <o_clk_freq>=<i_clk_freq>/i_freq_div
-        i_freq_div : in  integer range 1 to g_FREQ_DIV_MAX_VALUE;
+        i_freq_div : in  integer range 1 to g_FREQ_DIV_MAX;
         o_clk      : out std_ulogic -- final output clock
     );
 end entity clk_divider;
@@ -53,9 +53,9 @@ begin
     --     Performs i_clk frequency division, outputs need to be composed to get the final clock.
     divide_i_clk_freq : process (i_clk) is
         -- register to store internally i_freq_div value in a time
-        variable r_freq_div : integer range 1 to g_FREQ_DIV_MAX_VALUE;
+        variable r_freq_div : integer range 1 to g_FREQ_DIV_MAX;
         -- internal i_clk counter
-        variable r_i_clk_counter : integer range 1 to g_FREQ_DIV_MAX_VALUE;
+        variable r_i_clk_counter : integer range 1 to g_FREQ_DIV_MAX;
     begin
         if (rising_edge(i_clk)) then
             -- need to reset the r_i_clk_counter and begin the new o_clk period

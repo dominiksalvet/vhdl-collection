@@ -30,13 +30,13 @@ end entity clk_divider_tb;
 architecture behavioral of clk_divider_tb is
     
     -- uut generics
-    constant g_FREQ_DIV_MAX_VALUE : positive := 7;
+    constant g_FREQ_DIV_MAX : positive := 7;
     
     -- uut ports
     signal i_clk : std_ulogic := '0';
     signal i_rst : std_ulogic := '0';
     
-    signal i_freq_div : integer range 1 to g_FREQ_DIV_MAX_VALUE := 1;
+    signal i_freq_div : integer range 1 to g_FREQ_DIV_MAX := 1;
     signal o_clk      : std_ulogic;
     
     -- clock period definition
@@ -50,7 +50,7 @@ begin
     -- instantiate the unit under test (uut)
     uut : entity work.clk_divider(rtl)
         generic map (
-            g_FREQ_DIV_MAX_VALUE => g_FREQ_DIV_MAX_VALUE
+            g_FREQ_DIV_MAX => g_FREQ_DIV_MAX
         )
         port map (
             i_clk => i_clk,
