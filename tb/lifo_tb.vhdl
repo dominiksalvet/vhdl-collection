@@ -45,8 +45,8 @@ architecture behavioral of lifo_tb is
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
     
-    -- simulation finished flag to stop the clk_gen process
-    shared variable v_sim_finished : boolean := false;
+    -- simulation completed flag to stop the clk_gen process
+    shared variable v_verif_done : boolean := false;
     
 begin
     
@@ -76,7 +76,7 @@ begin
         i_clk <= '1';
         wait for c_CLK_PERIOD / 2;
         
-        if (v_sim_finished) then
+        if (v_verif_done) then
             wait;
         end if;
     end process clk_gen;
@@ -129,7 +129,7 @@ begin
         i_we <= '0';
         i_re <= '0';
         
-        v_sim_finished := true;
+        v_verif_done := true;
         wait;
         
     end process stim_and_verif;

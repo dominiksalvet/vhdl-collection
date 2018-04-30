@@ -39,8 +39,8 @@ architecture behavioral of static_clk_divider_tb is
     
     constant c_PERIOD_COUNT_TO_TEST : positive := 10;
     
-    -- simulation finished flag to stop the clk_gen process
-    shared variable v_sim_finished : boolean := false;
+    -- simulation completed flag to stop the clk_gen process
+    shared variable v_verif_done : boolean := false;
     
 begin
     
@@ -62,7 +62,7 @@ begin
         i_clk <= '1';
         wait for c_CLK_PERIOD / 2;
         
-        if (v_sim_finished) then
+        if (v_verif_done) then
             wait;
         end if;
     end process clk_gen;
@@ -95,7 +95,7 @@ begin
             wait for ((g_FREQ_DIV - 1) / 2) * c_CLK_PERIOD;
         end loop;
         
-        v_sim_finished := true;
+        v_verif_done := true;
         wait;
         
     end process verif;
