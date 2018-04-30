@@ -21,7 +21,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.conv_pkg.all;
+use work.string_pkg.all;
 use work.seg7_pkg.all;
 use work.seg7_driver;
 

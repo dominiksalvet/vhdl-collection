@@ -21,7 +21,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.conv_pkg.all;
+use work.string_pkg.all;
 use work.rom;
 
 entity rom_tb is

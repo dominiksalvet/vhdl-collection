@@ -20,7 +20,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.conv_pkg.all;
+use work.string_pkg.all;
 use work.clk_divider;
 
 entity clk_divider_tb is

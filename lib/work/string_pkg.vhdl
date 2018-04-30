@@ -6,15 +6,15 @@
 -- Target:    independent
 --------------------------------------------------------------------------------
 -- Description:
---     The package contains conversion functions for VHDL predefined data types
---     and data types included in the std_logic_1164 package.
+--     The package contains conversion functions for string, character and
+--     std_logic_1164's data types.
 --------------------------------------------------------------------------------
 
 
 library ieee;
 use ieee.std_logic_1164.all;
 
-package conv_pkg is
+package string_pkg is
     
     -- Description:
     --     Returns the std_ulogic parameter's character representation.
@@ -29,10 +29,10 @@ package conv_pkg is
             p_VECTOR : std_ulogic_vector -- input standard logic vector
         ) return string; -- final string
     
-end package conv_pkg;
+end package string_pkg;
 
 
-package body conv_pkg is
+package body string_pkg is
     
     function to_character (
             p_SIGNAL : std_ulogic
@@ -83,4 +83,4 @@ package body conv_pkg is
         return v_string;
     end function to_string;
     
-end package body conv_pkg;
+end package body string_pkg;
