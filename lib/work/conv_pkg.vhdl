@@ -6,7 +6,8 @@
 -- Target:    independent
 --------------------------------------------------------------------------------
 -- Description:
---     This package contains basic conversion functions.
+--     The package contains conversion functions for VHDL predefined data types
+--     and data types included in the std_logic_1164 package.
 --------------------------------------------------------------------------------
 
 
