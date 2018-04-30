@@ -79,7 +79,7 @@ begin
         end if;
     end process clk_gen;
     
-    stimulus : process is
+    stim_and_verif : process is
     begin
         
         i_re <= '1';
@@ -100,6 +100,6 @@ begin
         v_sim_finished := true;
         wait;
         
-    end process stimulus;
+    end process stim_and_verif;
     
 end architecture behavioral;

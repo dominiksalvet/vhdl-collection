@@ -130,7 +130,7 @@ begin
         end if;
     end process clk_gen;
     
-    stimulus : process is
+    stim_and_verif : process is
     begin
         
         wait for c_CLK_PERIOD; -- delay to initialize the uut
@@ -227,6 +227,6 @@ begin
         v_sim_finished := true;
         wait;
         
-    end process stimulus;
+    end process stim_and_verif;
     
 end architecture behavioral;

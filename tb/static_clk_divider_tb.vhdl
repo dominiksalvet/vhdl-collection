@@ -67,7 +67,7 @@ begin
         end if;
     end process clk_gen;
     
-    stimulus : process is
+    stim : process is
     begin 
         
         i_rst <= '1'; -- initialize the module
@@ -76,9 +76,9 @@ begin
         i_rst <= '0';
         wait;
         
-    end process stimulus;
+    end process stim;
     
-    verification : process is
+    verif : process is
     begin
         
         for i in 1 to c_PERIOD_COUNT_TO_TEST loop
@@ -98,6 +98,6 @@ begin
         v_sim_finished := true;
         wait;
         
-    end process verification;
+    end process verif;
     
 end architecture behavioral;

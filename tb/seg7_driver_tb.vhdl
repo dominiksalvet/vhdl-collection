@@ -80,7 +80,7 @@ begin
         end if;
     end process clk_gen;
     
-    stimulus : process is
+    stim : process is
     begin
         
         i_rst  <= '1'; -- initialize the module
@@ -93,9 +93,9 @@ begin
         i_data <= x"FACE";
         wait;
         
-    end process stimulus;
+    end process stim;
     
-    verification : process is
+    verif : process is
     begin
         
         wait for c_CLK_PERIOD;
@@ -154,6 +154,6 @@ begin
         v_sim_finished := true;
         wait;
         
-    end process verification;
+    end process verif;
     
 end architecture behavioral;

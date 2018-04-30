@@ -77,7 +77,7 @@ begin
         end if;
     end process clk_gen;
     
-    stimulus : process is
+    stim_and_verif : process is
         variable v_vector : std_ulogic_vector(g_DATA_WIDTH - 1 downto 0);
     begin
         
@@ -123,6 +123,6 @@ begin
         v_sim_finished := true;
         wait;
         
-    end process stimulus;
+    end process stim_and_verif;
     
 end architecture behavioral;

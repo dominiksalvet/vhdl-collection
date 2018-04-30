@@ -72,7 +72,7 @@ begin
         end if;
     end process clk_gen;
     
-    stimulus : process is
+    stim : process is
     begin
         
         i_rst <= '1'; -- initialize the module
@@ -100,9 +100,9 @@ begin
         i_freq_div <= 4;
         wait;
         
-    end process stimulus;
+    end process stim;
     
-    verification : process is
+    verif : process is
     begin
         
         -- asserting only at critical simulation times
@@ -155,6 +155,6 @@ begin
         v_sim_finished := true;
         wait;
         
-    end process verification;
+    end process verif;
     
 end architecture behavioral;
