@@ -40,9 +40,11 @@ architecture behavioral of seg7_driver_tb is
     signal i_clk : std_ulogic := '0';
     signal i_rst : std_ulogic := '0';
     
-    signal i_data      : std_ulogic_vector((g_DIGIT_COUNT * 4) - 1 downto 0) := (others => '0');
-    signal o_seg7_sel  : std_ulogic_vector(g_DIGIT_COUNT - 1 downto 0);
-    signal o_seg7_data : std_ulogic_vector(6 downto 0);
+    signal i_hex_digits : std_ulogic_vector(
+        (g_DIGIT_COUNT * 4) - 1 downto 0
+        ) := (others => '0');
+    signal o_seg7_sel       : std_ulogic_vector(g_DIGIT_COUNT - 1 downto 0);
+    signal o_seg7_hex_digit : std_ulogic_vector(6 downto 0);
     
     -- clock period definition
     constant c_CLK_PERIOD : time := 10 ns;
@@ -63,9 +65,9 @@ begin
             i_clk => i_clk,
             i_rst => i_rst,
             
-            i_data      => i_data,
-            o_seg7_sel  => o_seg7_sel,
-            o_seg7_data => o_seg7_data
+            i_hex_digits     => i_hex_digits,
+            o_seg7_sel       => o_seg7_sel,
+            o_seg7_hex_digit => o_seg7_hex_digit
         );
     
     clk_gen : process is
@@ -83,14 +85,14 @@ begin
     stim : process is
     begin
         
-        i_rst  <= '1'; -- initialize the module
-        i_data <= x"CAFE";
+        i_rst        <= '1'; -- initialize the module
+        i_hex_digits <= x"CAFE";
         wait for c_CLK_PERIOD;
         
         i_rst <= '0';
         wait for 7 * c_CLK_PERIOD;
         
-        i_data <= x"FACE";
+        i_hex_digits <= x"FACE";
         wait;
         
     end process stim;
@@ -102,52 +104,52 @@ begin
         
         ---- THE "CAFE" MESSAGE
         
-        assert (o_seg7_data = (c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for 5 * c_CLK_PERIOD; -- need to wait 9*c_CLK_PERIOD until the "FACE" message starts
         
         ---- THE "FACE" MESSAGE
         
-        assert (o_seg7_data = (c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#E#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#C#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#A#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         wait for c_CLK_PERIOD;
         
-        assert (o_seg7_data = (c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
-            report "Expected o_seg7_data=""" &
+        assert (o_seg7_hex_digit = (c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)))
+            report "Expected o_seg7_hex_digit=""" &
             to_string(c_SEG7(16#F#) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE)) & """!"
             severity error;
         

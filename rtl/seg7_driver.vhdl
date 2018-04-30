@@ -14,9 +14,9 @@
 --        the final refresh frequency of all the display is equal to i_clk
 --        frequency divided by number of unique digits.
 --     2. The least significant bit of o_seg7_sel output meets the least
---        significant four bits of i_data input.
---     3. The input i_data is not stored anywhere internally to quickly react to
---        the changes on this input.
+--        significant four bits of i_hex_digits input.
+--     3. The input i_hex_digits is not stored anywhere internally to react
+--        quickly to the changes on this input.
 --------------------------------------------------------------------------------
 
 
@@ -36,11 +36,11 @@ entity seg7_driver is
         i_clk : in std_ulogic; -- clock signal
         i_rst : in std_ulogic; -- reset signal
         
-        -- input data vector, will be treated as hexadecimal numbers (separated by 4 bits)
-        i_data : in std_ulogic_vector((g_DIGIT_COUNT * 4) - 1 downto 0);
-        -- seven segment select bits
-        o_seg7_sel  : out std_ulogic_vector(g_DIGIT_COUNT - 1 downto 0);
-        o_seg7_data : out std_ulogic_vector(6 downto 0) -- actual seven segment digit data
+        -- input vector, it will be treated as hexadecimal numbers (separated by 4 bits)
+        i_hex_digits : in std_ulogic_vector((g_DIGIT_COUNT * 4) - 1 downto 0);
+        -- seven segment selector bits
+        o_seg7_sel       : out std_ulogic_vector(g_DIGIT_COUNT - 1 downto 0);
+        o_seg7_hex_digit : out std_ulogic_vector(6 downto 0) -- current seven segment digit data
     );
 end entity seg7_driver;
 
@@ -77,14 +77,14 @@ begin
     end process seg7_sel_switch;
     
     -- Description:
-    --     Propagate changes of digit index and i_data to the o_seg7_data output.
-    seg7_data_conversion : process (i_data, r_seg7_sel_index) is
+    --     Propagate changes of digit index and i_hex_digits to the o_seg7_hex_digit output.
+    seg7_data_conversion : process (i_hex_digits, r_seg7_sel_index) is
         variable w_sel_hex_data : std_ulogic_vector(3 downto 0);
     begin
         -- window with the converted hexadecimal number
-        w_sel_hex_data := i_data((r_seg7_sel_index * 4) + 3 downto r_seg7_sel_index * 4);
+        w_sel_hex_data := i_hex_digits((r_seg7_sel_index * 4) + 3 downto r_seg7_sel_index * 4);
         -- conversion to the seven segment form with eventual negation of active segment value
-        o_seg7_data <= 
+        o_seg7_hex_digit <= 
             c_SEG7(to_integer(unsigned(w_sel_hex_data))) xnor (6 downto 0 => g_SEG_ACTIVE_VALUE);
     end process seg7_data_conversion;
     
