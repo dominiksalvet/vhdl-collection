@@ -17,10 +17,11 @@ use ieee.std_logic_1164.all;
 
 package seg7_pkg is
     
-    type t_MEM is array(0 to 15) of std_ulogic_vector(6 downto 0);
+    -- definition of an array type
+    type t_SEG7 is array(0 to 15) of std_ulogic_vector(6 downto 0);
     -- images of all seven segment values representing a hexadecimal number
     -- '1' values stands for an active segment, '0' for an inactive segment
-    constant c_SEG7 : t_MEM := (
+    constant c_SEG7 : t_SEG7 := (
             --     ABCDEFG (segment mapping)
             0  => "1111110", -- 0
             1  => "0110000", -- 1
