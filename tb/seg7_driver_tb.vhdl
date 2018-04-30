@@ -9,8 +9,8 @@
 --     Simulation represents an example where the message "CAFE" will be
 --     displayed. The seven segment display, which shows "E", has the lowest
 --     index and so it is selected by "0001" value on o_seg7_sel output signal
---     (eventually "1110"). After 8*c_CLK_PERIOD, the message will be changed to
---     the "FACE".
+--     (or "1110"). After 8*c_CLK_PERIOD, the message will be changed to the
+--     "FACE" message.
 --------------------------------------------------------------------------------
 -- Notes:
 --     1. Do not change g_DIGIT_COUNT unless you know about fatal impact on the
