@@ -88,7 +88,7 @@ begin
         wait for c_CLK_PERIOD;
         
         i_data_start <= '1';
-        for i in 0 to (2 ** o_data'length) - 1 loop -- loop through all the combinations
+        for i in 0 to integer((2 ** o_data'length) - 1) loop -- loop through all the combinations
             if (g_LSB_FIRST) then -- least significant bit is the first one
                 for j in 0 to g_DATA_WIDTH - 1 loop -- serial data receiving
                     v_vector := std_ulogic_vector(to_unsigned(i, v_vector'length));
