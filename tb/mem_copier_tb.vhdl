@@ -19,9 +19,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 use work.string_pkg.all;
-use work.mem_copier;
 use work.rom;
 use work.ram;
+use work.mem_copier;
 
 entity mem_copier_tb is
 end entity mem_copier_tb;
