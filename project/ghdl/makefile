@@ -67,7 +67,7 @@ $(BUILD_DIR)/%_tb.o: $(TB_DIR)/%_tb$(VHDL_EXT) $(BUILD_DIR)/%.o | $(BUILD_DIR)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 # RTL descriptions
-$(BUILD_DIR)/%.o: $(RTL_DIR)/%$(VHDL_EXT) $(BUILD_DIR)/%.d | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(RTL_DIR)/%$(VHDL_EXT) | $(BUILD_DIR)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 # libraries
