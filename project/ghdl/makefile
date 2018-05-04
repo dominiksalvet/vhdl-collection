@@ -12,6 +12,7 @@
 ## ENVIRONMENT
 
 SHELL := /bin/sh
+SED := sed
 MKDIR := mkdir
 RM_RF := rm -rf
 
@@ -43,10 +44,16 @@ VHDLC_SIM_FLAGS := --assert-level=failure --ieee-asserts=enable
 # VCD file viewer
 VCD_VIEWER := gtkwave
 
+
+SRC := $(wildcard $(LIB_DIR)/*/*$(VHDL_EXT)) $(wildcard $(RTL_DIR)/*$(VHDL_EXT)) $(wildcard $(TB_DIR)/*$(VHDL_EXT))
+DEPS := $(addprefix $(BUILD_DIR)/,$(notdir $(SRC:$(VHDL_EXT)=.d)))
+
+
 ## RULES
 
 .PHONY: clean
-.SECONDARY:
+#.SECONDARY:
+#.SECONDARY: $(BUILD_DIR)/%.o $(DEP_DIR)/%.d
 
 $(BUILD_DIR):
 	$(MKDIR) $@
@@ -60,15 +67,24 @@ $(BUILD_DIR)/%_tb.o: $(TB_DIR)/%_tb$(VHDL_EXT) $(BUILD_DIR)/%.o | $(BUILD_DIR)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 # RTL descriptions
-$(BUILD_DIR)/%.o: $(RTL_DIR)/%$(VHDL_EXT) | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(RTL_DIR)/%$(VHDL_EXT) $(BUILD_DIR)/%.d | $(BUILD_DIR)
 	$(VHDLC) -a $(VHDLC_FLAGS) $<
 
 # libraries
-# automatically assign packages to a library defined by directory they are placed in
+# automatically assign package to a library defined by directory that it is placed in
 $(BUILD_DIR)/%_pkg.o: $(LIB_DIR)/*/%_pkg$(VHDL_EXT) | $(BUILD_DIR)
 	$(VHDLC) -a --work=$(lastword $(subst /, ,$(dir $<))) $(VHDLC_FLAGS) $<
 
 clean:
 	$(RM_RF) $(BUILD_DIR)
 
-include deps.mk
+
+## DEPENDENCIES
+
+$(BUILD_DIR)/%_tb.d: $(TB_DIR)/%_tb$(VHDL_EXT) | $(BUILD_DIR)
+	./vhdldepend.sh $< '$$(BUILD_DIR)/' > $@
+
+$(BUILD_DIR)/%.d: $(RTL_DIR)/%$(VHDL_EXT) | $(BUILD_DIR)
+	./vhdldepend.sh $< '$$(BUILD_DIR)/' > $@
+
+-include $(DEPS)
