@@ -26,7 +26,7 @@ The modules are documented inside it's VHDL source files using comment headers a
 
 ## License
 
-This project is licensed under an Open Source Initiative approved license, the MIT License. See the [*LICENSE.txt*](LICENSE.txt) file for details.
+This project is licensed under an Open Source Initiative approved license, the MIT License. See the [*LICENSE.txt*](LICENSE.txt) file for details. Individual files contain the SPDX license identifier instead of the full license text.
 
 <p align="center">
   <a href="http://opensource.org/">
