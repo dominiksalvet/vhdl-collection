@@ -3,7 +3,7 @@
 Handy generic VHDL modules that can be used as part of a VHDL project. Every VHDL module has been simulated and works as intended. Test bench files of the simulation are included in the module's appropriate directory as well. A project file is also published with set up all the VHDL modules using and so they can be tested before real use in this prepared sandbox. The modules are not intended to be top-level entities of projects.
 
 ## To do list
-* change this description to reflect a new building system
+* change this description to reflect the new building system
 * *cache.vhd* + *cache_tb.vhd*
 
 ## Modules
