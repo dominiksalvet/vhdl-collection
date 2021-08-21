@@ -1,17 +1,11 @@
-**This repository is going to be [remastered](https://github.com/users/dominiksalvet/projects/2#card-26446302) sometime in the future.**
-
----
-
 # VHDL Collection
 
-Handy generic VHDL modules that can be used as part of a VHDL project. Every VHDL module has been simulated and works as intended. Test bench files of the simulation are included in the module's appropriate directory as well. A project file is also published with set up all the VHDL modules using and so they can be tested before real use in this prepared sandbox. The modules are not intended to be top-level entities of projects.
+> Collection of generic VHDL modules.
 
-## To do list
-* learn makefile to automatically build VHDL files dependecies
-* change this description to reflect the new building system
-* *cache.vhd* + *cache_tb.vhd*
+Handy generic VHDL modules that can be used as part of a VHDL project. Every VHDL module has been simulated and should work as intended. Test bench files of the simulation are included in the module's appropriate directory as well. An ISE project file is also published with all the VHDL modules set up, and so they can be tested before the real use. The modules are not intended to be top-level entities of projects.
 
 ## Modules
+
 * [Clock Divider](rtl/clk_divider.vhdl)
 * [First In, First Out](rtl/fifo.vhdl)
 * [Last In, First Out](rtl/lifo.vhdl)
@@ -20,20 +14,16 @@ Handy generic VHDL modules that can be used as part of a VHDL project. Every VHD
 * [Pulse-Width Modulation](rtl/pwm.vhdl)
 * [Random-Access Memory](rtl/ram.vhdl)
 * [Read-Only Memory](rtl/rom.vhdl)
-* [Seven-Segment Display Driver](rtl/seg7_driver.vhdl)
 * [Serial In, Parallel Out](rtl/sipo.vhdl)
+* [Seven-Segment Display Driver](rtl/seg7_driver.vhdl)
 * [Static Clock Divider](rtl/static_clk_divider.vhdl)
 
 ## Documentation
 
-The modules are documented inside it's VHDL source files using comment headers and inline comments.
+The modules are documented inside their VHDL source files using comment headers and inline comments.
 
-## License
+## Useful Resources
 
-This project is licensed under an Open Source Initiative approved license, the MIT License. See the [*LICENSE.txt*](LICENSE.txt) file for details. Individual files contain the SPDX license identifier instead of the full license text.
-
-<p align="center">
-  <a href="http://opensource.org/">
-    <img src="https://opensource.org/files/osi_logo_bold_300X400_90ppi.png" width="100">
-  </a>
-</p>
+* [support.md](support.md) – questions, answers, help
+* [contributing.md](contributing.md) – how to get involve
+* [license](license) – author and license
