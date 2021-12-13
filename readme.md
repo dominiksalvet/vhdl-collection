@@ -1,7 +1,5 @@
 # VHDL Collection
 
-> Collection of generic VHDL modules.
-
 Handy generic VHDL modules that can be used as part of a VHDL project. Every VHDL module has been simulated and should work as intended. Test bench files of the simulation are included in the module's appropriate directory as well. An ISE project file is also published with all the VHDL modules set up, and so they can be tested before the real use. The modules are not intended to be top-level entities of projects.
 
 ## Modules
